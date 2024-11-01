@@ -1,8 +1,6 @@
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class Main {
@@ -17,8 +15,15 @@ public class Main {
           clientSocket = serverSocket.accept();
           OutputStream out = clientSocket.getOutputStream();
           InputStream in = clientSocket.getInputStream();
-          for (int i = 0; i < 2; i++) {
-              out.write("+PONG\r\n".getBytes());
+          BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+
+          String line;
+          while ((line = reader.readLine()) != null) {
+                // If the received line is "PING", respond with "+PONG\r\n"
+                if (line.trim().equalsIgnoreCase("PING")) {
+                    out.write("+PONG\r\n".getBytes(StandardCharsets.UTF_8));
+                    out.flush(); // Ensure the response is sent immediately
+                }
           }
         } catch (IOException e) {
           System.out.println("IOException: " + e.getMessage());
