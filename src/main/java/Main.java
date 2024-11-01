@@ -15,7 +15,7 @@ public class Main {
           clientSocket = serverSocket.accept();
           OutputStream out = clientSocket.getOutputStream();
           out.write("+PONG\r\n".getBytes());
-
+          out.write("+PONG\r\n".getBytes());
         } catch (IOException e) {
           System.out.println("IOException: " + e.getMessage());
         } finally {
