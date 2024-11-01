@@ -2,10 +2,10 @@
 #
 # These can be VERY verbose, so we suggest turning them off
 # unless you really need them.
-debug: false
+debug: true
 
 # Use this to change the Java version used to run your code
 # on Codecrafters.
 #
 # Available versions: java-23
-language_pack: java-23
+language_pack: java-17
