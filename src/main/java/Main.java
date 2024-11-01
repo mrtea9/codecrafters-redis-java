@@ -72,7 +72,7 @@ public class Main {
             // Here, you can process the received data as needed
 
             // Echo back the received data to the client
-            clientChannel.write(ByteBuffer.wrap(("Echo: " + line + "\r\n").getBytes()));
+            clientChannel.write(ByteBuffer.wrap(("+PONG\r\n").getBytes()));
         } catch (IOException e) {
             System.out.println("IOException while handling client: " + e.getMessage());
             try {
