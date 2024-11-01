@@ -16,10 +16,9 @@ public class Main {
           OutputStream out = clientSocket.getOutputStream();
           InputStream in = clientSocket.getInputStream();
           BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-
           String line;
           while ((line = reader.readLine()) != null) {
-                // If the received line is "PING", respond with "+PONG\r\n"
+                System.out.println(line);
                 if (line.trim().equalsIgnoreCase("PING")) {
                     out.write("+PONG\r\n".getBytes(StandardCharsets.UTF_8));
                     out.flush(); // Ensure the response is sent immediately
