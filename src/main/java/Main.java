@@ -17,9 +17,9 @@ public class Main {
           clientSocket = serverSocket.accept();
           OutputStream out = clientSocket.getOutputStream();
           InputStream in = clientSocket.getInputStream();
-          out.write("+PONG\r\n".getBytes());
-          byte[] response =  in.readAllBytes();
-          System.out.println(new String(response, StandardCharsets.UTF_8));
+          for (int i = 0; i < 2; i++) {
+              out.write("+PONG\r\n".getBytes());
+          }
         } catch (IOException e) {
           System.out.println("IOException: " + e.getMessage());
         } finally {
