@@ -62,7 +62,7 @@ public class Main {
                 clientChannel.close();
                 return;
             }
-
+            System.out.println(new String(buffer.array()));
             String line = new String(buffer.array()).trim();
             System.out.println("Received data: " + line);
             // Here, you can process the received data as needed
