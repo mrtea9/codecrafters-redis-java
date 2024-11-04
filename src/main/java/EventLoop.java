@@ -15,6 +15,7 @@ public class EventLoop {
     private ServerSocketChannel serverSocketChannel;
     private final Map<String, Function<String, String>> handlers;
     private final Deque<EventResult> processedEvents;
+    private Map<String, String> globalKeys = new HashMap<>();
 
     EventLoop(int port) {
         this.port = port;
@@ -69,7 +70,7 @@ public class EventLoop {
         }
     }
 
-    private static void handleClient(SocketChannel clientChannel) throws IOException {
+    private void handleClient(SocketChannel clientChannel) throws IOException {
         ByteBuffer buffer = ByteBuffer.allocate(256);
         int bytesRead = clientChannel.read(buffer);
 
@@ -84,11 +85,48 @@ public class EventLoop {
         parser.parse();
         List<String> decodedList = parser.getDecodedResponse();
 
-        processResponse(decodedList);
+        processResponse(decodedList, clientChannel);
     }
 
-    private static void processResponse(List<String> decodedList) {
-
+    private void processResponse(List<String> decodedList, SocketChannel clientChannel) throws IOException {
+        String command = decodedList.get(0);
         System.out.println(decodedList);
+
+        if (command.equalsIgnoreCase("ping")) {
+            processPing(clientChannel);
+        } else if (command.equalsIgnoreCase("echo")) {
+            String value = decodedList.get(1);
+
+            processEcho(clientChannel, value);
+        } else if (command.equalsIgnoreCase("set")) {
+            String key = decodedList.get(1);
+            String value = decodedList.get(2);
+
+            processSet(clientChannel, key, value);
+        } else if (command.equalsIgnoreCase("get")) {
+            processGet();
+        }
+    }
+
+    private static void processPing(SocketChannel clientChannel) throws IOException {
+        clientChannel.write(ByteBuffer.wrap(("+PONG\r\n").getBytes()));
+    }
+
+    private static void processEcho(SocketChannel clientChannel, String value) throws IOException {
+        String response = "+" + value + "\r\n";
+
+        clientChannel.write(ByteBuffer.wrap(response.getBytes()));
+    }
+
+    private void processSet(SocketChannel clientChannel, String key, String value) throws IOException {
+        this.globalKeys.put(key, value);
+
+        clientChannel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
+    }
+
+    private void processGet(SocketChannel clientChannel, String key, String value) throws IOException {
+        String result = this.globalKeys.get(key);
+
+        clientChannel.write(ByteBuffer.wrap(result.getBytes()));
     }
 }
