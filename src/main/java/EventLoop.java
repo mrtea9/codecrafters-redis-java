@@ -1,61 +1,87 @@
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.util.*;
 import java.util.function.Function;
 
 public class EventLoop {
 
-    private final Deque<Event> events;
+    private final int port;
+    private Selector selector;
+    private ServerSocketChannel serverSocketChannel;
     private final Map<String, Function<String, String>> handlers;
     private final Deque<EventResult> processedEvents;
 
-    EventLoop() {
-        this.events = new ArrayDeque<>();
+    EventLoop(int port) {
+        this.port = port;
         this.handlers = new HashMap<>();
         this.processedEvents = new ArrayDeque<>();
+    }
+
+    public void start() {
+        try {
+            initialize();
+            runEventLoop();
+        } catch (IOException e) {
+            System.out.println("Error " + e.getMessage());
+        }
+    }
+
+    private void initialize() throws IOException {
+        this.selector = Selector.open();
+        this.serverSocketChannel = ServerSocketChannel.open();
+        this.serverSocketChannel.bind(new InetSocketAddress(this.port));
+        this.serverSocketChannel.configureBlocking(false);
+        this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
     }
 
     public void on(String key, Function<String, String> handler) {
         this.handlers.put(key, handler);
     }
 
-    public void dispatch(Event event) {
-        this.events.add(event);
-    }
+    public void runEventLoop() throws IOException {
 
-    public void run() {
-        Event event = events.poll();
+        while (true) {
+            this.selector.select();
+            Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
 
-        if (event != null) {
-            System.out.println("Received Event: " + event.key);
-            if (this.handlers.containsKey(event.key)) {
-                processEvent(event);
+            while (iterator.hasNext()) {
+                SelectionKey key = iterator.next();
+
+                if (key.isAcceptable()) acceptConnection();
+
+                if (key.isReadable()) handleClient((SocketChannel) key.channel());
+
+                iterator.remove();
             }
         }
-
-        EventResult eventResult = processedEvents.poll();
-
-        if (eventResult != null) printEventResult(eventResult);
     }
 
-    private void processEvent(Event event) {
-        Thread eventProcessingThread = new Thread(() -> {
-            creatingThread(event);
-        });
-        eventProcessingThread.start();
+    private void acceptConnection() throws IOException {
+        SocketChannel clientChannel = this.serverSocketChannel.accept();
+        if (clientChannel != null) {
+            clientChannel.configureBlocking(false);
+            clientChannel.register(this.selector, SelectionKey.OP_READ);
+        }
     }
 
-    private void creatingThread(Event event) {
-        Function<String, String> handler = this.handlers.get(event.key);
-        String result = handler.apply(event.data);
+    private static void handleClient(SocketChannel clientChannel) throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(256);
+        int bytesRead = clientChannel.read(buffer);
 
-        EventResult eventResult = new EventResult(event.key, result);
+        if (bytesRead == -1) {
+            System.out.println("Client disconnected: " + clientChannel.getLocalAddress());
+            clientChannel.close();
+            return;
+        }
 
-        processedEvents.add(eventResult);
+        String line = new String(buffer.array());
+
+        System.out.println(line);
     }
 
-    private void printEventResult(EventResult eventResult) {
-        System.out.println("Output for Event " + eventResult.key + " : " + eventResult.result);
-    }
 }
