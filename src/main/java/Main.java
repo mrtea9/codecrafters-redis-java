@@ -60,7 +60,9 @@ public class Main {
 
             String line = new String(buffer.array());
             System.out.println(line);
+            System.out.println(line.indexOf("\r\n"));
             // Here, you can process the received data as needed
+
 
             clientChannel.write(ByteBuffer.wrap(("+PONG\r\n").getBytes()));
         } catch (IOException e) {
