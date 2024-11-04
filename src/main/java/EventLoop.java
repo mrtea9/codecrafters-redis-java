@@ -104,7 +104,8 @@ public class EventLoop {
 
             processSet(clientChannel, key, value);
         } else if (command.equalsIgnoreCase("get")) {
-            processGet();
+            String key = decodedList.get(1);
+            processGet(clientChannel, key);
         }
     }
 
@@ -124,7 +125,7 @@ public class EventLoop {
         clientChannel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
 
-    private void processGet(SocketChannel clientChannel, String key, String value) throws IOException {
+    private void processGet(SocketChannel clientChannel, String key) throws IOException {
         String result = this.globalKeys.get(key);
 
         clientChannel.write(ByteBuffer.wrap(result.getBytes()));
