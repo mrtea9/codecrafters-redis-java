@@ -80,6 +80,8 @@ public class EventLoop {
         }
 
         String line = new String(buffer.array());
+        Parser parser = new Parser(line);
+        parser.parse();
 
         System.out.println(line);
     }
