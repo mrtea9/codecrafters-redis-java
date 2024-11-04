@@ -13,7 +13,7 @@ public class Parser {
     }
 
     public void parse() {
-        String[] sourceList = this.source.split("\r\n");
+        String[] sourceList = Arrays.copyOf(this.source.split("\r\n"),this.source.split("\r\n").length - 1) ;
         for (String element : sourceList) {
             System.out.println("element = " + element);
         }
