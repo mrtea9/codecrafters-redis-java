@@ -23,7 +23,6 @@ public class Main {
             while (true) {
                 selector.select();
                 Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
-                System.out.println(selector.selectedKeys().toString());
 
                 while (iterator.hasNext()) {
                     SelectionKey key = iterator.next();
@@ -31,12 +30,8 @@ public class Main {
                     if (key.isAcceptable()) {
                         SocketChannel clientChannel = serverSocketChannel.accept();
 
-                        if (clientChannel != null) {
-                            clientChannel.configureBlocking(false);
-                            clientChannel.register(selector, SelectionKey.OP_READ);
-                        } else {
-                            System.out.println("Failed to accept connection, clientChannel is null.");
-                        }
+                        clientChannel.configureBlocking(false);
+                        clientChannel.register(selector, SelectionKey.OP_READ);
                     }
 
                     if (key.isReadable()) {
@@ -48,7 +43,7 @@ public class Main {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -62,8 +57,8 @@ public class Main {
                 clientChannel.close();
                 return;
             }
-            System.out.println(new String(buffer.array()));
-            String line = new String(buffer.array()).trim();
+
+            String line = new String(buffer.array());
             System.out.println("Received data: " + line);
             // Here, you can process the received data as needed
 
