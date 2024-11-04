@@ -127,7 +127,7 @@ public class EventLoop {
 
     private void processGet(SocketChannel clientChannel, String key) throws IOException {
         String value = this.globalKeys.get(key);
-        String result = "$" + value.length() + value + "\r\n";
+        String result = "$" + value.length() + "\r\n" + value + "\r\n";
 
         clientChannel.write(ByteBuffer.wrap(result.getBytes()));
     }
