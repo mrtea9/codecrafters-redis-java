@@ -8,6 +8,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -59,8 +60,10 @@ public class Main {
             }
 
             String line = new String(buffer.array());
+            String[] splitLine = line.split("\r\n");
+
             System.out.println(line);
-            System.out.println("index = " + line.indexOf("\r\n"));
+            System.out.println(Arrays.toString(splitLine));
             // Here, you can process the received data as needed
 
 
