@@ -29,10 +29,12 @@ public class Parser {
 
             if (element.charAt(0) == ':') continue;
 
+            this.decodedResponse.add(element);
+
             System.out.println("element = " + element + ", index = " + i);
         }
         System.out.println();
-        System.out.println("sourceList = " + Arrays.toString(sourceList));
+        System.out.println("decodedResponse = " + this.decodedResponse.toString());
     }
 
 
