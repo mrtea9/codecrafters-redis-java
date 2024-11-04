@@ -64,7 +64,7 @@ public class Main {
 
             System.out.println(line);
             System.out.println("command = " + splitLine[2]);
-            System.out.println("word = " + splitLine[4]);
+            System.out.println("word =  " + splitLine[4]);
             System.out.println("test = " + Arrays.toString(splitLine));
             // Here, you can process the received data as needed
 
