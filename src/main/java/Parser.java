@@ -14,6 +14,10 @@ public class Parser {
 
     public void parse() {
         String[] sourceList = this.source.split("\r\n");
+        for (String element : sourceList) {
+            System.out.println("element = " + element);
+        }
+        System.out.println();
         System.out.println("sourceList = " + Arrays.toString(sourceList));
     }
 
