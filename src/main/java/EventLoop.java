@@ -91,7 +91,6 @@ public class EventLoop {
     private void processResponse(List<String> decodedList, SocketChannel clientChannel) throws IOException {
         String command = decodedList.get(0);
         System.out.println(decodedList);
-
         if (command.equalsIgnoreCase("ping")) {
             processPing(clientChannel);
         } else if (command.equalsIgnoreCase("echo")) {
