@@ -59,7 +59,7 @@ public class Main {
             }
 
             String line = new String(buffer.array());
-            System.out.println("Received data: " + line);
+            System.out.println("Received data:  " + line);
             // Here, you can process the received data as needed
 
             clientChannel.write(ByteBuffer.wrap(("+PONG\r\n").getBytes()));
