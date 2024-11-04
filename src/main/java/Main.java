@@ -62,18 +62,18 @@ public class Main {
             String line = new String(buffer.array());
             String[] splitLine = line.split("\r\n");
 
-            if (splitLine[2].equalsIgnoreCase("echo")) {
-                clientChannel.write(ByteBuffer.wrap(splitLine[4].getBytes()));
-            }
-
             System.out.println(line);
             System.out.println("command = " + splitLine[2]);
             System.out.println("word =  " + splitLine[4]);
             System.out.println("test = " + Arrays.toString(splitLine));
-            // Here, you can process the received data as needed
 
+            if (splitLine[2].equalsIgnoreCase("echo")) {
+                String response = "+" + splitLine[4] + "\r\n";
+                clientChannel.write(ByteBuffer.wrap(response.getBytes()));
+            } else {
+                clientChannel.write(ByteBuffer.wrap(("+PONG\r\n").getBytes()));
+            }
 
-            clientChannel.write(ByteBuffer.wrap(("+PONG\r\n").getBytes()));
         } catch (IOException e) {
             System.out.println("IOException while handling client: " + e.getMessage());
             try {
