@@ -63,7 +63,7 @@ public class Main {
             String[] splitLine = line.split("\r\n");
 
             System.out.println(line);
-            System.out.println(Arrays.toString(splitLine));
+            System.out.println("test = " + Arrays.toString(splitLine));
             // Here, you can process the received data as needed
 
 
