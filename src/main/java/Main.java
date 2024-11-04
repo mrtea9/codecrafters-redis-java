@@ -62,6 +62,10 @@ public class Main {
             String line = new String(buffer.array());
             String[] splitLine = line.split("\r\n");
 
+            if (splitLine[2].equalsIgnoreCase("echo")) {
+                clientChannel.write(ByteBuffer.wrap(splitLine[4].getBytes()));
+            }
+
             System.out.println(line);
             System.out.println("command = " + splitLine[2]);
             System.out.println("word =  " + splitLine[4]);
