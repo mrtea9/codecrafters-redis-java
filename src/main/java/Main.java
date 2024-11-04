@@ -60,7 +60,7 @@ public class Main {
 
             String line = new String(buffer.array());
             System.out.println(line);
-            System.out.println(line.indexOf("\r\n"));
+            System.out.println("index = " + line.indexOf("\r\n"));
             // Here, you can process the received data as needed
 
 
