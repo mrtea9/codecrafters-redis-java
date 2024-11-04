@@ -4,12 +4,16 @@ import java.util.List;
 
 public class Parser {
 
-    private List<String> decodedResponse;
+    private final List<String> decodedResponse;
     private final String source;
 
     public Parser(String source) {
         this.source = source;
         this.decodedResponse = new ArrayList<>();
+    }
+
+    public List<String> getDecodedResponse() {
+        return this.decodedResponse;
     }
 
     public void parse() {
@@ -20,9 +24,7 @@ public class Parser {
     }
 
     private void parseSourceList(String[] sourceList) {
-
-        for (int i = 0; i < sourceList.length; i++) {
-            String element = sourceList[i];
+        for (String element : sourceList) {
             if (element.charAt(0) == '*') continue;
 
             if (element.charAt(0) == '$') continue;
@@ -30,11 +32,7 @@ public class Parser {
             if (element.charAt(0) == ':') continue;
 
             this.decodedResponse.add(element);
-
-            System.out.println("element = " + element + ", index = " + i);
         }
-        System.out.println();
-        System.out.println("decodedResponse = " + this.decodedResponse.toString());
     }
 
 
