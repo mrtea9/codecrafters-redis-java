@@ -87,7 +87,7 @@ public class EventLoop {
         processResponse(decodedList);
     }
 
-    private void processResponse(List<String> decodedList) {
+    private static void processResponse(List<String> decodedList) {
 
         System.out.println(decodedList);
     }
