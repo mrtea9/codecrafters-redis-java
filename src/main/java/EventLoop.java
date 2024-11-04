@@ -84,7 +84,11 @@ public class EventLoop {
         parser.parse();
         List<String> decodedList = parser.getDecodedResponse();
 
-        System.out.println(decodedList);
+        processResponse(decodedList);
     }
 
+    private void processResponse(List<String> decodedList) {
+
+        System.out.println(decodedList);
+    }
 }
