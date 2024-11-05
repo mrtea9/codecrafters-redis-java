@@ -98,10 +98,12 @@ public class EventLoop {
 
             processEcho(clientChannel, value);
         } else if (command.equalsIgnoreCase("set")) {
+            String commandArg = "";
             String key = decodedList.get(1);
             String value = decodedList.get(2);
+            if (decodedList.size() > 3) commandArg = decodedList.get(3);
 
-            processSet(clientChannel, key, value);
+            processSet(clientChannel, key, value, commandArg);
         } else if (command.equalsIgnoreCase("get")) {
             String key = decodedList.get(1);
             processGet(clientChannel, key);
@@ -118,8 +120,12 @@ public class EventLoop {
         clientChannel.write(ByteBuffer.wrap(response.getBytes()));
     }
 
-    private void processSet(SocketChannel clientChannel, String key, String value) throws IOException {
+    private void processSet(SocketChannel clientChannel, String key, String value, String commandArg) throws IOException {
         this.globalKeys.put(key, value);
+
+        if (!commandArg.isEmpty()) {
+            System.out.println(commandArg);
+        }
 
         clientChannel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
