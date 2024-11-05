@@ -8,6 +8,7 @@ import java.util.Map;
 public class Client {
     private final SocketChannel channel;
     private final Map<String, String> globalKeys = new HashMap<>();
+    private int timeCreated;
 
     public Client(SocketChannel channel) {
         this.channel = channel;
@@ -44,7 +45,9 @@ public class Client {
             String time = "";
             String key = decodedList.get(1);
             String value = decodedList.get(2);
-            if (decodedList.size() > 3) time = decodedList.get(4);
+            if (decodedList.size() > 3) {
+                time = decodedList.get(4);
+            }
 
             processSet(key, value, time);
         } else if (command.equalsIgnoreCase("get")) {
@@ -69,12 +72,15 @@ public class Client {
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
 
         if (!time.isEmpty()) {
-            try {
-                Thread.sleep(Long.parseLong(time));
-                this.globalKeys.remove(key);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                System.out.println(e.getMessage());
+            this.timeCreated = (int) System.currentTimeMillis();
+            if (this.timeCreated > Integer.getInteger(time)) {
+                try {
+                    Thread.sleep(Long.parseLong(time));
+                    this.globalKeys.remove(key);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    System.out.println(e.getMessage());
+                }
             }
             System.out.println(time);
         }
