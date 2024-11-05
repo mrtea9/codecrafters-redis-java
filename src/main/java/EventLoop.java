@@ -17,6 +17,7 @@ public class EventLoop {
     private final Map<String, Function<String, String>> handlers;
     private final Deque<EventResult> processedEvents;
 
+    private Map<String, Long> globalTimes;
     private Map<String, String> globalKeys;
 
     EventLoop(int port) {
@@ -24,6 +25,7 @@ public class EventLoop {
         this.handlers = new HashMap<>();
         this.processedEvents = new ArrayDeque<>();
         this.globalKeys = new ConcurrentHashMap<>();
+        this.globalTimes = new ConcurrentHashMap<>();
     }
 
     public void start() {
@@ -59,9 +61,10 @@ public class EventLoop {
                 if (key.isAcceptable()) acceptConnection();
 
                 if (key.isReadable()) {
-                    Client client = new Client((SocketChannel) key.channel(), this.globalKeys);
+                    Client client = new Client((SocketChannel) key.channel(), this.globalKeys, this.globalTimes);
                     client.handleClient();
                     this.globalKeys = client.getKeys();
+                    this.globalTimes = client.getTimes();
                 }
 
                 iterator.remove();

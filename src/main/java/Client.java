@@ -8,15 +8,20 @@ import java.util.Map;
 public class Client {
     private final SocketChannel channel;
     private final Map<String, String> keys;
-    private final Map<String, Long> times = new HashMap<>();
+    private final Map<String, Long> times;
 
-    public Client(SocketChannel channel, Map<String, String> keys) {
+    public Client(SocketChannel channel, Map<String, String> keys, Map<String, Long> times) {
         this.channel = channel;
         this.keys = keys;
+        this.times = times;
     }
 
     public Map<String, String> getKeys() {
         return this.keys;
+    }
+
+    public Map<String, Long> getTimes() {
+        return this.times;
     }
 
     public void handleClient() throws IOException {
