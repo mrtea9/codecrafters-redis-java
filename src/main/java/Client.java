@@ -68,7 +68,7 @@ public class Client {
 
     private void processSet(String key, String value, String time) throws IOException {
         this.globalKeys.put(key, value);
-        System.out.println((int) System.currentTimeMillis());
+        System.out.println((long) System.currentTimeMillis() % 1000);
 
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
