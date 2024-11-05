@@ -12,6 +12,7 @@ public class Client {
 
     public Client(SocketChannel channel) {
         this.channel = channel;
+        System.out.println("new client");
     }
 
     public void handleClient() throws IOException {
