@@ -80,6 +80,7 @@ public class Client {
         String result = "$-1\r\n";
         String value = this.globalKeys.get(key);
         Long created_on = this.globalTime.get(key);
+        System.out.println("value = " + value);
         System.out.println("created on = " + created_on);
         System.out.println("get on = " + System.currentTimeMillis());
         System.out.println(System.currentTimeMillis() - created_on);
