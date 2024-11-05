@@ -17,7 +17,7 @@ public class EventLoop {
     private final Map<String, Function<String, String>> handlers;
     private final Deque<EventResult> processedEvents;
 
-    private Map<String, Long> globalTimes;
+    private Map<String, String> globalTimes;
     private Map<String, String> globalKeys;
 
     EventLoop(int port) {

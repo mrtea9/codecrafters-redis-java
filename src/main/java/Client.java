@@ -7,10 +7,10 @@ import java.util.Map;
 public class Client {
     private final SocketChannel channel;
     private final Map<String, String> keys;
-    private final Map<String, Long> times;
+    private final Map<String, String> times;
     private String time;
 
-    public Client(SocketChannel channel, Map<String, String> keys, Map<String, Long> times) {
+    public Client(SocketChannel channel, Map<String, String> keys, Map<String, String> times) {
         this.channel = channel;
         this.keys = keys;
         this.times = times;
@@ -20,7 +20,7 @@ public class Client {
         return this.keys;
     }
 
-    public Map<String, Long> getTimes() {
+    public Map<String, String> getTimes() {
         return this.times;
     }
 
@@ -79,9 +79,9 @@ public class Client {
     private void processSet(String key, String value) throws IOException {
         this.keys.put(key, value);
         if (this.time.isEmpty()) {
-            this.times.put(key,(long) 0);
+            this.times.put(key, "0:0");
         } else {
-            this.times.put(key, System.currentTimeMillis());
+            this.times.put(key, System.currentTimeMillis() + ":" + this.time);
         }
 
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
@@ -89,7 +89,9 @@ public class Client {
 
     private void processGet(String key) throws IOException {
         String result = "$-1\r\n";
-        long createdOn = this.times.get(key);
+        String allTime = this.times.get(key);
+        System.out.println(allTime);
+        //long createdOn = this.times.get(key);
         if (createdOn != (long) 0) {
             long timePassed = System.currentTimeMillis() - createdOn;
             if (timePassed > Long.parseLong(this.time)) this.keys.remove(key);
