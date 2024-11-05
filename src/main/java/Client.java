@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -78,9 +77,10 @@ public class Client {
 
     private void processSet(String key, String value, String time) throws IOException {
         this.keys.put(key, value);
+        if (time.isEmpty()) {
+            System.out.println("da");
+        }
         this.times.put(key, System.currentTimeMillis());
-        Long created_on = this.times.get(key);
-        System.out.println("created on = " + created_on);
 
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
@@ -88,11 +88,8 @@ public class Client {
     private void processGet(String key) throws IOException {
         String result = "$-1\r\n";
         String value = this.keys.get(key);
-        Long created_on = this.times.get(key);
-        System.out.println("value = " + value);
-        System.out.println("created on = " + created_on);
-        System.out.println("get on = " + System.currentTimeMillis());
-        System.out.println(System.currentTimeMillis() - created_on);
+        Long createdOn = this.times.get(key);
+        Long timePassed = System.currentTimeMillis() - createdOn;
         if (value != null) result = "$" + value.length() + "\r\n" + value + "\r\n";
 
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
