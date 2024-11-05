@@ -92,10 +92,10 @@ public class Client {
         String allTime = this.times.get(key);
         System.out.println(allTime);
         //long createdOn = this.times.get(key);
-        if (createdOn != (long) 0) {
-            long timePassed = System.currentTimeMillis() - createdOn;
-            if (timePassed > Long.parseLong(this.time)) this.keys.remove(key);
-        }
+//        if (createdOn != (long) 0) {
+//            long timePassed = System.currentTimeMillis() - createdOn;
+//            if (timePassed > Long.parseLong(this.time)) this.keys.remove(key);
+//        }
 
         String value = this.keys.get(key);
         if (value != null) result = "$" + value.length() + "\r\n" + value + "\r\n";
