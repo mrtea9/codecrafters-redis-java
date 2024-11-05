@@ -90,6 +90,7 @@ public class Client {
     private void processGet(String key) throws IOException {
         String result = "$-1\r\n";
         String allTime = this.times.get(key);
+
         long createdOn = Long.parseLong(allTime.substring(0, allTime.indexOf(':')));
         String time = allTime.substring(allTime.indexOf(':') + 1);
 
