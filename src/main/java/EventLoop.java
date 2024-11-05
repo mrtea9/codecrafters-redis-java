@@ -101,7 +101,7 @@ public class EventLoop {
             String time = "";
             String key = decodedList.get(1);
             String value = decodedList.get(2);
-            if (decodedList.size() > 3) time = decodedList.get(3);
+            if (decodedList.size() > 3) time = decodedList.get(4);
 
             processSet(clientChannel, key, value, time);
         } else if (command.equalsIgnoreCase("get")) {
