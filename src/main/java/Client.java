@@ -68,13 +68,14 @@ public class Client {
 
     private void processSet(String key, String value, String time) throws IOException {
         this.globalKeys.put(key, value);
-        System.out.println((long) System.currentTimeMillis() % 1000);
+        System.out.println("created on = " + (long) System.currentTimeMillis() % 1000);
 
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
 
     private void processGet(String key) throws IOException {
         String result = "$-1\r\n";
+        System.out.println("get on = " + (long) System.currentTimeMillis() % 1000);
         String value = this.globalKeys.get(key);
 
         if (value != null) result = "$" + value.length() + "\r\n" + value + "\r\n";
