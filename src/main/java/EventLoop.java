@@ -141,7 +141,7 @@ public class EventLoop {
         String result = "$-1\r\n";
         String value = this.globalKeys.get(key);
 
-        if (!value.isEmpty()) result = "$" + value.length() + "\r\n" + value + "\r\n";
+        if (!value.isBlank()) result = "$" + value.length() + "\r\n" + value + "\r\n";
 
         clientChannel.write(ByteBuffer.wrap(result.getBytes()));
     }
