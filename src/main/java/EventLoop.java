@@ -15,7 +15,6 @@ public class EventLoop {
     private ServerSocketChannel serverSocketChannel;
     private final Map<String, Function<String, String>> handlers;
     private final Deque<EventResult> processedEvents;
-    private Map<String, String> globalKeys = new HashMap<>();
 
     EventLoop(int port) {
         this.port = port;
@@ -55,7 +54,10 @@ public class EventLoop {
 
                 if (key.isAcceptable()) acceptConnection();
 
-                if (key.isReadable()) handleClient((SocketChannel) key.channel());
+                if (key.isReadable()) {
+                    Client client = new Client((SocketChannel) key.channel());
+                    client.handleClient();
+                }
 
                 iterator.remove();
             }
@@ -68,81 +70,5 @@ public class EventLoop {
             clientChannel.configureBlocking(false);
             clientChannel.register(this.selector, SelectionKey.OP_READ);
         }
-    }
-
-    private void handleClient(SocketChannel clientChannel) throws IOException {
-        ByteBuffer buffer = ByteBuffer.allocate(256);
-        int bytesRead = clientChannel.read(buffer);
-
-        if (bytesRead == -1) {
-            System.out.println("Client disconnected: " + clientChannel.getLocalAddress());
-            clientChannel.close();
-            return;
-        }
-
-        String line = new String(buffer.array());
-        Parser parser = new Parser(line);
-        parser.parse();
-        List<String> decodedList = parser.getDecodedResponse();
-
-        processResponse(decodedList, clientChannel);
-    }
-
-    private void processResponse(List<String> decodedList, SocketChannel clientChannel) throws IOException {
-        String command = decodedList.get(0);
-        System.out.println(decodedList);
-        if (command.equalsIgnoreCase("ping")) {
-            processPing(clientChannel);
-        } else if (command.equalsIgnoreCase("echo")) {
-            String value = decodedList.get(1);
-
-            processEcho(clientChannel, value);
-        } else if (command.equalsIgnoreCase("set")) {
-            String time = "";
-            String key = decodedList.get(1);
-            String value = decodedList.get(2);
-            if (decodedList.size() > 3) time = decodedList.get(4);
-
-            processSet(clientChannel, key, value, time);
-        } else if (command.equalsIgnoreCase("get")) {
-            String key = decodedList.get(1);
-            processGet(clientChannel, key);
-        }
-    }
-
-    private static void processPing(SocketChannel clientChannel) throws IOException {
-        clientChannel.write(ByteBuffer.wrap(("+PONG\r\n").getBytes()));
-    }
-
-    private static void processEcho(SocketChannel clientChannel, String value) throws IOException {
-        String response = "+" + value + "\r\n";
-
-        clientChannel.write(ByteBuffer.wrap(response.getBytes()));
-    }
-
-    private void processSet(SocketChannel clientChannel, String key, String value, String time) throws IOException {
-        this.globalKeys.put(key, value);
-
-        clientChannel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
-
-        if (!time.isEmpty()) {
-            try {
-                Thread.sleep(Long.parseLong(time));
-                this.globalKeys.remove(key);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                System.out.println(e.getMessage());
-            }
-            System.out.println(time);
-        }
-    }
-
-    private void processGet(SocketChannel clientChannel, String key) throws IOException {
-        String result = "$-1\r\n";
-        String value = this.globalKeys.get(key);
-
-        if (value != null) result = "$" + value.length() + "\r\n" + value + "\r\n";
-
-        clientChannel.write(ByteBuffer.wrap(result.getBytes()));
     }
 }
