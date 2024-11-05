@@ -4,7 +4,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println(Arrays.toString(args));
 
-        EventLoop eventLoop = new EventLoop(6379);
+        EventLoop eventLoop = new EventLoop();
         eventLoop.start();
     }
 }

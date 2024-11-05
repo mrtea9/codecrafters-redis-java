@@ -20,8 +20,8 @@ public class EventLoop {
     private Map<String, String> globalTimes;
     private Map<String, String> globalKeys;
 
-    EventLoop(int port) {
-        this.port = port;
+    EventLoop() {
+        this.port = 6379;
         this.handlers = new HashMap<>();
         this.processedEvents = new ArrayDeque<>();
         this.globalKeys = new ConcurrentHashMap<>();
