@@ -7,12 +7,16 @@ import java.util.Map;
 
 public class Client {
     private final SocketChannel channel;
-    private final Map<String, String> globalKeys = new HashMap<>();
-    private final Map<String, Long> globalTime = new HashMap<>();
+    private final Map<String, String> keys;
+    private final Map<String, Long> times = new HashMap<>();
 
-    public Client(SocketChannel channel) {
+    public Client(SocketChannel channel, Map<String, String> keys) {
         this.channel = channel;
-        System.out.println("new client");
+        this.keys = keys;
+    }
+
+    public Map<String, String> getKeys() {
+        return this.keys;
     }
 
     public void handleClient() throws IOException {
@@ -68,9 +72,9 @@ public class Client {
     }
 
     private void processSet(String key, String value, String time) throws IOException {
-        this.globalKeys.put(key, value);
-        this.globalTime.put(key, System.currentTimeMillis());
-        Long created_on = this.globalTime.get(key);
+        this.keys.put(key, value);
+        this.times.put(key, System.currentTimeMillis());
+        Long created_on = this.times.get(key);
         System.out.println("created on = " + created_on);
 
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
@@ -78,8 +82,8 @@ public class Client {
 
     private void processGet(String key) throws IOException {
         String result = "$-1\r\n";
-        String value = this.globalKeys.get(key);
-        Long created_on = this.globalTime.get(key);
+        String value = this.keys.get(key);
+        Long created_on = this.times.get(key);
         System.out.println("value = " + value);
         System.out.println("created on = " + created_on);
         System.out.println("get on = " + System.currentTimeMillis());

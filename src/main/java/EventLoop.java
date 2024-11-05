@@ -6,6 +6,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class EventLoop {
@@ -16,10 +17,13 @@ public class EventLoop {
     private final Map<String, Function<String, String>> handlers;
     private final Deque<EventResult> processedEvents;
 
+    private Map<String, String> globalKeys;
+
     EventLoop(int port) {
         this.port = port;
         this.handlers = new HashMap<>();
         this.processedEvents = new ArrayDeque<>();
+        this.globalKeys = new ConcurrentHashMap<>();
     }
 
     public void start() {
@@ -55,8 +59,9 @@ public class EventLoop {
                 if (key.isAcceptable()) acceptConnection();
 
                 if (key.isReadable()) {
-                    Client client = new Client((SocketChannel) key.channel());
+                    Client client = new Client((SocketChannel) key.channel(), this.globalKeys);
                     client.handleClient();
+                    this.globalKeys = client.getKeys();
                 }
 
                 iterator.remove();
