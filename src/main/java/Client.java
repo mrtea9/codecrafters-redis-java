@@ -8,6 +8,7 @@ public class Client {
     private final SocketChannel channel;
     private final Map<String, String> keys;
     private final Map<String, Long> times;
+    private String time;
 
     public Client(SocketChannel channel, Map<String, String> keys, Map<String, Long> times) {
         this.channel = channel;
@@ -51,14 +52,14 @@ public class Client {
 
             processEcho(value);
         } else if (command.equalsIgnoreCase("set")) {
-            String time = "";
+            this.time = "";
             String key = decodedList.get(1);
             String value = decodedList.get(2);
             if (decodedList.size() > 3) {
-                time = decodedList.get(4);
+                this.time = decodedList.get(4);
             }
 
-            processSet(key, value, time);
+            processSet(key, value);
         } else if (command.equalsIgnoreCase("get")) {
             String key = decodedList.get(1);
             processGet(key);
@@ -75,21 +76,26 @@ public class Client {
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }
 
-    private void processSet(String key, String value, String time) throws IOException {
+    private void processSet(String key, String value) throws IOException {
         this.keys.put(key, value);
-        if (time.isEmpty()) {
-            System.out.println("da");
+        if (this.time.isEmpty()) {
+            this.times.put(key,(long) 0);
+        } else {
+            this.times.put(key, System.currentTimeMillis());
         }
-        this.times.put(key, System.currentTimeMillis());
 
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
 
     private void processGet(String key) throws IOException {
         String result = "$-1\r\n";
+        long createdOn = this.times.get(key);
+        if (createdOn != (long) 0) {
+            long timePassed = System.currentTimeMillis() - createdOn;
+            if (timePassed > Long.parseLong(this.time)) this.keys.remove(key);
+        }
+
         String value = this.keys.get(key);
-        Long createdOn = this.times.get(key);
-        Long timePassed = System.currentTimeMillis() - createdOn;
         if (value != null) result = "$" + value.length() + "\r\n" + value + "\r\n";
 
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
