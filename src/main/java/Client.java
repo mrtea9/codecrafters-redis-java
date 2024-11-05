@@ -90,13 +90,13 @@ public class Client {
     private void processGet(String key) throws IOException {
         String result = "$-1\r\n";
         String allTime = this.times.get(key);
-        String createdOn = allTime.substring(0, allTime.indexOf(':'));
-        System.out.println(createdOn);
-        //long createdOn = this.times.get(key);
-//        if (createdOn != (long) 0) {
-//            long timePassed = System.currentTimeMillis() - createdOn;
-//            if (timePassed > Long.parseLong(this.time)) this.keys.remove(key);
-//        }
+        long createdOn = Long.parseLong(allTime.substring(0, allTime.indexOf(':')));
+        String time = allTime.substring(allTime.indexOf(':') + 1);
+
+        if (createdOn != (long) 0) {
+            long timePassed = System.currentTimeMillis() - createdOn;
+            if (timePassed > Long.parseLong(time)) this.keys.remove(key);
+        }
 
         String value = this.keys.get(key);
         if (value != null) result = "$" + value.length() + "\r\n" + value + "\r\n";
