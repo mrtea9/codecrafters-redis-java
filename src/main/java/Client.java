@@ -90,7 +90,8 @@ public class Client {
     private void processGet(String key) throws IOException {
         String result = "$-1\r\n";
         String allTime = this.times.get(key);
-        System.out.println(allTime);
+        String createdOn = allTime.substring(0, allTime.indexOf(':'));
+        System.out.println(createdOn);
         //long createdOn = this.times.get(key);
 //        if (createdOn != (long) 0) {
 //            long timePassed = System.currentTimeMillis() - createdOn;
