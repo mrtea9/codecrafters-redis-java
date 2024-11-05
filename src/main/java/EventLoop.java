@@ -58,7 +58,6 @@ public class EventLoop {
             while (iterator.hasNext()) {
                 SelectionKey key = iterator.next();
 
-
                 if (key.isAcceptable()) acceptConnection();
 
                 if (key.isReadable()) {
