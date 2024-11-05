@@ -68,8 +68,8 @@ public class Client {
 
     private void processSet(String key, String value, String time) throws IOException {
         this.globalKeys.put(key, value);
-        this.globalTime.put(key, (long) System.currentTimeMillis());
-        System.out.println("created on = " + (long) System.currentTimeMillis());
+        this.globalTime.put(key, System.currentTimeMillis());
+        System.out.println("created on = " + System.currentTimeMillis());
 
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
@@ -79,8 +79,8 @@ public class Client {
         String value = this.globalKeys.get(key);
         Long created_on = this.globalTime.get(key);
         System.out.println("created on = " + created_on);
-        System.out.println("get on = " + (long) System.currentTimeMillis());
-        System.out.println((long) System.currentTimeMillis() - created_on);
+        System.out.println("get on = " + System.currentTimeMillis());
+        System.out.println(System.currentTimeMillis() - created_on);
         if (value != null) result = "$" + value.length() + "\r\n" + value + "\r\n";
 
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
