@@ -126,6 +126,13 @@ public class EventLoop {
         clientChannel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
 
         if (!time.isEmpty()) {
+            try {
+                Thread.sleep(Long.parseLong(time));
+                this.globalKeys.remove(key);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.out.println(e.getMessage());
+            }
             System.out.println(time);
         }
     }
