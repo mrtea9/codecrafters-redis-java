@@ -8,7 +8,7 @@ import java.util.Map;
 public class Client {
     private final SocketChannel channel;
     private final Map<String, String> globalKeys = new HashMap<>();
-    private int timeCreated;
+    private Map<String, Integer> globalTime = new HashMap<>();
 
     public Client(SocketChannel channel) {
         this.channel = channel;
@@ -68,22 +68,9 @@ public class Client {
 
     private void processSet(String key, String value, String time) throws IOException {
         this.globalKeys.put(key, value);
+        System.out.println((int) System.currentTimeMillis());
 
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
-
-        if (!time.isEmpty()) {
-            this.timeCreated = (int) System.currentTimeMillis();
-            if (this.timeCreated > Integer.getInteger(time)) {
-                try {
-                    Thread.sleep(Long.parseLong(time));
-                    this.globalKeys.remove(key);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    System.out.println(e.getMessage());
-                }
-            }
-            System.out.println(time);
-        }
     }
 
     private void processGet(String key) throws IOException {
