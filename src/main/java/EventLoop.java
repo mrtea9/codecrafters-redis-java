@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -91,7 +92,7 @@ public class EventLoop {
             FileInputStream fin = new FileInputStream(file);
             fin.read(bytes);
 
-            System.out.println(Arrays.toString(bytes));
+            System.out.println(new BigInteger(1, bytes).toString(16));
 
             fin.close();
 
