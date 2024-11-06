@@ -74,7 +74,7 @@ public class Parser {
         StringBuilder header = new StringBuilder();
 
         for (String hex : hexFile) {
-            if (hex.equals("FA")) return header.toString();
+            if (hex.equals("FA")) break;
 
             int decimalValue = Integer.parseInt(hex, 16);
             System.out.println("hex = " + hex + "; char = " + Arrays.toString(Character.toChars(decimalValue)));
