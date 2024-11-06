@@ -4,12 +4,15 @@ import java.util.List;
 
 public class Parser {
 
-    private final List<String> decodedResponse;
+    private final List<String> decodedResponse = new ArrayList<>();
     private final String source;
+
+    public Parser() {
+        this.source = "";
+    }
 
     public Parser(String source) {
         this.source = source;
-        this.decodedResponse = new ArrayList<>();
     }
 
     public List<String> getDecodedResponse() {
@@ -41,5 +44,11 @@ public class Parser {
         String result = "*2\r\n$" + keyLength + "\r\n" + key + "\r\n$" + valueLength + "\r\n" + value + "\r\n";
 
         return result;
+    }
+
+    public static void parseRdbFile(byte[] bytes) {
+        for (byte i : bytes) {
+            System.out.println("byte = " + i + "; hex = " + String.format("%02X", i));
+        }
     }
 }

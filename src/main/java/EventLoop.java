@@ -1,13 +1,11 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,7 +13,6 @@ public class EventLoop {
 
     private Selector selector;
     private ServerSocketChannel serverSocketChannel;
-
     private Map<String, String> globalTimes = new ConcurrentHashMap<>();
     private Map<String, String> globalKeys = new ConcurrentHashMap<>();
 
@@ -92,9 +89,7 @@ public class EventLoop {
             FileInputStream fin = new FileInputStream(file);
             fin.read(bytes);
 
-            for (byte i : bytes) {
-                System.out.println("byte = " + i + "; hex = " + String.format("%02X", i));
-            }
+            Parser.parseRdbFile(bytes);
 
             fin.close();
 
