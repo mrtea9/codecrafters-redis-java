@@ -96,11 +96,15 @@ public class Parser {
 
             if (hex.equals("FE")) break;
             if (hex.equals("FA")) continue;
-            if (hex.equals("05")) metadata.append(" ");
+            if (hex.equals("05")) {
+                metadata.append(" ");
+                continue;
+            }
             if (hex.equals("C0")) {
                 int number = Integer.parseInt(hexFile.get(i + 1), 16);
                 metadata.append(" ");
                 metadata.append(number);
+                hexFile.remove(0);
                 continue;
             }
 
