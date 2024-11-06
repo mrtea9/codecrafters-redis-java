@@ -62,14 +62,14 @@ public class Client {
             processSet(key, value);
         } else if (command.equalsIgnoreCase("get")) {
             String key = decodedList.get(1);
+
             processGet(key);
         } else if (command.equalsIgnoreCase("config")) {
             String commandArg = decodedList.get(1);
             String key = decodedList.get(2);
             String value = this.keys.get(key);
 
-            String result = Parser.encodeArray(key, value);
-            this.channel.write(ByteBuffer.wrap(result.getBytes()));
+            processConfig(key, commandArg);
         }
     }
 
@@ -110,6 +110,13 @@ public class Client {
         String value = this.keys.get(key);
         if (value != null) result = "$" + value.length() + "\r\n" + value + "\r\n";
 
+        this.channel.write(ByteBuffer.wrap(result.getBytes()));
+    }
+
+    private void processConfig(String key, String commandArg) throws IOException {
+        String value = this.keys.get(key);
+
+        String result = Parser.encodeArray(key, value);
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
     }
 }
