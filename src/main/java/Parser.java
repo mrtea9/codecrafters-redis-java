@@ -85,6 +85,7 @@ public class Parser {
             hexFile.subList(0, header.length()).clear();
         }
 
+        System.out.println(hexFile);
         return header.toString();
     }
 
