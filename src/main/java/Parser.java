@@ -38,6 +38,8 @@ public class Parser {
     public static String encodeArray(String key, String value) {
         String result = "*2\r\n$3\r\ndir\r\n$4\r\ntest\r\n";
 
+        System.out.println("key = " + key + "value = " + value);
+
         return result;
     }
 }

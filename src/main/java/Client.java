@@ -66,10 +66,10 @@ public class Client {
         } else if (command.equalsIgnoreCase("config")) {
             String commandArg = decodedList.get(1);
             String key = decodedList.get(2);
+            String value = this.keys.get(key);
 
-            String result = Parser.encodeArray(key, "test");
+            String result = Parser.encodeArray(key, value);
             this.channel.write(ByteBuffer.wrap(result.getBytes()));
-            //processGet(key);
         }
     }
 
