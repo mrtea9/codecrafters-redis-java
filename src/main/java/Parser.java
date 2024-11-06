@@ -58,7 +58,7 @@ public class Parser {
     }
 
     private static String[] bytesToHex(byte[] bytes) {
-        String[] hexResult = new String[bytes.length * 2];
+        String[] hexResult = new String[bytes.length];
 
         for (int i = 0; i < bytes.length; i++) {
             hexResult[i] = String.format("%02X", bytes[i]);
