@@ -58,6 +58,7 @@ public class Parser {
 
         System.out.println(hexFile);
         System.out.println(header);
+        System.out.println(metadata);
     }
 
     private static ArrayList<String> bytesToHex(byte[] bytes) {
@@ -93,6 +94,13 @@ public class Parser {
 
         for (String hex : hexFile) {
             if (hex.equals("FE")) break;
+
+            if (hex.equals("FA")) continue;
+
+            if (hex.equals("C0")) {
+                int test = Integer.parseInt(hex, 8);
+                System.out.println("test = " + test);
+            }
 
             int decimalValue = Integer.parseInt(hex, 16);
             System.out.println("hex = " + hex + "; char = " + Arrays.toString(Character.toChars(decimalValue)));
