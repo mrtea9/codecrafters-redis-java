@@ -1,8 +1,5 @@
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HexFormat;
-import java.util.List;
+import java.util.*;
 
 public class Parser {
 
@@ -122,7 +119,9 @@ public class Parser {
         return metadata.toString();
     }
 
-    private static String extractDatabase(ArrayList<String> hexFile) { // need to implement errors
+    private static String extractDatabase(ArrayList<String> hexFile) {
+        // need to implement errors
+        HashMap<String, String> result = new HashMap<>();
 
         hexFile.remove(0); // delete hex "FE"
         int databaseIndex = Integer.parseInt(hexFile.get(0), 16);
@@ -140,6 +139,18 @@ public class Parser {
 
         System.out.println("keys table size = " + keysTableSize);
         System.out.println("flag = " + flag);
+
+        int keyLength = Integer.parseInt(hexFile.get(0), 16);
+        hexFile.remove(0);
+
+        StringBuilder key = new StringBuilder();
+        for (String hex : hexFile) {
+            if (key.length() == keyLength) break;
+
+            int decimalValue = Integer.parseInt(hex, 16);
+            key.append(Character.toChars(decimalValue));
+        }
+        System.out.println(key.toString());
         System.out.println(hexFile);
         return "";
     }
