@@ -90,7 +90,7 @@ public class EventLoop {
             FileInputStream fin = new FileInputStream(file);
             fin.read(bytes);
 
-            System.out.println(Arrays.toString(bytes));
+            System.out.println(new String(bytes));
 
             fin.close();
 
