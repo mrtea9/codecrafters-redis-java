@@ -150,7 +150,7 @@ public class Parser {
             int decimalValue = Integer.parseInt(hex, 16);
             key.append(Character.toChars(decimalValue));
         }
-        System.out.println(key.toString());
+        System.out.println("key = " + key.toString());
         System.out.println(hexFile);
         return "";
     }
