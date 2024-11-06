@@ -1,3 +1,4 @@
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,11 +48,12 @@ public class Parser {
     }
 
     public static void parseRdbFile(byte[] bytes) {
-        String[] hexString = bytesToHex(bytes);
-        String header = "";
-        String metadata = "";
+        String[] hexFile = bytesToHex(bytes);
 
-        System.out.println(Arrays.toString(hexString));
+        String header = extractHeader(hexFile);
+
+        System.out.println(Arrays.toString(hexFile));
+        System.out.println(header);
     }
 
     private static String[] bytesToHex(byte[] bytes) {
@@ -62,5 +64,17 @@ public class Parser {
         }
 
         return hexResult;
+    }
+
+    private static String extractHeader(String[] hexFile) {
+        StringBuilder header = new StringBuilder();
+
+        for (String hex : hexFile) {
+            if (hex.equals("FA")) return header.toString();
+
+            header.append(new String(hex.getBytes(), StandardCharsets.US_ASCII));
+        }
+
+        return header.toString();
     }
 }
