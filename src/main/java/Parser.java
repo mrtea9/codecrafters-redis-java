@@ -56,9 +56,9 @@ public class Parser {
         String header = extractHeader(hexFile);
         String metadata = extractMetadata(hexFile);
 
-        System.out.println(hexFile);
         System.out.println(header);
         System.out.println(metadata);
+        System.out.println(hexFile);
     }
 
     private static ArrayList<String> bytesToHex(byte[] bytes) {
@@ -100,6 +100,7 @@ public class Parser {
 
             if (hex.equals("C0")) {
                 int number = Integer.parseInt(hexFile.get(i + 1), 16);
+                metadata.append(" ");
                 metadata.append(number);
                 hexFile.remove(0);
                 hexFile.remove(0);
@@ -108,6 +109,8 @@ public class Parser {
 
             int decimalValue = Integer.parseInt(hex, 16);
             metadata.append(Character.toChars(decimalValue));
+
+            System.out.println("hex = " + hex + "; char = " + Arrays.toString(Character.toChars(decimalValue)));
         }
 
         if (!metadata.isEmpty()) {
