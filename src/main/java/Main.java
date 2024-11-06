@@ -2,10 +2,17 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
+        EventLoop eventLoop;
 
-        System.out.println(Arrays.toString(args));
-        System.out.println(args.length);
-        EventLoop eventLoop = new EventLoop();
+        if (args.length > 1) {
+            String dirName = args[1];
+            String dbFileName = args[3];
+
+            eventLoop = new EventLoop(dirName, dbFileName);
+        } else {
+            eventLoop = new EventLoop();
+        }
+
         eventLoop.start();
     }
 }

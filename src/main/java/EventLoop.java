@@ -1,27 +1,27 @@
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 
 public class EventLoop {
 
-    private final int port;
     private Selector selector;
     private ServerSocketChannel serverSocketChannel;
 
-    private Map<String, String> globalTimes;
-    private Map<String, String> globalKeys;
+    private Map<String, String> globalTimes = new ConcurrentHashMap<>();
+    private Map<String, String> globalKeys = new ConcurrentHashMap<>();
 
     EventLoop() {
-        this.port = 6379;
-        this.globalKeys = new ConcurrentHashMap<>();
-        this.globalTimes = new ConcurrentHashMap<>();
+
+    }
+
+    EventLoop(String dirName, String dbFileName) {
+        this.globalKeys.put("dir", dirName);
+        this.globalKeys.put("dbfilename", dbFileName);
     }
 
     public void start() {
@@ -36,7 +36,8 @@ public class EventLoop {
     private void initialize() throws IOException {
         this.selector = Selector.open();
         this.serverSocketChannel = ServerSocketChannel.open();
-        this.serverSocketChannel.bind(new InetSocketAddress(this.port));
+        int port = 6379;
+        this.serverSocketChannel.bind(new InetSocketAddress(port));
         this.serverSocketChannel.configureBlocking(false);
         this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
     }
