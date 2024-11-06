@@ -55,6 +55,7 @@ public class Parser {
 
         String header = extractHeader(hexFile);
         String metadata = extractMetadata(hexFile);
+        String database = extractDatabase(hexFile);
 
         System.out.println(header);
         System.out.println(metadata);
@@ -119,5 +120,25 @@ public class Parser {
         }
 
         return metadata.toString();
+    }
+
+    private static String extractDatabase(ArrayList<String> hexFile) { // need to implement errors
+
+        hexFile.remove(0); // delete hex "FE"
+        int databaseIndex = Integer.parseInt(hexFile.get(0), 16);
+        hexFile.remove(0); // delete database index
+
+        hexFile.remove(0); // delete hex "FB"
+        int keysTableSize = Integer.parseInt(hexFile.get(0), 16);
+        hexFile.remove(0); // delete size of the hash table that stores the keys and values (size encoded)
+
+        int expiresTable = Integer.parseInt(hexFile.get(0), 16);
+        hexFile.remove(0); // delete size of the hash table that stores the expires of keys (size encoded)
+
+        String flag = Arrays.toString(Character.toChars(Integer.parseInt(hexFile.get(0), 16)));
+
+        System.out.println(flag);
+        System.out.println(hexFile);
+        return "";
     }
 }
