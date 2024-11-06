@@ -98,7 +98,7 @@ public class Parser {
             if (hex.equals("FA")) continue;
 
             if (hex.equals("C0")) {
-                int test = Integer.parseInt(hex, 8);
+                int test = Integer.parseInt(hex, 16);
                 System.out.println("test = " + test);
             }
 
