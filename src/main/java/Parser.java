@@ -51,6 +51,8 @@ public class Parser {
     public static void parseRdbFile(byte[] bytes) {
         ArrayList<String> hexFile = bytesToHex(bytes);
 
+        System.out.println(hexFile);
+
         String header = extractHeader(hexFile);
         String metadata = extractMetadata(hexFile);
 
@@ -77,6 +79,7 @@ public class Parser {
             int decimalValue = Integer.parseInt(hex, 16);
             System.out.println("hex = " + hex + "; char = " + Arrays.toString(Character.toChars(decimalValue)));
             header.append(Character.toChars(decimalValue));
+            hexFile.remove(hex);
         }
 
         return header.toString();
