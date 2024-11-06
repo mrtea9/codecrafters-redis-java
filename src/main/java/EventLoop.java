@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
@@ -80,6 +82,20 @@ public class EventLoop {
 
     private void readConfig(String dir, String fileName) {
         String filePath = dir + "/" + fileName;
-        System.out.println(filePath);
+
+        try {
+            File file = new File(filePath);
+            byte[] bytes = new byte[(int) file.length()];
+
+            FileInputStream fin = new FileInputStream(file);
+            fin.read(bytes);
+
+            System.out.println(Arrays.toString(bytes));
+
+            fin.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
