@@ -74,8 +74,8 @@ public class Parser {
             if (hex.equals("FA")) return header.toString();
 
             int decimalValue = Integer.parseInt(hex, 16);
+            System.out.println("hex = " + hex + "; char = " + Arrays.toString(Character.toChars(decimalValue)));
             header.append(Character.toChars(decimalValue));
-
         }
 
         return header.toString();
