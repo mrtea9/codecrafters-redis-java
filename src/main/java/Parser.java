@@ -135,7 +135,7 @@ public class Parser {
         int expiresTable = Integer.parseInt(hexFile.get(0), 16);
         hexFile.remove(0); // delete size of the hash table that stores the expires of keys (size encoded)
 
-        String flag = Character.toString(Integer.parseInt(hexFile.get(0), 16));
+        String flag = hexFile.get(0);
         hexFile.remove(0); // delete flag
 
         System.out.println("keys table size = " + keysTableSize);
