@@ -54,7 +54,7 @@ public class Parser {
         System.out.println(hexFile);
 
         String header = extractHeader(hexFile);
-        String metadata = extractMetadata(hexFile);
+        //String metadata = extractMetadata(hexFile);
 
         System.out.println(hexFile);
         System.out.println(header);
