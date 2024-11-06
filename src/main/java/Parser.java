@@ -108,7 +108,6 @@ public class Parser {
             }
 
             int decimalValue = Integer.parseInt(hex, 16);
-            System.out.println("hex = " + hex + "; char = " + Arrays.toString(Character.toChars(decimalValue)));
             metadata.append(Character.toChars(decimalValue));
         }
 
