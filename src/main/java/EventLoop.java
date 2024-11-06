@@ -14,16 +14,12 @@ public class EventLoop {
     private final int port;
     private Selector selector;
     private ServerSocketChannel serverSocketChannel;
-    private final Map<String, Function<String, String>> handlers;
-    private final Deque<EventResult> processedEvents;
 
     private Map<String, String> globalTimes;
     private Map<String, String> globalKeys;
 
     EventLoop() {
         this.port = 6379;
-        this.handlers = new HashMap<>();
-        this.processedEvents = new ArrayDeque<>();
         this.globalKeys = new ConcurrentHashMap<>();
         this.globalTimes = new ConcurrentHashMap<>();
     }
@@ -43,10 +39,6 @@ public class EventLoop {
         this.serverSocketChannel.bind(new InetSocketAddress(this.port));
         this.serverSocketChannel.configureBlocking(false);
         this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-    }
-
-    public void on(String key, Function<String, String> handler) {
-        this.handlers.put(key, handler);
     }
 
     public void runEventLoop() throws IOException {

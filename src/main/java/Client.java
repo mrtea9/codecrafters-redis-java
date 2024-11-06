@@ -78,6 +78,7 @@ public class Client {
 
     private void processSet(String key, String value) throws IOException {
         this.keys.put(key, value);
+
         if (this.time.isEmpty()) {
             this.times.put(key, "0:0");
         } else {
@@ -104,5 +105,4 @@ public class Client {
 
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
     }
-
 }
