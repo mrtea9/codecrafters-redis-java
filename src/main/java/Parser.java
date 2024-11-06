@@ -52,6 +52,7 @@ public class Parser {
         String[] hexFile = bytesToHex(bytes);
 
         String header = extractHeader(hexFile);
+        String metadata = extractMetadata(hexFile);
 
         System.out.println(Arrays.toString(hexFile));
         System.out.println(header);
@@ -71,7 +72,7 @@ public class Parser {
         StringBuilder header = new StringBuilder();
 
         for (String hex : hexFile) {
-            //if (hex.equals("FA")) return header.toString();
+            if (hex.equals("FA")) return header.toString();
 
             int decimalValue = Integer.parseInt(hex, 16);
             System.out.println("hex = " + hex + "; char = " + Arrays.toString(Character.toChars(decimalValue)));
@@ -79,5 +80,9 @@ public class Parser {
         }
 
         return header.toString();
+    }
+
+    private static String extractMetadata(String[] hexFile) {
+
     }
 }
