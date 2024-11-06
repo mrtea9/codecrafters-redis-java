@@ -25,6 +25,8 @@ public class EventLoop {
 
         this.globalKeys.put("dbfilename", dbFileName);
         this.globalTimes.put("dbfilename", "0:0");
+
+        readConfig(dirName, dbFileName);
     }
 
     public void start() {
@@ -74,5 +76,10 @@ public class EventLoop {
             clientChannel.configureBlocking(false);
             clientChannel.register(this.selector, SelectionKey.OP_READ);
         }
+    }
+
+    private void readConfig(String dir, String fileName) {
+        String filePath = dir + fileName;
+        System.out.println(filePath);
     }
 }
