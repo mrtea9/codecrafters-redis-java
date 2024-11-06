@@ -49,26 +49,26 @@ public class Parser {
     }
 
     public static void parseRdbFile(byte[] bytes) {
-        String[] hexFile = bytesToHex(bytes);
+        ArrayList<String> hexFile = bytesToHex(bytes);
 
         String header = extractHeader(hexFile);
         String metadata = extractMetadata(hexFile);
 
-        System.out.println(Arrays.toString(hexFile));
+        System.out.println(hexFile);
         System.out.println(header);
     }
 
-    private static String[] bytesToHex(byte[] bytes) {
-        String[] hexResult = new String[bytes.length];
+    private static ArrayList<String> bytesToHex(byte[] bytes) {
+        ArrayList<String> hexResult = new ArrayList<>();
 
-        for (int i = 0; i < bytes.length; i++) {
-            hexResult[i] = String.format("%02X", bytes[i]);
+        for (byte b : bytes) {
+            hexResult.add(String.format("%02X", b));
         }
 
         return hexResult;
     }
 
-    private static String extractHeader(String[] hexFile) {
+    private static String extractHeader(ArrayList<String> hexFile) {
         StringBuilder header = new StringBuilder();
 
         for (String hex : hexFile) {
@@ -82,7 +82,7 @@ public class Parser {
         return header.toString();
     }
 
-    private static String extractMetadata(String[] hexFile) {
+    private static String extractMetadata(ArrayList<String> hexFile) {
 
         return "";
     }
