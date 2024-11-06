@@ -79,7 +79,7 @@ public class EventLoop {
     }
 
     private void readConfig(String dir, String fileName) {
-        String filePath = dir + fileName;
+        String filePath = dir + "/" + fileName;
         System.out.println(filePath);
     }
 }
