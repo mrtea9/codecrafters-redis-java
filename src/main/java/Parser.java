@@ -103,7 +103,6 @@ public class Parser {
                 metadata.append(" ");
                 metadata.append(number);
                 hexFile.remove(0);
-                hexFile.remove(0);
                 continue;
             }
 
