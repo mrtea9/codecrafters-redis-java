@@ -1,6 +1,7 @@
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HexFormat;
 import java.util.List;
 
 public class Parser {
@@ -72,7 +73,9 @@ public class Parser {
         for (String hex : hexFile) {
             if (hex.equals("FA")) return header.toString();
 
-            header.append(new String(hex.getBytes(), StandardCharsets.US_ASCII));
+            int decimalValue = Integer.parseInt(hex, 16);
+            header.append(Character.toChars(decimalValue));
+
         }
 
         return header.toString();
