@@ -47,12 +47,9 @@ public class Parser {
     }
 
     public static void parseRdbFile(byte[] bytes) {
-
         String[] hexString = bytesToHex(bytes);
-
-        for (String hex : hexString) {
-            System.out.println("hex = " + hex);
-        }
+        String header = "";
+        String metadata = "";
 
         System.out.println(Arrays.toString(hexString));
     }
