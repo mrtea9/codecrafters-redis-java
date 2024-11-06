@@ -101,7 +101,6 @@ public class Parser {
                 int number = Integer.parseInt(hexFile.get(i + 1), 16);
                 metadata.append(" ");
                 metadata.append(number);
-                hexFile.remove(0);
                 continue;
             }
 
