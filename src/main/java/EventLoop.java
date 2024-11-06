@@ -91,7 +91,7 @@ public class EventLoop {
             FileInputStream fin = new FileInputStream(file);
             fin.read(bytes);
 
-            System.out.println(new String(bytes, StandardCharsets.US_ASCII));
+            System.out.println(Arrays.toString(bytes));
 
             fin.close();
 
