@@ -81,9 +81,7 @@ public class Parser {
             header.append(Character.toChars(decimalValue));
         }
 
-        if (!header.isEmpty()) {
-            hexFile.subList(0, header.length()).clear();
-        }
+        hexFile.remove(0);
 
         System.out.println(hexFile);
         return header.toString();
