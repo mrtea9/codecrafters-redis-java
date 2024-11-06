@@ -57,8 +57,8 @@ public class Parser {
         String metadata = extractMetadata(hexFile);
         String database = extractDatabase(hexFile);
 
-        System.out.println(header);
-        System.out.println(metadata);
+        //System.out.println(header);
+        //System.out.println(metadata);
         System.out.println(hexFile);
     }
 
@@ -112,7 +112,7 @@ public class Parser {
             int decimalValue = Integer.parseInt(hex, 16);
             metadata.append(Character.toChars(decimalValue));
 
-            System.out.println("hex = " + hex + "; char = " + Arrays.toString(Character.toChars(decimalValue)));
+            //System.out.println("hex = " + hex + "; char = " + Arrays.toString(Character.toChars(decimalValue)));
         }
 
         if (!metadata.isEmpty()) {
