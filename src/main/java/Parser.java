@@ -84,5 +84,6 @@ public class Parser {
 
     private static String extractMetadata(String[] hexFile) {
 
+        return "";
     }
 }
