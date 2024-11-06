@@ -63,6 +63,11 @@ public class Client {
         } else if (command.equalsIgnoreCase("get")) {
             String key = decodedList.get(1);
             processGet(key);
+        } else if (command.equalsIgnoreCase("config")) {
+            String commandArg = decodedList.get(1);
+            String key = decodedList.get(2);
+
+            processGet(key);
         }
     }
 
