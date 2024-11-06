@@ -6,6 +6,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -90,7 +91,7 @@ public class EventLoop {
             FileInputStream fin = new FileInputStream(file);
             fin.read(bytes);
 
-            System.out.println(new String(bytes));
+            System.out.println(new String(bytes, StandardCharsets.US_ASCII));
 
             fin.close();
 
