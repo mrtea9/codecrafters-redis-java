@@ -54,7 +54,7 @@ public class Parser {
         System.out.println(hexFile);
 
         String header = extractHeader(hexFile);
-        //String metadata = extractMetadata(hexFile);
+        String metadata = extractMetadata(hexFile);
 
         System.out.println(hexFile);
         System.out.println(header);
@@ -89,7 +89,20 @@ public class Parser {
     }
 
     private static String extractMetadata(ArrayList<String> hexFile) {
+        StringBuilder metadata = new StringBuilder();
 
-        return "";
+        for (String hex : hexFile) {
+            if (hex.equals("FE")) break;
+
+            int decimalValue = Integer.parseInt(hex, 16);
+            System.out.println("hex = " + hex + "; char = " + Arrays.toString(Character.toChars(decimalValue)));
+            metadata.append(Character.toChars(decimalValue));
+        }
+
+        if (!metadata.isEmpty()) {
+            hexFile.subList(0, metadata.length()).clear();
+        }
+
+        return metadata.toString();
     }
 }
