@@ -79,7 +79,7 @@ public class Parser {
             int decimalValue = Integer.parseInt(hex, 16);
             System.out.println("hex = " + hex + "; char = " + Arrays.toString(Character.toChars(decimalValue)));
             header.append(Character.toChars(decimalValue));
-            hexFile.remove(hex);
+            hexFile.remove(0);
         }
 
         return header.toString();
