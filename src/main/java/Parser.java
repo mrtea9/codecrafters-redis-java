@@ -92,12 +92,18 @@ public class Parser {
     private static String extractMetadata(ArrayList<String> hexFile) {
         StringBuilder metadata = new StringBuilder();
 
-        for (String hex : hexFile) {
+        for (int i = 0; i < hexFile.size(); i++) {
+            String hex = hexFile.get(i);
+
             if (hex.equals("FE")) break;
 
             if (hex.equals("FA")) continue;
 
             if (hex.equals("C0")) {
+                int number = Integer.parseInt(hexFile.get(i + 1), 16);
+                metadata.append(number);
+                hexFile.remove(0);
+                hexFile.remove(0);
                 continue;
             }
 
