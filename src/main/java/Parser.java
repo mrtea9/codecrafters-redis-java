@@ -138,7 +138,8 @@ public class Parser {
         String flag = Character.toString(Integer.parseInt(hexFile.get(0), 16));
         hexFile.remove(0); // delete flag
 
-        System.out.println(flag);
+        System.out.println("keys table size = " + keysTableSize);
+        System.out.println("flag = " + flag);
         System.out.println(hexFile);
         return "";
     }
