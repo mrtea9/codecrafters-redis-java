@@ -92,7 +92,9 @@ public class EventLoop {
             FileInputStream fin = new FileInputStream(file);
             fin.read(bytes);
 
-            System.out.println(new BigInteger(1, bytes).toString(16));
+            for (byte i : bytes) {
+                System.out.println("byte = " + i + "; hex = " + String.format("%02X", i));
+            }
 
             fin.close();
 
