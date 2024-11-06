@@ -47,8 +47,23 @@ public class Parser {
     }
 
     public static void parseRdbFile(byte[] bytes) {
+
+        String[] hexString = bytesToHex(bytes);
+
         for (byte i : bytes) {
             System.out.println("byte = " + i + "; hex = " + String.format("%02X", i));
         }
+
+        System.out.println(Arrays.toString(hexString));
+    }
+
+    private static String[] bytesToHex(byte[] bytes) {
+        String[] hexResult = new String[bytes.length * 2];
+
+        for (int i = 0; i < bytes.length; i++) {
+            hexResult[i] = String.format("%02X", bytes[i]);
+        }
+
+        return hexResult;
     }
 }
