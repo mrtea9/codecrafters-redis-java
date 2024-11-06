@@ -67,7 +67,9 @@ public class Client {
             String commandArg = decodedList.get(1);
             String key = decodedList.get(2);
 
-            processGet(key);
+            String result = Parser.encodeArray(key, "test");
+            this.channel.write(ByteBuffer.wrap(result.getBytes()));
+            //processGet(key);
         }
     }
 
