@@ -83,7 +83,6 @@ public class Parser {
 
         hexFile.remove(2);
 
-        System.out.println(hexFile);
         return header.toString();
     }
 
