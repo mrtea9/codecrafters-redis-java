@@ -36,9 +36,9 @@ public class Parser {
     }
 
     public static String encodeArray(String key, String value) {
-        String result = "*2\r\n$3\r\ndir\r\n$4\r\ntest\r\n";
-
-        System.out.println("key = " + key + "value = " + value);
+        int keyLength = key.length();
+        int valueLength = value.length();
+        String result = "*2\r\n$" + keyLength + "\r\n" + key + "\r\n$" + valueLength + "\r\n" + value + "\r\n";
 
         return result;
     }
