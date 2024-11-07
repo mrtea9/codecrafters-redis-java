@@ -151,6 +151,8 @@ public class Parser {
             key.append(Character.toChars(decimalValue));
         }
         System.out.println("key = " + key.toString());
+
+        hexFile.subList(0, keyLength).clear();
         System.out.println(hexFile);
         return "";
     }
