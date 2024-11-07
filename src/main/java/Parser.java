@@ -53,11 +53,13 @@ public class Parser {
         String header = extractHeader(hexFile);
         String metadata = extractMetadata(hexFile);
         HashMap<String, String> database = extractDatabase(hexFile);
+        hexFile.remove(0);
+        ArrayList<String> endOfFile = hexFile;
 
         System.out.println(header);
         System.out.println(metadata);
         System.out.println(database);
-        System.out.println(hexFile);
+        System.out.println(endOfFile);
     }
 
     private static ArrayList<String> bytesToHex(byte[] bytes) {
