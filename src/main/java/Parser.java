@@ -52,7 +52,7 @@ public class Parser {
 
         String header = extractHeader(hexFile);
         String metadata = extractMetadata(hexFile);
-        String database = extractDatabase(hexFile);
+        HashMap<String, String> database = extractDatabase(hexFile);
 
         //System.out.println(header);
         //System.out.println(metadata);
@@ -175,7 +175,7 @@ public class Parser {
             result.put(key.toString(), value.toString());
         }
 
-        System.out.println(List.of(result));
+        System.out.println(result);
         return result;
     }
 }
