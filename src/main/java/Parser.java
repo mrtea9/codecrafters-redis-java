@@ -154,13 +154,13 @@ public class Parser {
         int keysTableSize = Integer.parseInt(hexFile.remove(0), 16); // get and delete size of the hash table that stores the keys and values (size encoded)
         int expiresTable = Integer.parseInt(hexFile.remove(0), 16); // get and delete size of the hash table that stores the expires of keys (size encoded)
 
-        String flag = hexFile.remove(0); // get and delete flag
-
         System.out.println("keys table size = " + keysTableSize);
-        System.out.println("flag = " + flag);
 
         while (!hexFile.get(0).equals("FF")) {
             System.out.println(hexFile);
+
+            String flag = hexFile.remove(0); // get and delete flag
+            System.out.println("flag = " + flag);
 
             int keySize = Integer.parseInt(hexFile.remove(0), 16);
             List<String> keyHex = hexFile.subList(0, keySize);
