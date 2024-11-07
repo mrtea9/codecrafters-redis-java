@@ -71,6 +71,11 @@ public class Parser {
         hexFile.remove(0);
         ArrayList<String> endOfFile = hexFile;
 
+        System.out.println(header);
+        System.out.println(metadata);
+        System.out.println(database);
+        System.out.println(endOfFile);
+
         return database;
     }
 
