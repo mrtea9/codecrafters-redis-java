@@ -148,12 +148,12 @@ public class Parser {
             List<String> valueHex = hexFile.subList(0, valueSize);
             System.out.println(valueHex);
             break;
-            int decimalValue = Integer.parseInt(hex, 16);
-            value.append(Character.toChars(decimalValue));
+           // int decimalValue = Integer.parseInt(hex, 16);
+            //value.append(Character.toChars(decimalValue));
 
-            System.out.println("hex = " + hex);
+           // System.out.println("hex = " + hex);
 
-            hexFile.remove(0);
+           // hexFile.remove(0);
         }
 
         System.out.println("value = " + value.toString());
