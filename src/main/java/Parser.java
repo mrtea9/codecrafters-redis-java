@@ -140,23 +140,42 @@ public class Parser {
         System.out.println("keys table size = " + keysTableSize);
         System.out.println("flag = " + flag);
 
-        StringBuilder value = new StringBuilder();
         while (!hexFile.get(0).equals("FF")) {
+            StringBuilder key = new StringBuilder();
+            StringBuilder value = new StringBuilder();
+
             String hex = hexFile.get(0);
+            int keySize = Integer.parseInt(hex, 16);
+            hexFile.remove(0);
+            List<String> keyHex = hexFile.subList(0, keySize);
+            System.out.println(keyHex);
+
+            for (int i = 0; i < keySize; i++) {
+                int decimalValue = Integer.parseInt(hex, 16);
+                key.append(Character.toChars(decimalValue));
+            }
+
+            hexFile.subList(0, keySize).clear();
+
+            hex = hexFile.get(0);
             int valueSize = Integer.parseInt(hex, 16);
             hexFile.remove(0);
             List<String> valueHex = hexFile.subList(0, valueSize);
             System.out.println(valueHex);
-            break;
-           // int decimalValue = Integer.parseInt(hex, 16);
-            //value.append(Character.toChars(decimalValue));
+
+            for (int i = 0; i < valueSize; i++) {
+                int decimalValue = Integer.parseInt(hex, 16);
+                value.append(Character.toChars(decimalValue));
+            }
+
+            hexFile.subList(0, valueSize).clear();
+
+            System.out.println("key = " + key + " value = " + value);
 
            // System.out.println("hex = " + hex);
 
            // hexFile.remove(0);
         }
-
-        System.out.println("value = " + value.toString());
 
         System.out.println(hexFile);
         return "";
