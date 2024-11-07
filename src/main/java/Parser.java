@@ -45,7 +45,7 @@ public class Parser {
         return result;
     }
 
-    public static void parseRdbFile(byte[] bytes) {
+    public static HashMap<String, String> parseRdbFile(byte[] bytes) {
         ArrayList<String> hexFile = bytesToHex(bytes);
 
         System.out.println(hexFile);
@@ -56,10 +56,7 @@ public class Parser {
         hexFile.remove(0);
         ArrayList<String> endOfFile = hexFile;
 
-        System.out.println(header);
-        System.out.println(metadata);
-        System.out.println(database);
-        System.out.println(endOfFile);
+        return database;
     }
 
     private static ArrayList<String> bytesToHex(byte[] bytes) {

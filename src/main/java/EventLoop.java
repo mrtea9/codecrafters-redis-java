@@ -81,6 +81,7 @@ public class EventLoop {
 
     private void readConfig(String dir, String fileName) {
         String filePath = dir + "/" + fileName;
+        HashMap<String, String> database = new HashMap<>();
 
         try {
             File file = new File(filePath);
@@ -89,7 +90,8 @@ public class EventLoop {
             FileInputStream fin = new FileInputStream(file);
             fin.read(bytes);
 
-            Parser.parseRdbFile(bytes);
+            database = Parser.parseRdbFile(bytes);
+            this.globalKeys.putAll(database);
 
             fin.close();
 
