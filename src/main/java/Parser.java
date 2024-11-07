@@ -182,6 +182,7 @@ public class Parser {
             //System.out.println(valueHex);
 
             hexFile.subList(0, valueSize).clear();
+            System.out.println(hexFile);
 
             result.put(key, value);
         }
