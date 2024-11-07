@@ -164,6 +164,10 @@ public class Parser {
             if (hexFile.get(0).equals("FC")) {
                 hexFile.remove(0);
                 isExpiry = true;
+                List<String> timestampHex = hexFile.subList(0, 8);
+
+
+                hexFile.subList(0, 8).clear();
             }
 
             String flag = hexFile.remove(0); // get and delete flag
