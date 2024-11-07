@@ -54,8 +54,9 @@ public class Parser {
         String metadata = extractMetadata(hexFile);
         HashMap<String, String> database = extractDatabase(hexFile);
 
-        //System.out.println(header);
-        //System.out.println(metadata);
+        System.out.println(header);
+        System.out.println(metadata);
+        System.out.println(database);
         System.out.println(hexFile);
     }
 
@@ -148,7 +149,7 @@ public class Parser {
             int keySize = Integer.parseInt(hex, 16);
             hexFile.remove(0);
             List<String> keyHex = hexFile.subList(0, keySize);
-            System.out.println(keyHex);
+            //System.out.println(keyHex);
 
             for (int i = 0; i < keySize; i++) {
                 hex = hexFile.get(i);
@@ -162,7 +163,7 @@ public class Parser {
             int valueSize = Integer.parseInt(hex, 16);
             hexFile.remove(0);
             List<String> valueHex = hexFile.subList(0, valueSize);
-            System.out.println(valueHex);
+            //System.out.println(valueHex);
 
             for (int i = 0; i < valueSize; i++) {
                 hex = hexFile.get(i);
@@ -175,7 +176,7 @@ public class Parser {
             result.put(key.toString(), value.toString());
         }
 
-        System.out.println(result);
+        //System.out.println(result);
         return result;
     }
 }
