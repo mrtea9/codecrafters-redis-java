@@ -125,6 +125,8 @@ public class Client {
         inter.put(key, value);
 
         String result = Parser.encodeArray(inter);
+
+        System.out.println("result = " + result);
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
     }
 
