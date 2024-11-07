@@ -146,6 +146,8 @@ public class Parser {
             int decimalValue = Integer.parseInt(hex, 16);
             value.append(Character.toChars(decimalValue));
 
+            System.out.println("hex = " + hex);
+
             hexFile.remove(0);
         }
 
