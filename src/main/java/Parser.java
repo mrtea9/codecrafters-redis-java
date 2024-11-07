@@ -154,7 +154,7 @@ public class Parser {
         }
         System.out.println("key = " + key.toString());
 
-        hexFile.subList(0, keyLength).clear();
+        hexFile.subList(0, key.length()).clear();
         System.out.println(hexFile);
         return "";
     }
