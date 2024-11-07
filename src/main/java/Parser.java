@@ -47,8 +47,6 @@ public class Parser {
             result += "$" + keyLength + "\r\n" + key + "\r\n$" + valueLength + "\r\n" + value + "\r\n";
         }
 
-        System.out.println(result);
-
         return result;
     }
 
