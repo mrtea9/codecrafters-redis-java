@@ -66,15 +66,18 @@ public class Parser {
         System.out.println(hexFile);
 
         String header = extractHeader(hexFile);
+        System.out.println(hexFile);
         String metadata = extractMetadata(hexFile);
+        System.out.println(hexFile);
         HashMap<String, String> database = extractDatabase(hexFile);
+        System.out.println(hexFile);
         hexFile.remove(0);
         ArrayList<String> endOfFile = hexFile;
 
-        System.out.println(header);
-        System.out.println(metadata);
-        System.out.println(database);
-        System.out.println(endOfFile);
+//        System.out.println(header);
+//        System.out.println(metadata);
+//        System.out.println(database);
+//        System.out.println(endOfFile);
 
         return database;
     }
