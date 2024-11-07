@@ -145,7 +145,7 @@ public class Parser {
     private static HashMap<String, String> extractDatabase(ArrayList<String> hexFile) {
         // need to implement errors
         HashMap<String, String> result = new HashMap<>();
-        System.out.println(hexFile);
+       // System.out.println(hexFile);
 
         hexFile.remove(0); // delete hex "FE"
         int databaseIndex = Integer.parseInt(hexFile.remove(0), 16); // get and delete database index
@@ -160,7 +160,7 @@ public class Parser {
         while (!hexFile.get(0).equals("FF")) {
             boolean isExpiry = false;
 
-            System.out.println(hexFile);
+            //System.out.println(hexFile);
             if (hexFile.get(0).equals("FC")) {
                 hexFile.remove(0);
                 isExpiry = true;
@@ -191,7 +191,7 @@ public class Parser {
             result.put(key, value);
         }
 
-        //System.out.println(result);
+        System.out.println(result);
         return result;
     }
 
