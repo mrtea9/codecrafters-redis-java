@@ -158,7 +158,13 @@ public class Parser {
         System.out.println("expiresTable size = " + expiresTable);
 
         while (!hexFile.get(0).equals("FF")) {
+            boolean isExpiry = false;
+
             System.out.println(hexFile);
+            if (hexFile.get(0).equals("FC")) {
+                hexFile.remove(0);
+                isExpiry = true;
+            }
 
             String flag = hexFile.remove(0); // get and delete flag
             System.out.println("flag = " + flag);
