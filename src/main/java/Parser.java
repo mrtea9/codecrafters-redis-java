@@ -119,7 +119,7 @@ public class Parser {
         return metadata.toString();
     }
 
-    private static String extractDatabase(ArrayList<String> hexFile) {
+    private static HashMap<String, String> extractDatabase(ArrayList<String> hexFile) {
         // need to implement errors
         HashMap<String, String> result = new HashMap<>();
 
@@ -172,14 +172,10 @@ public class Parser {
 
             hexFile.subList(0, valueSize).clear();
 
-            System.out.println("key = " + key.toString() + " value = " + value.toString());
-
-           // System.out.println("hex = " + hex);
-
-           // hexFile.remove(0);
+            result.put(key.toString(), value.toString());
         }
 
-        System.out.println(hexFile);
-        return "";
+        System.out.println(result);
+        return result;
     }
 }
