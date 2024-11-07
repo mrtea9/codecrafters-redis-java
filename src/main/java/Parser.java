@@ -175,7 +175,7 @@ public class Parser {
             result.put(key.toString(), value.toString());
         }
 
-        System.out.println(result);
+        System.out.println(List.of(result));
         return result;
     }
 }
