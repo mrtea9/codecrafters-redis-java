@@ -157,7 +157,7 @@ public class Parser {
         System.out.println("keys table size = " + keysTableSize);
 
         while (!hexFile.get(0).equals("FF")) {
-            System.out.println(hexFile);
+            //System.out.println(hexFile);
 
             String flag = hexFile.remove(0); // get and delete flag
             System.out.println("flag = " + flag);
