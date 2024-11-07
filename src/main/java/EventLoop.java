@@ -21,11 +21,11 @@ public class EventLoop {
     }
 
     EventLoop(String dirName, String dbFileName) {
-        this.globalKeys.put("dir", dirName);
-        this.globalTimes.put("dir", "0:0");
+       // this.globalKeys.put("dir", dirName);
+        //this.globalTimes.put("dir", "0:0");
 
-        this.globalKeys.put("dbfilename", dbFileName);
-        this.globalTimes.put("dbfilename", "0:0");
+        //this.globalKeys.put("dbfilename", dbFileName);
+        //this.globalTimes.put("dbfilename", "0:0");
 
         readConfig(dirName, dbFileName);
     }
