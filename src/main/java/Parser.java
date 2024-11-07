@@ -151,6 +151,7 @@ public class Parser {
             System.out.println(keyHex);
 
             for (int i = 0; i < keySize; i++) {
+                hex = hexFile.get(i);
                 int decimalValue = Integer.parseInt(hex, 16);
                 key.append(Character.toChars(decimalValue));
             }
@@ -164,6 +165,7 @@ public class Parser {
             System.out.println(valueHex);
 
             for (int i = 0; i < valueSize; i++) {
+                hex = hexFile.get(i);
                 int decimalValue = Integer.parseInt(hex, 16);
                 value.append(Character.toChars(decimalValue));
             }
