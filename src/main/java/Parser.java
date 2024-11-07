@@ -145,6 +145,7 @@ public class Parser {
     private static HashMap<String, String> extractDatabase(ArrayList<String> hexFile) {
         // need to implement errors
         HashMap<String, String> result = new HashMap<>();
+        System.out.println(hexFile);
 
         hexFile.remove(0); // delete hex "FE"
         int databaseIndex = Integer.parseInt(hexFile.remove(0), 16); // get and delete database index
