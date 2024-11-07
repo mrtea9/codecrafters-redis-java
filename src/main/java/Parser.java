@@ -37,10 +37,15 @@ public class Parser {
         }
     }
 
-    public static String encodeArray(String key, String value) {
-        int keyLength = key.length();
-        int valueLength = value.length();
-        String result = "*2\r\n$" + keyLength + "\r\n" + key + "\r\n$" + valueLength + "\r\n" + value + "\r\n";
+    public static String encodeArray(Map<String, String> map) {
+        Set<String> keys = map.keySet();
+        String result = "*" + map.size() + "\r\n";
+        for (String key : keys) {
+            int keyLength = key.length();
+            String value = map.get(key);
+            int valueLength = value.length();
+            result += "$" + keyLength + "\r\n" + key + "\r\n$" + valueLength + "\r\n" + value + "\r\n";
+        }
 
         return result;
     }

@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,6 +71,9 @@ public class Client {
             String value = this.keys.get(key);
 
             processConfig(key, commandArg);
+        } else if (command.equalsIgnoreCase("keys")) {
+
+            processKeys();
         }
     }
 
@@ -114,9 +118,17 @@ public class Client {
     }
 
     private void processConfig(String key, String commandArg) throws IOException {
+        HashMap<String, String> inter = new HashMap<>();
         String value = this.keys.get(key);
+        inter.put(key, value);
 
-        String result = Parser.encodeArray(key, value);
+        String result = Parser.encodeArray(inter);
+        this.channel.write(ByteBuffer.wrap(result.getBytes()));
+    }
+
+    private void processKeys() throws IOException {
+        String result = Parser.encodeArray(this.keys);
+
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
     }
 }
