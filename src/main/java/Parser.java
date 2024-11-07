@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -165,8 +166,9 @@ public class Parser {
                 hexFile.remove(0);
                 isExpiry = true;
                 List<String> timestampHex = hexFile.subList(0, 8);
-                System.out.println(timestampHex);
 
+                BigInteger decodedTimestamp = decodeTimestamp(timestampHex);
+                System.out.println(decodedTimestamp);
                 hexFile.subList(0, 8).clear();
             }
 
@@ -202,5 +204,14 @@ public class Parser {
             sb.append(Character.toChars(decimalValue));
         }
         return sb.toString();
+    }
+
+    private static BigInteger decodeTimestamp(List<String> hexList) {
+        byte[] bytes = new byte[8];
+        for (int i = 0; i < 8; i++) {
+            bytes[7 - i] = (byte) Integer.parseInt(hexList.get(i), 16);
+        }
+
+        return new BigInteger(1, bytes);
     }
 }
