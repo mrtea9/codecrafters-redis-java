@@ -15,17 +15,15 @@ public class EventLoop {
     private ServerSocketChannel serverSocketChannel;
     private Map<String, String> globalTimes = new ConcurrentHashMap<>();
     private Map<String, String> globalKeys = new ConcurrentHashMap<>();
+    private Map<String, String> globalConfig = new ConcurrentHashMap<>();
 
     EventLoop() {
 
     }
 
     EventLoop(String dirName, String dbFileName) {
-       // this.globalKeys.put("dir", dirName);
-        //this.globalTimes.put("dir", "0:0");
-
-        //this.globalKeys.put("dbfilename", dbFileName);
-        //this.globalTimes.put("dbfilename", "0:0");
+        this.globalConfig.put("dir", dirName);
+        this.globalConfig.put("dbfilename", dbFileName);
 
         readConfig(dirName, dbFileName);
     }
@@ -60,7 +58,7 @@ public class EventLoop {
                 if (key.isAcceptable()) acceptConnection();
 
                 if (key.isReadable()) {
-                    Client client = new Client((SocketChannel) key.channel(), this.globalKeys, this.globalTimes);
+                    Client client = new Client((SocketChannel) key.channel(), this.globalKeys, this.globalTimes, this.globalConfig);
                     client.handleClient();
                     this.globalKeys = client.getKeys();
                     this.globalTimes = client.getTimes();

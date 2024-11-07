@@ -9,12 +9,14 @@ public class Client {
     private final SocketChannel channel;
     private final Map<String, String> keys;
     private final Map<String, String> times;
+    private final Map<String, String> config;
     private String time;
 
-    public Client(SocketChannel channel, Map<String, String> keys, Map<String, String> times) {
+    public Client(SocketChannel channel, Map<String, String> keys, Map<String, String> times, Map<String, String> config) {
         this.channel = channel;
         this.keys = keys;
         this.times = times;
+        this.config = config;
     }
 
     public Map<String, String> getKeys() {
@@ -119,7 +121,7 @@ public class Client {
 
     private void processConfig(String key, String commandArg) throws IOException {
         HashMap<String, String> inter = new HashMap<>();
-        String value = this.keys.get(key);
+        String value = this.config.get(key);
         inter.put(key, value);
 
         String result = Parser.encodeArray(inter);
