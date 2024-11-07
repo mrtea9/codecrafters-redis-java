@@ -140,19 +140,18 @@ public class Parser {
         System.out.println("keys table size = " + keysTableSize);
         System.out.println("flag = " + flag);
 
-        int keyLength = Integer.parseInt(hexFile.get(0), 16);
-        hexFile.remove(0);
-
-        StringBuilder key = new StringBuilder();
-        for (String hex : hexFile) {
-            if (hex.equals("FF")) break;
-
+        StringBuilder value = new StringBuilder();
+        while (!hexFile.get(0).equals("FF")) {
+            String hex = hexFile.get(0);
             int decimalValue = Integer.parseInt(hex, 16);
-            key.append(Character.toChars(decimalValue));
-        }
-        System.out.println("key = " + key.toString());
+            value.append(Character.toChars(decimalValue));
 
-        hexFile.subList(0, key.length()).clear();
+            hexFile.remove(0);
+        }
+
+        System.out.println("value = " + value);
+
+        hexFile.subList(0, value.length()).clear();
         System.out.println(hexFile);
         return "";
     }
