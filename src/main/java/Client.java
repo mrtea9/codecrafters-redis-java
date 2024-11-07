@@ -123,7 +123,7 @@ public class Client {
         HashMap<String, String> inter = new HashMap<>();
         String value = this.config.get(key);
         inter.put(key, value);
-
+        System.out.println(inter);
         String result = Parser.encodeArray(inter);
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
     }
