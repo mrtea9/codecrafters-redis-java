@@ -145,7 +145,9 @@ public class Parser {
 
         StringBuilder key = new StringBuilder();
         for (String hex : hexFile) {
-            if (key.length() == keyLength) break;
+            if (hex.equals("FF")) break;
+
+            if (hex.equals("0A")) continue;
 
             int decimalValue = Integer.parseInt(hex, 16);
             key.append(Character.toChars(decimalValue));
