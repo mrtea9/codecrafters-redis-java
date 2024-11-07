@@ -104,9 +104,13 @@ public class Client {
     private void processGet(String key) throws IOException {
         String result = "$-1\r\n";
         String allTime = this.times.get(key);
+        String time = "";
+        long createdOn = 0;
 
-        long createdOn = Long.parseLong(allTime.substring(0, allTime.indexOf(':')));
-        String time = allTime.substring(allTime.indexOf(':') + 1);
+        if (allTime != null) {
+            createdOn = Long.parseLong(allTime.substring(0, allTime.indexOf(':')));
+            time = allTime.substring(allTime.indexOf(':') + 1);
+        }
 
         if (createdOn != (long) 0) {
             long timePassed = System.currentTimeMillis() - createdOn;
