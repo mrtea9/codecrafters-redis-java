@@ -165,14 +165,14 @@ public class Parser {
                 hexFile.remove(0);
                 isExpiry = true;
                 List<String> timestampHex = hexFile.subList(0, 8);
-
+                System.out.println(timestampHex);
 
                 hexFile.subList(0, 8).clear();
             }
 
             String flag = hexFile.remove(0); // get and delete flag
             System.out.println("flag = " + flag);
-            System.out.println(hexFile);
+            //System.out.println(hexFile);
 
             int keySize = Integer.parseInt(hexFile.remove(0), 16);
             List<String> keyHex = hexFile.subList(0, keySize);
