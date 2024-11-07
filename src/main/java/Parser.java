@@ -211,7 +211,7 @@ public class Parser {
     private static BigInteger decodeTimestamp(List<String> hexList) {
         byte[] bytes = new byte[8];
         for (int i = 0; i < 8; i++) {
-            bytes[7 - i] = (byte) Integer.parseInt(hexList.get(i), 16);
+            bytes[i] = (byte) Integer.parseInt(hexList.get(i), 16);
         }
 
         return new BigInteger(1, bytes);
