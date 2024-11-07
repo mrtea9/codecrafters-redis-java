@@ -143,6 +143,11 @@ public class Parser {
         StringBuilder value = new StringBuilder();
         while (!hexFile.get(0).equals("FF")) {
             String hex = hexFile.get(0);
+            int valueSize = Integer.parseInt(hex, 16);
+            hexFile.remove(0);
+            List<String> valueHex = hexFile.subList(0, valueSize);
+            System.out.println(valueHex);
+            break;
             int decimalValue = Integer.parseInt(hex, 16);
             value.append(Character.toChars(decimalValue));
 
