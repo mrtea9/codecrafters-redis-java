@@ -117,6 +117,7 @@ public class Client {
             if (timePassed > Long.parseLong(time)) this.keys.remove(key);
         }
 
+
         String value = this.keys.get(key);
         if (value != null) result = "$" + value.length() + "\r\n" + value + "\r\n";
 
