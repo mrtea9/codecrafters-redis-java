@@ -124,31 +124,33 @@ public class Parser {
         // need to implement errors
         HashMap<String, String> result = new HashMap<>();
 
-        int index = 0;
+        hexFile.remove(0); // delete hex "FE"
+        int databaseIndex = Integer.parseInt(hexFile.remove(0), 16); // get and delete database index
 
-        index++; // remove initial "FE"
-        int databaseIndex = Integer.parseInt(hexFile.get(index++), 16); // getting database index and after that deleting it
+        hexFile.remove(0); // delete hex "FB"
+        int keysTableSize = Integer.parseInt(hexFile.remove(0), 16); // get and delete size of the hash table that stores the keys and values (size encoded)
+        int expiresTable = Integer.parseInt(hexFile.remove(0), 16); // get and delete size of the hash table that stores the expires of keys (size encoded)
 
-        index++; // delete hex "FB"
-        int keysTableSize = Integer.parseInt(hexFile.get(index++), 16); // getting keysTableSize and after that deleting it
-        int expiresTable = Integer.parseInt(hexFile.get(index++), 16); // getting expiresTable and after that deleting it
-
-        String flag = hexFile.get(index++); // getting flag and after that deleting it
+        String flag = hexFile.remove(0); // get and delete flag
 
         System.out.println("keys table size = " + keysTableSize);
         System.out.println("flag = " + flag);
 
-        while (!hexFile.get(index).equals("FF")) {
+        while (!hexFile.get(0).equals("FF")) {
 
-            int keySize = Integer.parseInt(hexFile.get(index++), 16);
-            String key = parseHexString(hexFile, index, keySize);
+            int keySize = Integer.parseInt(hexFile.remove(0), 16);
+            List<String> keyHex = hexFile.subList(0, keySize);
+            String key = parseHexString(keyHex, keySize);
             //System.out.println(keyHex);
-            index += keySize;
 
-            int valueSize = Integer.parseInt(hexFile.get(index++), 16);
-            String value = parseHexString(hexFile, index, valueSize);
+            hexFile.subList(0, keySize).clear();
+
+            int valueSize = Integer.parseInt(hexFile.remove(0), 16);
+            List<String> valueHex = hexFile.subList(0, valueSize);
+            String value = parseHexString(valueHex, valueSize);
             //System.out.println(valueHex);
-            index += valueSize;
+
+            hexFile.subList(0, valueSize).clear();
 
             result.put(key, value);
         }
@@ -157,10 +159,10 @@ public class Parser {
         return result;
     }
 
-    private static String parseHexString(ArrayList<String> hexFile, int startIndex, int length) {
+    private static String parseHexString(List<String> hexFile, int length) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {
-            int decimalValue = Integer.parseInt(hexFile.get(startIndex + i), 16);
+            int decimalValue = Integer.parseInt(hexFile.get(i), 16);
             sb.append(Character.toChars(decimalValue));
         }
         return sb.toString();
