@@ -149,7 +149,7 @@ public class Parser {
             hexFile.remove(0);
         }
 
-        System.out.println("value = " + value);
+        System.out.println("value = " + value.toString());
 
         hexFile.subList(0, value.length()).clear();
         System.out.println(hexFile);
