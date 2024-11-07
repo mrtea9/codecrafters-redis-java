@@ -160,6 +160,7 @@ public class Parser {
         System.out.println("flag = " + flag);
 
         while (!hexFile.get(0).equals("FF")) {
+            System.out.println(hexFile);
 
             int keySize = Integer.parseInt(hexFile.remove(0), 16);
             List<String> keyHex = hexFile.subList(0, keySize);
@@ -174,8 +175,6 @@ public class Parser {
             //System.out.println(valueHex);
 
             hexFile.subList(0, valueSize).clear();
-
-            System.out.println(hexFile);
 
             result.put(key, value);
         }
