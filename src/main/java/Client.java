@@ -127,6 +127,8 @@ public class Client {
     }
 
     private void processKeys() throws IOException {
+        System.out.println(this.keys);
+
         String result = Parser.encodeArray(this.keys);
 
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
