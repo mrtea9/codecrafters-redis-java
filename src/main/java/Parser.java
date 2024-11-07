@@ -170,7 +170,7 @@ public class Parser {
 
             hexFile.subList(0, valueSize).clear();
 
-            System.out.println("key = " + key + " value = " + value);
+            System.out.println("key = " + key.toString() + " value = " + value.toString());
 
            // System.out.println("hex = " + hex);
 
