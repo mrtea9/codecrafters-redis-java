@@ -39,7 +39,7 @@ public class Parser {
 
     public static String encodeArray(Map<String, String> map) {
         Set<String> keys = map.keySet();
-        String result = "*" + map.size() + "\r\n";
+        String result = "*" + map.size() * 2 + "\r\n";
         for (String key : keys) {
             int keyLength = key.length();
             String value = map.get(key);
