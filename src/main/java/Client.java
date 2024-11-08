@@ -72,7 +72,7 @@ public class Client {
         } else if (command.equalsIgnoreCase("info")) {
             String commandArg = decodedList.get(1);
 
-            System.out.println(commandArg);
+            processInfo();
         }
     }
 
@@ -107,7 +107,7 @@ public class Client {
         System.out.println(System.currentTimeMillis());
         System.out.println(value.expiryTimestamp);
         if (value.expiryTimestamp > System.currentTimeMillis() || value.expiryTimestamp == 0) {
-            result = "$" + value.value.length() + "\r\n" + value.value + "\r\n";
+            result = Parser.encodeBulkString(value.value);
         }
 
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
@@ -125,6 +125,12 @@ public class Client {
 
     private void processKeys() throws IOException {
         String result = Parser.encodeArray(this.keys.keySet());
+
+        this.channel.write(ByteBuffer.wrap(result.getBytes()));
+    }
+
+    private void processInfo() throws IOException {
+        String result = Parser.encodeBulkString("role:master");
 
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
     }

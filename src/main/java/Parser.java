@@ -38,6 +38,10 @@ public class Parser {
         }
     }
 
+    public static String encodeBulkString(String decoded) {
+        return "$" + decoded.length() + "\r\n" + decoded + "\r\n";
+    }
+
     public static String encodeArray(Map<String, String> map) {
         Set<String> keys = map.keySet();
         String result = "*" + map.size() * 2 + "\r\n";
