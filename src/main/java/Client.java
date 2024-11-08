@@ -70,7 +70,6 @@ public class Client {
         } else if (command.equalsIgnoreCase("config")) {
             String commandArg = decodedList.get(1);
             String key = decodedList.get(2);
-            String value = this.keys.get(key);
 
             processConfig(key, commandArg);
         } else if (command.equalsIgnoreCase("keys")) {
@@ -90,36 +89,26 @@ public class Client {
     }
 
     private void processSet(String key, String value) throws IOException {
-        this.keys.put(key, value);
+        KeyValue valueKey = new KeyValue(value, 0);
 
         if (this.time.isEmpty()) {
-            this.expiryTimes.put(key, "0:0");
+            valueKey.expiryTimestamp = 0;
         } else {
-            this.expiryTimes.put(key, System.currentTimeMillis() + ":" + this.time);
+            valueKey.expiryTimestamp = System.currentTimeMillis() + Long.parseLong(this.time);
         }
+
+        this.keys.put(key, valueKey);
 
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
 
     private void processGet(String key) throws IOException {
         String result = "$-1\r\n";
-        String allTime = this.expiryTimes.get(key);
-        String time = "";
-        long createdOn = 0;
 
-        if (allTime != null) {
-            createdOn = Long.parseLong(allTime.substring(0, allTime.indexOf(':')));
-            time = allTime.substring(allTime.indexOf(':') + 1);
+        KeyValue value = this.keys.get(key);
+        if (value.expiryTimestamp > System.currentTimeMillis()) {
+            result = "$" + value.value.length() + "\r\n" + value + "\r\n";
         }
-
-        if (createdOn != (long) 0) {
-            long timePassed = System.currentTimeMillis() - createdOn;
-            if (timePassed > Long.parseLong(time)) this.keys.remove(key);
-        }
-
-
-        String value = this.keys.get(key);
-        if (value != null) result = "$" + value.length() + "\r\n" + value + "\r\n";
 
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
     }

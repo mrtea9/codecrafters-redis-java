@@ -58,7 +58,7 @@ public class EventLoop {
                 if (key.isAcceptable()) acceptConnection();
 
                 if (key.isReadable()) {
-                    Client client = new Client((SocketChannel) key.channel(), this.globalKeys, this.globalTimes, this.globalConfig);
+                    Client client = new Client((SocketChannel) key.channel(), this.globalKeys, this.globalConfig);
                     client.handleClient();
                     this.globalKeys = client.getKeys();
                     //this.globalTimes = client.getExpiryTimes();
@@ -79,7 +79,7 @@ public class EventLoop {
 
     private void readConfig(String dir, String fileName) {
         String filePath = dir + "/" + fileName;
-        HashMap<String, String> database = new HashMap<>();
+        HashMap<String, KeyValue> database = new HashMap<>();
 
         try {
             File file = new File(filePath);
