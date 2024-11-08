@@ -7,25 +7,25 @@ import java.util.Map;
 
 public class Client {
     private final SocketChannel channel;
-    private final Map<String, String> keys;
-    private final Map<String, String> expiryTimes;
+    private final Map<String, KeyValue> keys;
+    //private final Map<String, String> expiryTimes;
     private final Map<String, String> config;
     private String time;
 
-    public Client(SocketChannel channel, Map<String, String> keys, Map<String, String> expiryTimes, Map<String, String> config) {
+    public Client(SocketChannel channel, Map<String, KeyValue> keys, Map<String, String> config) {
         this.channel = channel;
         this.keys = keys;
-        this.expiryTimes = expiryTimes;
+        //this.expiryTimes = expiryTimes;
         this.config = config;
     }
 
-    public Map<String, String> getKeys() {
+    public Map<String, KeyValue> getKeys() {
         return this.keys;
     }
 
-    public Map<String, String> getExpiryTimes() {
-        return this.expiryTimes;
-    }
+//    public Map<String, String> getExpiryTimes() {
+//        return this.expiryTimes;
+//    }
 
     public void handleClient() throws IOException {
         ByteBuffer buffer = ByteBuffer.allocate(256);

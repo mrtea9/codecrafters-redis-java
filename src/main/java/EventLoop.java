@@ -13,9 +13,9 @@ public class EventLoop {
 
     private Selector selector;
     private ServerSocketChannel serverSocketChannel;
-    private Map<String, String> globalTimes = new ConcurrentHashMap<>();
-    private Map<String, String> globalKeys = new ConcurrentHashMap<>();
-    private Map<String, String> globalConfig = new ConcurrentHashMap<>();
+   // private Map<String, KeyValue> globalTimes = new ConcurrentHashMap<>();
+    private Map<String, KeyValue> globalKeys = new ConcurrentHashMap<>();
+    private final Map<String, String> globalConfig = new ConcurrentHashMap<>();
 
     EventLoop() {
 
@@ -61,7 +61,7 @@ public class EventLoop {
                     Client client = new Client((SocketChannel) key.channel(), this.globalKeys, this.globalTimes, this.globalConfig);
                     client.handleClient();
                     this.globalKeys = client.getKeys();
-                    this.globalTimes = client.getExpiryTimes();
+                    //this.globalTimes = client.getExpiryTimes();
                 }
 
                 iterator.remove();

@@ -61,7 +61,7 @@ public class Parser {
         return result;
     }
 
-    public static HashMap<String, String> parseRdbFile(byte[] bytes) {
+    public static HashMap<String, KeyValue> parseRdbFile(byte[] bytes) {
         ArrayList<String> hexFile = bytesToHex(bytes);
 
         System.out.println(hexFile);
@@ -70,7 +70,7 @@ public class Parser {
 
         String metadata = extractMetadata(hexFile);
 
-        HashMap<String, String> database = extractDatabase(hexFile);
+        HashMap<String, KeyValue> database = extractDatabase(hexFile);
 
         hexFile.remove(0);
         ArrayList<String> endOfFile = hexFile;
@@ -143,9 +143,9 @@ public class Parser {
         return metadata.toString();
     }
 
-    private static HashMap<String, String> extractDatabase(ArrayList<String> hexFile) {
+    private static HashMap<String, KeyValue> extractDatabase(ArrayList<String> hexFile) {
         // need to implement errors
-        HashMap<String, String> result = new HashMap<>();
+        HashMap<String, KeyValue> result = new HashMap<>();
        // System.out.println(hexFile);
 
         hexFile.remove(0); // delete hex "FE"
@@ -160,6 +160,7 @@ public class Parser {
 
         while (!hexFile.get(0).equals("FF")) {
             boolean isExpiry = false;
+            KeyValue value = new KeyValue("", 0);
 
             //System.out.println(hexFile);
             if (hexFile.get(0).equals("FC")) {
@@ -168,10 +169,9 @@ public class Parser {
                 List<String> timestampHex = hexFile.subList(0, 8);
 
                 BigInteger decodedTimestamp = decodeTimestamp(timestampHex);
-                BigInteger currentTimestamp = BigInteger.valueOf(System.currentTimeMillis());
-                System.out.println(decodedTimestamp);
-                System.out.println(currentTimestamp);
-                System.out.println(decodedTimestamp.compareTo(currentTimestamp));
+
+                value.expiryTimestamp = decodedTimestamp.longValue();
+
                 hexFile.subList(0, 8).clear();
             }
 
@@ -188,7 +188,7 @@ public class Parser {
 
             int valueSize = Integer.parseInt(hexFile.remove(0), 16);
             List<String> valueHex = hexFile.subList(0, valueSize);
-            String value = parseHexString(valueHex, valueSize);
+            value.value = parseHexString(valueHex, valueSize);
             //System.out.println(valueHex);
 
             hexFile.subList(0, valueSize).clear();
