@@ -108,7 +108,7 @@ public class Client {
         KeyValue value = this.keys.get(key);
         System.out.println(System.currentTimeMillis());
         System.out.println(value.expiryTimestamp);
-        if (value.expiryTimestamp > System.currentTimeMillis()) {
+        if (value.expiryTimestamp > System.currentTimeMillis() || value.expiryTimestamp == 0) {
             result = "$" + value.value.length() + "\r\n" + value.value + "\r\n";
         }
 
