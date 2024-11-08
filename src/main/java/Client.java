@@ -132,18 +132,19 @@ public class Client {
     private void processInfo() throws IOException {
         String replicaOf = this.config.get("--replicaof");
         String result = "";
-        String masterReplId = Parser.encodeBulkString("master_replid:8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb");
-        String masterReplOffset = Parser.encodeBulkString("master_repl_offset:0");
+        String masterReplId = "master_replid:8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb";
+        String masterReplOffset = "master_repl_offset:0";
 
         if (replicaOf.isEmpty()) {
-            result = Parser.encodeBulkString("role:master");
+            result = "role:master";
         } else {
-            result = Parser.encodeBulkString("role:slave");
+            result = "role:slave";
         }
 
+        result += "\r\n" + masterReplOffset + "\r\n" + masterReplId;
+        result = Parser.encodeBulkString(result);
 
-        //this.channel.write(ByteBuffer.wrap(result.getBytes()));
-        this.channel.write(ByteBuffer.wrap(masterReplOffset.getBytes()));
-        this.channel.write(ByteBuffer.wrap(masterReplId.getBytes()));
+
+        this.channel.write(ByteBuffer.wrap(result.getBytes()));
     }
 }
