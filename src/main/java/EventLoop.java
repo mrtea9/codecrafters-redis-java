@@ -11,17 +11,18 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class EventLoop {
 
+    private final int port;
     private Selector selector;
     private ServerSocketChannel serverSocketChannel;
-   // private Map<String, KeyValue> globalTimes = new ConcurrentHashMap<>();
     private Map<String, KeyValue> globalKeys = new ConcurrentHashMap<>();
     private final Map<String, String> globalConfig = new ConcurrentHashMap<>();
 
-    EventLoop() {
-
+    EventLoop(int port) {
+        this.port = port;
     }
 
     EventLoop(String dirName, String dbFileName) {
+        this.port = 6379;
         this.globalConfig.put("dir", dirName);
         this.globalConfig.put("dbfilename", dbFileName);
 
@@ -40,8 +41,7 @@ public class EventLoop {
     private void initialize() throws IOException {
         this.selector = Selector.open();
         this.serverSocketChannel = ServerSocketChannel.open();
-        int port = 6379;
-        this.serverSocketChannel.bind(new InetSocketAddress(port));
+        this.serverSocketChannel.bind(new InetSocketAddress(this.port));
         this.serverSocketChannel.configureBlocking(false);
         this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
     }
@@ -61,7 +61,6 @@ public class EventLoop {
                     Client client = new Client((SocketChannel) key.channel(), this.globalKeys, this.globalConfig);
                     client.handleClient();
                     this.globalKeys = client.getKeys();
-                    //this.globalTimes = client.getExpiryTimes();
                 }
 
                 iterator.remove();
@@ -79,7 +78,7 @@ public class EventLoop {
 
     private void readConfig(String dir, String fileName) {
         String filePath = dir + "/" + fileName;
-        HashMap<String, KeyValue> database = new HashMap<>();
+        HashMap<String, KeyValue> database;
 
         try {
             File file = new File(filePath);
