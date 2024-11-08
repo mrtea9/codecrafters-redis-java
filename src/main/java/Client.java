@@ -107,7 +107,7 @@ public class Client {
 
         KeyValue value = this.keys.get(key);
         if (value.expiryTimestamp > System.currentTimeMillis()) {
-            result = "$" + value.value.length() + "\r\n" + value + "\r\n";
+            result = "$" + value.value.length() + "\r\n" + value.value + "\r\n";
         }
 
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
