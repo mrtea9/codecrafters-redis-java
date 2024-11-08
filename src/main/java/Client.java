@@ -142,8 +142,8 @@ public class Client {
         }
 
 
-       // this.channel.write(ByteBuffer.wrap(result.getBytes()));
-        this.channel.write(ByteBuffer.wrap(masterReplId.getBytes()));
+        this.channel.write(ByteBuffer.wrap(result.getBytes()));
         this.channel.write(ByteBuffer.wrap(masterReplOffset.getBytes()));
+        this.channel.write(ByteBuffer.wrap(masterReplId.getBytes()));
     }
 }
