@@ -9,14 +9,21 @@ public class Main {
             String dbFileName = args[3];
 
             eventLoop = new EventLoop(dirName, dbFileName);
-        } else if (args.length > 1) {
+        } else if (args.length > 3) {
             int port = Integer.parseInt(args[1]);
             String replicaOf = args[3];
             System.out.println(replicaOf);
 
-            eventLoop = new EventLoop(port);
+            eventLoop = new EventLoop(port, replicaOf);
+        } else if (args.length > 1) {
+            int port = Integer.parseInt(args[1]);
+            String replicaOf = "";
+
+            eventLoop = new EventLoop(port, replicaOf);
         } else {
-            eventLoop = new EventLoop(6379);
+            String replicaOf = "";
+
+            eventLoop = new EventLoop(6379, replicaOf);
         }
 
         eventLoop.start();

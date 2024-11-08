@@ -17,8 +17,9 @@ public class EventLoop {
     private Map<String, KeyValue> globalKeys = new ConcurrentHashMap<>();
     private final Map<String, String> globalConfig = new ConcurrentHashMap<>();
 
-    EventLoop(int port) {
+    EventLoop(int port, String replicaOf) {
         this.port = port;
+        this.globalConfig.put("--replicaof", replicaOf);
     }
 
     EventLoop(String dirName, String dbFileName) {

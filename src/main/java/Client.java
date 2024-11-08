@@ -130,7 +130,15 @@ public class Client {
     }
 
     private void processInfo() throws IOException {
-        String result = Parser.encodeBulkString("role:master");
+        String replicaOf = this.config.get("--replicaof");
+        String result = "";
+
+        if (replicaOf.isEmpty() || replicaOf == null) {
+            result = Parser.encodeBulkString("role:master");
+        } else {
+            result = Parser.encodeBulkString("role:slave");
+        }
+
 
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
     }
