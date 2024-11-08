@@ -159,13 +159,11 @@ public class Parser {
         System.out.println("expiresTable size = " + expiresTable);
 
         while (!hexFile.get(0).equals("FF")) {
-            boolean isExpiry = false;
             KeyValue value = new KeyValue("", 0);
 
             //System.out.println(hexFile);
             if (hexFile.get(0).equals("FC")) {
                 hexFile.remove(0);
-                isExpiry = true;
                 List<String> timestampHex = hexFile.subList(0, 8);
 
                 BigInteger decodedTimestamp = decodeTimestamp(timestampHex);
