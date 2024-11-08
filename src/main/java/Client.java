@@ -8,14 +8,14 @@ import java.util.Map;
 public class Client {
     private final SocketChannel channel;
     private final Map<String, String> keys;
-    private final Map<String, String> times;
+    private final Map<String, String> expiryTimes;
     private final Map<String, String> config;
     private String time;
 
-    public Client(SocketChannel channel, Map<String, String> keys, Map<String, String> times, Map<String, String> config) {
+    public Client(SocketChannel channel, Map<String, String> keys, Map<String, String> expiryTimes, Map<String, String> config) {
         this.channel = channel;
         this.keys = keys;
-        this.times = times;
+        this.expiryTimes = expiryTimes;
         this.config = config;
     }
 
@@ -23,8 +23,8 @@ public class Client {
         return this.keys;
     }
 
-    public Map<String, String> getTimes() {
-        return this.times;
+    public Map<String, String> getExpiryTimes() {
+        return this.expiryTimes;
     }
 
     public void handleClient() throws IOException {
@@ -93,9 +93,9 @@ public class Client {
         this.keys.put(key, value);
 
         if (this.time.isEmpty()) {
-            this.times.put(key, "0:0");
+            this.expiryTimes.put(key, "0:0");
         } else {
-            this.times.put(key, System.currentTimeMillis() + ":" + this.time);
+            this.expiryTimes.put(key, System.currentTimeMillis() + ":" + this.time);
         }
 
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
@@ -103,7 +103,7 @@ public class Client {
 
     private void processGet(String key) throws IOException {
         String result = "$-1\r\n";
-        String allTime = this.times.get(key);
+        String allTime = this.expiryTimes.get(key);
         String time = "";
         long createdOn = 0;
 

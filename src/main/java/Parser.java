@@ -171,6 +171,7 @@ public class Parser {
                 BigInteger currentTimestamp = BigInteger.valueOf(System.currentTimeMillis());
                 System.out.println(decodedTimestamp);
                 System.out.println(currentTimestamp);
+                System.out.println(decodedTimestamp.compareTo(currentTimestamp));
                 hexFile.subList(0, 8).clear();
             }
 

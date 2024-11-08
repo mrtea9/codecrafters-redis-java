@@ -61,7 +61,7 @@ public class EventLoop {
                     Client client = new Client((SocketChannel) key.channel(), this.globalKeys, this.globalTimes, this.globalConfig);
                     client.handleClient();
                     this.globalKeys = client.getKeys();
-                    this.globalTimes = client.getTimes();
+                    this.globalTimes = client.getExpiryTimes();
                 }
 
                 iterator.remove();
