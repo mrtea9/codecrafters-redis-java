@@ -106,6 +106,8 @@ public class Client {
         String result = "$-1\r\n";
 
         KeyValue value = this.keys.get(key);
+        System.out.println(System.currentTimeMillis());
+        System.out.println(value.expiryTimestamp);
         if (value.expiryTimestamp > System.currentTimeMillis()) {
             result = "$" + value.value.length() + "\r\n" + value.value + "\r\n";
         }
