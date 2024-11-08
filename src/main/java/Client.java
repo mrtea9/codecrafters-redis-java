@@ -69,6 +69,10 @@ public class Client {
         } else if (command.equalsIgnoreCase("keys")) {
 
             processKeys();
+        } else if (command.equalsIgnoreCase("info")) {
+            String commandArg = decodedList.get(1);
+
+            System.out.println(commandArg);
         }
     }
 
