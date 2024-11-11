@@ -125,7 +125,10 @@ public class EventLoop {
 
             System.out.println("Connected to master: " + replicaOf);
 
-            masterChannel.write(ByteBuffer.wrap(("+PING\r\n").getBytes()));
+            Set<String> request = new HashSet<>();
+            request.add("PING");
+
+            masterChannel.write(ByteBuffer.wrap((Parser.encodeArray(request)).getBytes()));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
