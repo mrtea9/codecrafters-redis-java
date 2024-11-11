@@ -74,9 +74,11 @@ public class Client {
 
             processInfo();
         } else if (command.equalsIgnoreCase("replconf")) {
-            this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
+
+            processReplconf();
         } else if (command.equalsIgnoreCase("psync")) {
-            System.out.println(decodedList);
+
+            processPsync();
         }
     }
 
@@ -136,13 +138,23 @@ public class Client {
     private void processInfo() throws IOException {
         String replicaOf = this.config.get("--replicaof");
         String result = "";
-        String masterReplId = "master_replid:8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb";
-        String masterReplOffset = "master_repl_offset:0";
+        this.config.put("master_replid", "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb");
+        this.config.put("master_repl_offset", "0");
+        String masterReplId = "master_replid:" + this.config.get("master_replid");
+        String masterReplOffset = "master_repl_offset:" + this.config.get("master_repl_offset");
 
         result = replicaOf.isEmpty() ? "role:master" : "role:slave";
         result += "\r\n" + masterReplOffset + "\r\n" + masterReplId;
         result = Parser.encodeBulkString(result);
 
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
+    }
+
+    private void processReplconf() throws IOException {
+        this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
+    }
+
+    private void processPsync() throws IOException {
+        String response = "+FULLRESYNC " + this.config.get("master_replid") + this.config.get("master_repl_offset") + "\r\n";
     }
 }
