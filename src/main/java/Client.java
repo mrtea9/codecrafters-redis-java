@@ -160,5 +160,17 @@ public class Client {
         String response = "+FULLRESYNC " + this.config.get("master_replid") + " " + this.config.get("master_repl_offset") + "\r\n";
 
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
+
+        String rdbFile = createRdbContent();
+
+        this.channel.write(ByteBuffer.wrap(rdbFile.getBytes()));
+    }
+
+    private String createRdbContent() {
+
+        String content = "524544495330303131FA0972656469732D76657205372E322E30FA0A72656469732D62697473C040FE00FB0000FF87B1A7CD0B1FC06E";
+        String result = "$" + content.length() + "\r\n" + content;
+
+        return result;
     }
 }
