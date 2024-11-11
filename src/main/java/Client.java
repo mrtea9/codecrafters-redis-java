@@ -21,6 +21,10 @@ public class Client {
         return this.keys;
     }
 
+    public Map<String, String> getConfig() {
+        return this.config;
+    }
+
     public void handleClient() throws IOException {
         ByteBuffer buffer = ByteBuffer.allocate(256);
         int bytesRead = this.channel.read(buffer);
