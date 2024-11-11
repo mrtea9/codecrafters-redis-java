@@ -45,6 +45,8 @@ public class EventLoop {
         this.serverSocketChannel.bind(new InetSocketAddress(this.port));
         this.serverSocketChannel.configureBlocking(false);
         this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+
+        connectMaster();
     }
 
     public void runEventLoop() throws IOException {
@@ -96,5 +98,13 @@ public class EventLoop {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private void connectMaster() {
+        String replicaOf = this.globalConfig.get("--replicaof");
+
+        if (replicaOf == null) return;
+
+        System.out.println(replicaOf);
     }
 }
