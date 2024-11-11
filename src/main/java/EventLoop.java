@@ -125,15 +125,14 @@ public class EventLoop {
 
             System.out.println("Connected to master: " + replicaOf);
 
-            Set<String> request = new HashSet<>();
-            request.add("PING");
+            sendPing(masterChannel);
 
-            masterChannel.write(ByteBuffer.wrap((Parser.encodeArray(request)).getBytes()));
+            sendReplConf(masterChannel);
 
             ByteBuffer buffer = ByteBuffer.allocate(2048);
             int bytesRead = masterChannel.read(buffer);
 
-            if (bytesRead < 0) return;
+            if (bytesRead <= 0) return;
 
             System.out.println(bytesRead);
             byte[] responseBytes = new byte[bytesRead];
@@ -144,5 +143,21 @@ public class EventLoop {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    private void sendPing(SocketChannel masterChannel) throws IOException {
+        Set<String> request = new HashSet<>();
+        request.add("PING");
+
+        masterChannel.write(ByteBuffer.wrap((Parser.encodeArray(request)).getBytes()));
+    }
+
+    private void sendReplConf(SocketChannel masterChannel) throws IOException {
+        Set<String> request = new HashSet<>();
+        request.add("REPLCONF");
+        request.add("listening-port");
+        request.add(String.valueOf(this.port));
+
+        masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
     }
 }
