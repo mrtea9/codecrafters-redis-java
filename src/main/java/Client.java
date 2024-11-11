@@ -73,6 +73,8 @@ public class Client {
             String commandArg = decodedList.get(1);
 
             processInfo();
+        } else if (command.equalsIgnoreCase("replconf")) {
+            this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
         }
     }
 
