@@ -198,6 +198,6 @@ public class EventLoop {
 
         byte[] responseBytes = new byte[bytesRead];
         buffer.get(responseBytes);
-        System.out.println("Received response from master: " + new String(responseBytes, StandardCharsets.US_ASCII));
+        System.out.println("Received response from master: " + new String(responseBytes));
     }
 }
