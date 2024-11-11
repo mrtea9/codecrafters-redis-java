@@ -129,13 +129,13 @@ public class EventLoop {
 
             readResponse(masterChannel);
 
-            Thread.sleep(1);
+            Thread.sleep(5);
 
             sendReplConfPort(masterChannel);
 
             readResponse(masterChannel);
 
-            Thread.sleep(1);
+            Thread.sleep(5);
 
             sendReplConfCapa(masterChannel);
 
