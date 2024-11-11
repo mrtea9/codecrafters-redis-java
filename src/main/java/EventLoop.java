@@ -179,6 +179,9 @@ public class EventLoop {
         int bytesRead = masterChannel.read(buffer);
 
         System.out.println(bytesRead);
+
+        if (bytesRead <= 0) return;
+
         byte[] responseBytes = new byte[bytesRead];
         buffer.get(responseBytes);
         System.out.println("Received response from master: " + new String(responseBytes));
