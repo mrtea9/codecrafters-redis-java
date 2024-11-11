@@ -67,6 +67,7 @@ public class EventLoop {
                     client.handleClient();
                     this.globalKeys = client.getKeys();
                     this.globalConfig = client.getConfig();
+                    System.out.println(globalConfig);
                 }
 
                 iterator.remove();
