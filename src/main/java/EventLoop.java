@@ -171,7 +171,7 @@ public class EventLoop {
         request.add("capa");
         request.add("psync2");
 
-        System.out.println(request);
+        System.out.println("request = " + request);
 
         masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
     }
