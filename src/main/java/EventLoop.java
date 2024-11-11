@@ -171,6 +171,8 @@ public class EventLoop {
         request.add("capa");
         request.add("psync2");
 
+        System.out.println(request);
+
         masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
     }
 
@@ -184,6 +186,6 @@ public class EventLoop {
 
         byte[] responseBytes = new byte[bytesRead];
         buffer.get(responseBytes);
-        System.out.println("Received response from master: " + new String(responseBytes));
+        //System.out.println("Received response from master: " + new String(responseBytes));
     }
 }
