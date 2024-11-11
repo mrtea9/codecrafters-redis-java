@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
@@ -168,7 +169,8 @@ public class Client {
 
     private String createRdbContent() {
         String content = "524544495330303131fa0972656469732d76657205372e322e30fa0a72656469732d62697473c040fa056374696d65c26d08bc65fa08757365642d6d656dc2b0c41000fa08616f662d62617365c000fff06e3bfec0ff5aa2";
+        String binContent = new BigInteger(content, 16).toString(2);
 
-        return "$" + content.length() + "\r\n" + content;
+        return "$" + content.length() + "\r\n" + binContent;
     }
 }
