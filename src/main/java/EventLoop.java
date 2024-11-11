@@ -131,6 +131,7 @@ public class EventLoop {
             int bytesRead = masterChannel.read(buffer);
 
             //if (bytesRead <= 0) return;
+            Thread.sleep(10);
 
             System.out.println(bytesRead);
             byte[] responseBytes = new byte[bytesRead];
@@ -141,6 +142,8 @@ public class EventLoop {
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
     }
