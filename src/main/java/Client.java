@@ -3,6 +3,7 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -162,15 +163,18 @@ public class Client {
 
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
 
-        String rdbFile = createRdbContent();
+        createRdbContent();
 
-        this.channel.write(ByteBuffer.wrap(rdbFile.getBytes()));
+        //this.channel.write(ByteBuffer.wrap(rdbFile.getBytes()));
     }
 
-    private String createRdbContent() {
+    private void createRdbContent() throws IOException {
         String content = "524544495330303131fa0972656469732d76657205372e322e30fa0a72656469732d62697473c040fa056374696d65c26d08bc65fa08757365642d6d656dc2b0c41000fa08616f662d62617365c000fff06e3bfec0ff5aa2";
         String binContent = new BigInteger(content, 16).toString(2);
 
-        return "$" + content.length() + "\r\n" + binContent;
+        byte[] contents = HexFormat.of().parseHex(content);
+
+        this.channel.write(ByteBuffer.wrap(("$" + contents.length + "\r\n").getBytes()));
+        this.channel.write(ByteBuffer.wrap(contents));
     }
 }
