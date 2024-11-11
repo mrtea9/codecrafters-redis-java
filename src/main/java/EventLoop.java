@@ -129,13 +129,13 @@ public class EventLoop {
 
             readResponse(masterChannel);
 
-            Thread.sleep(5);
+            Thread.sleep(10);
 
             sendReplConfPort(masterChannel);
 
             readResponse(masterChannel);
 
-            Thread.sleep(5);
+            Thread.sleep(10);
 
             sendReplConfCapa(masterChannel);
 
@@ -166,7 +166,7 @@ public class EventLoop {
     }
 
     private void sendReplConfCapa(SocketChannel masterChannel) throws IOException {
-        Set<String> request = new HashSet<>();
+        List<String> request = new ArrayList<>();
         request.add("REPLCONF");
         request.add("capa");
         request.add("psync2");

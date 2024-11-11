@@ -65,6 +65,16 @@ public class Parser {
         return result;
     }
 
+    public static String encodeArray(List<String> list) {
+        String result = "*" + list.size() + "\r\n";
+        for (String key : list) {
+            int keyLength = key.length();
+            result += "$" + keyLength + "\r\n" + key + "\r\n";
+        }
+
+        return result;
+    }
+
     public static HashMap<String, KeyValue> parseRdbFile(byte[] bytes) {
         ArrayList<String> hexFile = bytesToHex(bytes);
 
