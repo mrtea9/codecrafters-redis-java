@@ -129,6 +129,16 @@ public class EventLoop {
             request.add("PING");
 
             masterChannel.write(ByteBuffer.wrap((Parser.encodeArray(request)).getBytes()));
+
+            ByteBuffer buffer = ByteBuffer.allocate(2048);
+            int bytesRead = masterChannel.read(buffer);
+
+            if (bytesRead < 0) return;
+
+            byte[] responseBytes = new byte[bytesRead];
+            buffer.get(responseBytes);
+            System.out.println("Received response from master : " + new String(responseBytes));
+
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
