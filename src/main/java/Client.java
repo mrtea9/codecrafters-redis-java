@@ -87,7 +87,6 @@ public class Client {
             processPsync();
         }
 
-        this.channel.write(ByteBuffer.wrap(("+PONG\r\n").getBytes()));
     }
 
     private void processPing() throws IOException {
