@@ -161,6 +161,7 @@ public class Client {
     private void processPsync() throws IOException {
         String response = "+FULLRESYNC " + this.config.get("master_replid") + this.config.get("master_repl_offset") + "\r\n";
 
+        System.out.println(this.config);
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }
 }
