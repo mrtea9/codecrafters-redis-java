@@ -127,18 +127,19 @@ public class EventLoop {
 
             sendPing(masterChannel);
 
-            ByteBuffer buffer = ByteBuffer.allocate(2048);
-            int bytesRead = masterChannel.read(buffer);
+            readResponse(masterChannel);
 
-            //if (bytesRead <= 0) return;
-            Thread.sleep(10);
+            Thread.sleep(1);
 
-            System.out.println(bytesRead);
-            byte[] responseBytes = new byte[bytesRead];
-            buffer.get(responseBytes);
-            System.out.println("Received response from master: " + new String(responseBytes));
+            sendReplConfPort(masterChannel);
 
-            sendReplConf(masterChannel);
+            readResponse(masterChannel);
+
+            Thread.sleep(1);
+
+            sendReplConfCapa(masterChannel);
+
+            readResponse(masterChannel);
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -155,12 +156,31 @@ public class EventLoop {
         masterChannel.write(ByteBuffer.wrap((Parser.encodeArray(request)).getBytes()));
     }
 
-    private void sendReplConf(SocketChannel masterChannel) throws IOException {
+    private void sendReplConfPort(SocketChannel masterChannel) throws IOException {
         Set<String> request = new HashSet<>();
         request.add("REPLCONF");
         request.add("listening-port");
         request.add(String.valueOf(this.port));
 
         masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
+    }
+
+    private void sendReplConfCapa(SocketChannel masterChannel) throws IOException {
+        Set<String> request = new HashSet<>();
+        request.add("REPLCONF");
+        request.add("capa");
+        request.add("psync2");
+
+        masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
+    }
+
+    private void readResponse(SocketChannel masterChannel) throws  IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(2048);
+        int bytesRead = masterChannel.read(buffer);
+
+        System.out.println(bytesRead);
+        byte[] responseBytes = new byte[bytesRead];
+        buffer.get(responseBytes);
+        System.out.println("Received response from master: " + new String(responseBytes));
     }
 }
