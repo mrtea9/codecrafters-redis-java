@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -106,9 +107,28 @@ public class EventLoop {
         if (replicaOf == null || replicaOf.isEmpty()) return;
 
         String[] parts = replicaOf.split(" ");
-        String address = parts[0];
+        String host = parts[0];
         int port = Integer.parseInt(parts[1]);
 
-        System.out.println("address: " + address + "; port = " + port);
+        System.out.println("address: " + host + "; port = " + port);
+
+        try {
+            SocketChannel masterChannel = SocketChannel.open();
+            masterChannel.configureBlocking(false);
+            masterChannel.connect(new InetSocketAddress(host, port));
+
+            masterChannel.register(this.selector, SelectionKey.OP_CONNECT);
+
+            while (!masterChannel.finishConnect()) {
+                continue;
+            }
+
+            System.out.println("Connected to master: " + replicaOf);
+
+            masterChannel.write(ByteBuffer.wrap(("+PING\r\n").getBytes()));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 }
