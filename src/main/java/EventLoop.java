@@ -127,8 +127,6 @@ public class EventLoop {
 
             sendPing(masterChannel);
 
-            sendReplConf(masterChannel);
-
             ByteBuffer buffer = ByteBuffer.allocate(2048);
             int bytesRead = masterChannel.read(buffer);
 
@@ -138,6 +136,8 @@ public class EventLoop {
             byte[] responseBytes = new byte[bytesRead];
             buffer.get(responseBytes);
             System.out.println("Received response from master: " + new String(responseBytes));
+
+            sendReplConf(masterChannel);
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
