@@ -130,7 +130,7 @@ public class EventLoop {
             ByteBuffer buffer = ByteBuffer.allocate(2048);
             int bytesRead = masterChannel.read(buffer);
 
-            if (bytesRead <= 0) return;
+            //if (bytesRead <= 0) return;
 
             System.out.println(bytesRead);
             byte[] responseBytes = new byte[bytesRead];
