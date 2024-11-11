@@ -103,8 +103,12 @@ public class EventLoop {
     private void connectMaster() {
         String replicaOf = this.globalConfig.get("--replicaof");
 
-        if (replicaOf == null) return;
+        if (replicaOf == null || replicaOf.isEmpty()) return;
 
-        System.out.println(replicaOf);
+        String[] parts = replicaOf.split(" ");
+        String address = parts[0];
+        int port = Integer.parseInt(parts[1]);
+
+        System.out.println("address: " + address + "; port = " + port);
     }
 }
