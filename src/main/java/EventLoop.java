@@ -146,6 +146,11 @@ public class EventLoop {
 
         sendReplConfCapa(masterChannel);
         readResponse(masterChannel);
+
+        Thread.sleep(10);
+
+        sendPsync(masterChannel);
+        readResponse(masterChannel);
     }
 
     private void sendPing(SocketChannel masterChannel) throws IOException {
@@ -156,7 +161,7 @@ public class EventLoop {
     }
 
     private void sendReplConfPort(SocketChannel masterChannel) throws IOException {
-        Set<String> request = new HashSet<>();
+        List<String> request = new ArrayList<>();
         request.add("REPLCONF");
         request.add("listening-port");
         request.add(String.valueOf(this.port));
@@ -169,6 +174,15 @@ public class EventLoop {
         request.add("REPLCONF");
         request.add("capa");
         request.add("psync2");
+
+        masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
+    }
+
+    private void sendPsync(SocketChannel masterChannel) throws IOException {
+        List<String> request = new ArrayList<>();
+        request.add("PSYNC");
+        request.add("?");
+        request.add("-1");
 
         masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
     }
