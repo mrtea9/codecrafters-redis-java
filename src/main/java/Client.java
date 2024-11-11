@@ -142,8 +142,6 @@ public class Client {
     private void processInfo() throws IOException {
         String replicaOf = this.config.get("--replicaof");
         String result = "";
-        this.config.put("master_replid", "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb");
-        this.config.put("master_repl_offset", "0");
         String masterReplId = "master_replid:" + this.config.get("master_replid");
         String masterReplOffset = "master_repl_offset:" + this.config.get("master_repl_offset");
 
@@ -161,7 +159,6 @@ public class Client {
     private void processPsync() throws IOException {
         String response = "+FULLRESYNC " + this.config.get("master_replid") + this.config.get("master_repl_offset") + "\r\n";
 
-        System.out.println(this.config);
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }
 }

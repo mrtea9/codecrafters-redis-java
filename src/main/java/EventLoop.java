@@ -22,6 +22,8 @@ public class EventLoop {
     EventLoop(int port, String replicaOf) {
         this.port = port;
         this.globalConfig.put("--replicaof", replicaOf);
+        this.globalConfig.put("master_replid", "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb");
+        this.globalConfig.put("master_repl_offset", "0");
     }
 
     EventLoop(String dirName, String dbFileName) {
@@ -66,8 +68,6 @@ public class EventLoop {
                     Client client = new Client((SocketChannel) key.channel(), this.globalKeys, this.globalConfig);
                     client.handleClient();
                     this.globalKeys = client.getKeys();
-                    this.globalConfig = client.getConfig();
-                    System.out.println(globalConfig);
                 }
 
                 iterator.remove();
