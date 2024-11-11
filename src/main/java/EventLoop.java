@@ -125,28 +125,27 @@ public class EventLoop {
 
             System.out.println("Connected to master: " + replicaOf);
 
-            sendPing(masterChannel);
+            sendHandshake(masterChannel);
 
-            readResponse(masterChannel);
-
-            Thread.sleep(10);
-
-            sendReplConfPort(masterChannel);
-
-            readResponse(masterChannel);
-
-            Thread.sleep(10);
-
-            sendReplConfCapa(masterChannel);
-
-            readResponse(masterChannel);
-
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             System.out.println(e.getMessage());
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
 
+    }
+
+    private void sendHandshake(SocketChannel masterChannel) throws IOException, InterruptedException {
+        sendPing(masterChannel);
+        readResponse(masterChannel);
+
+        Thread.sleep(10);
+
+        sendReplConfPort(masterChannel);
+        readResponse(masterChannel);
+
+        Thread.sleep(10);
+
+        sendReplConfCapa(masterChannel);
+        readResponse(masterChannel);
     }
 
     private void sendPing(SocketChannel masterChannel) throws IOException {
@@ -170,8 +169,6 @@ public class EventLoop {
         request.add("REPLCONF");
         request.add("capa");
         request.add("psync2");
-
-        System.out.println("request = " + request);
 
         masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
     }
