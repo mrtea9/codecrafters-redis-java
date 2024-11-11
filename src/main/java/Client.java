@@ -135,15 +135,9 @@ public class Client {
         String masterReplId = "master_replid:8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb";
         String masterReplOffset = "master_repl_offset:0";
 
-        if (replicaOf.isEmpty()) {
-            result = "role:master";
-        } else {
-            result = "role:slave";
-        }
-
+        result = replicaOf.isEmpty() ? "role:master" : "role:slave";
         result += "\r\n" + masterReplOffset + "\r\n" + masterReplId;
         result = Parser.encodeBulkString(result);
-
 
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
     }
