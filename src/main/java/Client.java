@@ -75,6 +75,8 @@ public class Client {
             processInfo();
         } else if (command.equalsIgnoreCase("replconf")) {
             this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
+        } else if (command.equalsIgnoreCase("psync")) {
+            System.out.println(decodedList);
         }
     }
 
