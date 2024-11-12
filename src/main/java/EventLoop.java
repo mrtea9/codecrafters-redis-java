@@ -16,8 +16,8 @@ public class EventLoop {
     private Selector selector;
     private ServerSocketChannel serverSocketChannel;
     private Map<String, KeyValue> globalKeys = new ConcurrentHashMap<>();
-    private Map<String, String> globalConfig = new ConcurrentHashMap<>();
-    public List<SocketChannel> replicaChannels;
+    private final Map<String, String> globalConfig = new ConcurrentHashMap<>();
+    public List<SocketChannel> replicaChannels = new ArrayList<>();
 
     EventLoop(int port, String replicaOf) {
         this.port = port;
