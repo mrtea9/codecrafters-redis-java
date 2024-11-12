@@ -155,7 +155,7 @@ public class EventLoop {
         sendPsync(masterChannel);
         readResponse(masterChannel);
 
-        Thread.sleep(1000);
+        Thread.sleep(10000);
 
         processResponse(masterChannel);
     }
