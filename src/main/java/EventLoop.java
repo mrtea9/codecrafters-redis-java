@@ -205,38 +205,54 @@ public class EventLoop {
         System.out.println(decodedList);
     }
 
-    private void sendPing(SocketChannel masterChannel) throws IOException {
+    private void sendPing(SocketChannel masterChannel) {
         Set<String> request = new HashSet<>();
         request.add("PING");
 
-        masterChannel.write(ByteBuffer.wrap((Parser.encodeArray(request)).getBytes()));
+        try {
+            masterChannel.write(ByteBuffer.wrap((Parser.encodeArray(request)).getBytes()));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    private void sendReplConfPort(SocketChannel masterChannel) throws IOException {
+    private void sendReplConfPort(SocketChannel masterChannel) {
         List<String> request = new ArrayList<>();
         request.add("REPLCONF");
         request.add("listening-port");
         request.add(String.valueOf(this.port));
 
-        masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
+        try {
+            masterChannel.write(ByteBuffer.wrap((Parser.encodeArray(request)).getBytes()));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    private void sendReplConfCapa(SocketChannel masterChannel) throws IOException {
+    private void sendReplConfCapa(SocketChannel masterChannel) {
         List<String> request = new ArrayList<>();
         request.add("REPLCONF");
         request.add("capa");
         request.add("psync2");
 
-        masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
+        try {
+            masterChannel.write(ByteBuffer.wrap((Parser.encodeArray(request)).getBytes()));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    private void sendPsync(SocketChannel masterChannel) throws IOException {
+    private void sendPsync(SocketChannel masterChannel) {
         List<String> request = new ArrayList<>();
         request.add("PSYNC");
         request.add("?");
         request.add("-1");
 
-        masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
+        try {
+            masterChannel.write(ByteBuffer.wrap((Parser.encodeArray(request)).getBytes()));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void readResponse(SocketChannel masterChannel) throws  IOException {
