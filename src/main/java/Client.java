@@ -148,6 +148,7 @@ public class Client {
         result += "\r\n" + masterReplOffset + "\r\n" + masterReplId;
         result = Parser.encodeBulkString(result);
 
+
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
     }
 
