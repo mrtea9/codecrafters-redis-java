@@ -38,6 +38,10 @@ public class EventLoop {
     public void start() {
         try {
             initialize();
+
+            Thread connectMasterThread = new Thread(this::connectMaster);
+            connectMasterThread.start();
+
             runEventLoop();
         } catch (IOException e) {
             System.out.println("Error " + e.getMessage());
@@ -51,7 +55,7 @@ public class EventLoop {
         this.serverSocketChannel.configureBlocking(false);
         this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-        connectMaster();
+        //connectMaster();
     }
 
     public void runEventLoop() throws IOException {
@@ -257,22 +261,6 @@ public class EventLoop {
         }
     }
 
-    private void readResponse(SocketChannel masterChannel) throws  IOException {
-        ByteBuffer buffer = ByteBuffer.allocate(256);
-        int bytesRead = masterChannel.read(buffer);
-
-        System.out.println(bytesRead);
-
-        if (bytesRead <= 0) return;
-
-        String line = new String(buffer.array());
-        Parser parser = new Parser(line);
-        parser.parse();
-        List<String> decodedList = parser.getDecodedResponse();
-
-        System.out.println(decodedList);
-    }
-
     public void propagateCommand(String command, String... args) throws IOException {
         List<String> request = new ArrayList<>();
         request.add(command);
@@ -282,23 +270,5 @@ public class EventLoop {
         for (SocketChannel replicaChannel : this.replicaChannels) {
             if (replicaChannel.isConnected()) replicaChannel.write(ByteBuffer.wrap(encodedCommand.getBytes()));
         }
-    }
-
-    private void processResponse(SocketChannel masterChannel) throws IOException {
-        ByteBuffer buffer = ByteBuffer.allocate(256);
-        int bytesRead = masterChannel.read(buffer);
-
-        if (bytesRead == -1) {
-            System.out.println("Client disconnected: " + masterChannel.getLocalAddress());
-            masterChannel.close();
-            return;
-        }
-
-        String line = new String(buffer.array());
-        Parser parser = new Parser(line);
-        parser.parse();
-        List<String> decodedList = parser.getDecodedResponse();
-
-        System.out.println(decodedList);
     }
 }
