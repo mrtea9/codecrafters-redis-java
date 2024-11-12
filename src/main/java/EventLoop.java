@@ -175,6 +175,8 @@ public class EventLoop {
         Selector readSelector = Selector.open();
         masterChannel.register(readSelector, SelectionKey.OP_READ);
 
+        StringBuilder responseAccumulator = new StringBuilder();
+
         while (masterChannel.isOpen()) {
             if (readSelector.select(1000) <= 0) return;
 
@@ -192,17 +194,29 @@ public class EventLoop {
                 if (bytesRead <= 0) continue;
 
                 buffer.flip();
-                String response = new String(buffer.array(), 0, bytesRead);
-                parseAndProcessResponse(response);
+                String responseChunk = new String(buffer.array(), 0, bytesRead);
+                responseAccumulator.append(responseChunk);
+
+                // Process complete responses
+                parseAndProcessResponse(responseAccumulator);
             }
         }
     }
 
-    private void parseAndProcessResponse(String response) {
-        Parser parser = new Parser(response);
-        parser.parse();
-        List<String> decodedList = parser.getDecodedResponse();
-        System.out.println(decodedList);
+    private void parseAndProcessResponse(StringBuilder responseAccumulator) {
+        // Split the accumulated response into RESP messages
+        String[] responses = responseAccumulator.toString().split("\r\n");
+
+        for (String response : responses) {
+            if (!response.isEmpty()) {
+                Parser parser = new Parser(response);
+                parser.parse();
+                List<String> decodedList = parser.getDecodedResponse();
+                System.out.println(decodedList);
+            }
+        }
+        // Clear the accumulator if all messages were processed
+        responseAccumulator.setLength(0);
     }
 
     private void sendPing(SocketChannel masterChannel) {
