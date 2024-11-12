@@ -209,10 +209,7 @@ public class EventLoop {
 
         for (String response : responses) {
             if (!response.isEmpty()) {
-                Parser parser = new Parser(response);
-                parser.parse();
-                List<String> decodedList = parser.getDecodedResponse();
-                System.out.println(decodedList);
+                System.out.println(response);
             }
         }
         // Clear the accumulator if all messages were processed
