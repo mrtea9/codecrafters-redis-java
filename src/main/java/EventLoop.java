@@ -9,6 +9,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public class EventLoop {
 
@@ -164,8 +165,8 @@ public class EventLoop {
 //        processResponse(masterChannel);
     }
 
-    private void sendAwaitResponse(SocketChannel masterChannel, Runnable sendCommand) throws IOException {
-        sendCommand.run();
+    private void sendAwaitResponse(SocketChannel masterChannel, Consumer<SocketChannel> sendCommand) throws IOException {
+        sendCommand.accept(masterChannel);
         processContinuousResponse(masterChannel);
     }
 
