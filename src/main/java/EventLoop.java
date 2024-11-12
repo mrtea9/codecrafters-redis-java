@@ -206,10 +206,13 @@ public class EventLoop {
     private void parseAndProcessResponse(StringBuilder responseAccumulator) {
         // Split the accumulated response into RESP messages
         String[] responses = responseAccumulator.toString().split("\r\n");
-
+        System.out.println(Arrays.toString(responses));
         for (String response : responses) {
             if (!response.isEmpty()) {
-                System.out.println(response);
+                Parser parser = new Parser(response);
+                parser.parse();
+                List<String> decodedList = parser.getDecodedResponse();
+                System.out.println(decodedList);
             }
         }
         // Clear the accumulator if all messages were processed
