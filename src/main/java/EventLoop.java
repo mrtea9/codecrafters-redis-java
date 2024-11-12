@@ -150,12 +150,12 @@ public class EventLoop {
         sendReplConfCapa(masterChannel);
         readResponse(masterChannel);
 
-        Thread.sleep(100);
+        Thread.sleep(10);
 
         sendPsync(masterChannel);
         readResponse(masterChannel);
 
-        Thread.sleep(100);
+        Thread.sleep(1000);
 
         processResponse(masterChannel);
     }
