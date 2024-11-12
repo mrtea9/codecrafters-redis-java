@@ -207,10 +207,8 @@ public class EventLoop {
         // Split the accumulated response into RESP messages
         String[] responses = responseAccumulator.toString().split("\r\n");
 
-        System.out.println(Arrays.toString(responses));
-//        for (String response : responses) {
-//            System.out.println(response);
-//        }
+        System.out.println(Parser.decodeArray(responses));
+
         // Clear the accumulator if all messages were processed
         responseAccumulator.setLength(0);
     }

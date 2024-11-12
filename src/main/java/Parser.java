@@ -38,6 +38,21 @@ public class Parser {
         }
     }
 
+    public static List<String> decodeArray(String[] encodedArray) {
+        List<String> result = new ArrayList<>();
+        for (String element : encodedArray) {
+            if (element.charAt(0) == '*') continue;
+
+            if (element.charAt(0) == '$') continue;
+
+            if (element.charAt(0) == ':') continue;
+
+            result.add(element);
+        }
+
+        return result;
+    }
+
     public static String encodeBulkString(String decoded) {
         return "$" + decoded.length() + "\r\n" + decoded + "\r\n";
     }
