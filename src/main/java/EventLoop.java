@@ -189,9 +189,12 @@ public class EventLoop {
         String[] responses = responseAccumulator.toString().split("\r\n");
 
         List<String> responsesList = Parser.decodeArray(responses);
+        System.out.println(responsesList);
 
         while (!responsesList.isEmpty()) {
             String firstElement = responsesList.remove(0);
+
+            System.out.println("first = " + firstElement);
 
             if (!firstElement.equalsIgnoreCase("set")) continue;
 
@@ -202,8 +205,6 @@ public class EventLoop {
 
             System.out.println("key = " + key + "; value = " + value);
         }
-
-        System.out.println(Parser.decodeArray(responses));
 
         // Clear the accumulator if all messages were processed
         responseAccumulator.setLength(0);
