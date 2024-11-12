@@ -194,7 +194,9 @@ public class EventLoop {
             if (!firstElement.equalsIgnoreCase("set")) continue;
 
             String key = responsesList.remove(0);
-            String value = responsesList.remove(0);
+            KeyValue value = new KeyValue(responsesList.remove(0), 0);
+
+            this.globalKeys.put(key, value);
 
             System.out.println("key = " + key + "; value = " + value);
         }
