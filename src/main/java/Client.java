@@ -174,11 +174,4 @@ public class Client {
         this.channel.write(ByteBuffer.wrap(contents));
 
     }
-
-    private void propagateCommand(String command, String... args) {
-        List<String> request = new ArrayList<>();
-        request.add(command);
-        request.addAll(Arrays.asList(args));
-
-    }
 }
