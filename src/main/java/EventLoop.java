@@ -142,27 +142,6 @@ public class EventLoop {
         sendAwaitResponse(masterChannel, this::sendReplConfPort);
         sendAwaitResponse(masterChannel, this::sendReplConfCapa);
         sendAwaitResponse(masterChannel, this::sendPsync);
-//        sendPing(masterChannel);
-//        readResponse(masterChannel);
-//
-//        Thread.sleep(10);
-//
-//        sendReplConfPort(masterChannel);
-//        readResponse(masterChannel);
-//
-//        Thread.sleep(10);
-//
-//        sendReplConfCapa(masterChannel);
-//        readResponse(masterChannel);
-//
-//        Thread.sleep(1000);
-//
-//        sendPsync(masterChannel);
-//        readResponse(masterChannel);
-//
-//        Thread.sleep(1000);
-//
-//        processResponse(masterChannel);
     }
 
     private void sendAwaitResponse(SocketChannel masterChannel, Consumer<SocketChannel> sendCommand) throws IOException {
