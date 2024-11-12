@@ -208,14 +208,9 @@ public class EventLoop {
         String[] responses = responseAccumulator.toString().split("\r\n");
 
         System.out.println(Arrays.toString(responses));
-        for (String response : responses) {
-            if (!response.isEmpty()) {
-                Parser parser = new Parser(response);
-                parser.parse();
-                List<String> decodedList = parser.getDecodedResponse();
-                System.out.println(decodedList);
-            }
-        }
+//        for (String response : responses) {
+//            System.out.println(response);
+//        }
         // Clear the accumulator if all messages were processed
         responseAccumulator.setLength(0);
     }
