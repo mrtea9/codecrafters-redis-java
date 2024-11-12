@@ -172,6 +172,5 @@ public class Client {
 
         this.channel.write(ByteBuffer.wrap(("$" + contents.length + "\r\n").getBytes()));
         this.channel.write(ByteBuffer.wrap(contents));
-
     }
 }
