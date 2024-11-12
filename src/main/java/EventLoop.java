@@ -154,6 +154,8 @@ public class EventLoop {
 
         sendPsync(masterChannel);
         readResponse(masterChannel);
+
+        processResponse(masterChannel);
     }
 
     private void sendPing(SocketChannel masterChannel) throws IOException {
@@ -212,5 +214,23 @@ public class EventLoop {
         for (SocketChannel replicaChannel : this.replicaChannels) {
             if (replicaChannel.isConnected()) replicaChannel.write(ByteBuffer.wrap(encodedCommand.getBytes()));
         }
+    }
+
+    private void processResponse(SocketChannel masterChannel) throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(256);
+        int bytesRead = masterChannel.read(buffer);
+
+        if (bytesRead == -1) {
+            System.out.println("Client disconnected: " + masterChannel.getLocalAddress());
+            masterChannel.close();
+            return;
+        }
+
+        String line = new String(buffer.array());
+        Parser parser = new Parser(line);
+        parser.parse();
+        List<String> decodedList = parser.getDecodedResponse();
+
+        System.out.println(decodedList);
     }
 }
