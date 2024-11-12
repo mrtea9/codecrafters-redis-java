@@ -54,8 +54,6 @@ public class EventLoop {
         this.serverSocketChannel.bind(new InetSocketAddress(this.port));
         this.serverSocketChannel.configureBlocking(false);
         this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-
-        //connectMaster();
     }
 
     public void runEventLoop() throws IOException {
