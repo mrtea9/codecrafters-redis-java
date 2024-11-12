@@ -193,16 +193,19 @@ public class EventLoop {
     }
 
     private void readResponse(SocketChannel masterChannel) throws  IOException {
-        ByteBuffer buffer = ByteBuffer.allocate(2048);
+        ByteBuffer buffer = ByteBuffer.allocate(256);
         int bytesRead = masterChannel.read(buffer);
 
         System.out.println(bytesRead);
 
         if (bytesRead <= 0) return;
 
-        byte[] responseBytes = new byte[bytesRead];
-        buffer.get(responseBytes);
-        System.out.println("Received response from master: " + new String(responseBytes));
+        String line = new String(buffer.array());
+        Parser parser = new Parser(line);
+        parser.parse();
+        List<String> decodedList = parser.getDecodedResponse();
+
+        System.out.println(decodedList);
     }
 
     public void propagateCommand(String command, String... args) throws IOException {
