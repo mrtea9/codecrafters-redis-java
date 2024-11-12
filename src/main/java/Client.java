@@ -1,30 +1,24 @@
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.util.HashMap;
-import java.util.HexFormat;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Client {
     private final SocketChannel channel;
     private final Map<String, KeyValue> keys;
     private final Map<String, String> config;
     private String time;
+    private final EventLoop eventLoop;
 
-    public Client(SocketChannel channel, Map<String, KeyValue> keys, Map<String, String> config) {
+    public Client(SocketChannel channel, Map<String, KeyValue> keys, Map<String, String> config, EventLoop eventLoop) {
         this.channel = channel;
         this.keys = keys;
         this.config = config;
+        this.eventLoop = eventLoop;
     }
 
     public Map<String, KeyValue> getKeys() {
         return this.keys;
-    }
-
-    public Map<String, String> getConfig() {
-        return this.config;
     }
 
     public void handleClient() throws IOException {
@@ -109,8 +103,9 @@ public class Client {
         }
 
         this.keys.put(key, valueKey);
-
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
+
+        this.eventLoop.propagateCommand("SET", key, value);
     }
 
     private void processGet(String key) throws IOException {
@@ -156,6 +151,8 @@ public class Client {
     }
 
     private void processReplconf() throws IOException {
+        this.eventLoop.replicaChannels.add(this.channel);
+
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
 
@@ -174,6 +171,13 @@ public class Client {
 
         this.channel.write(ByteBuffer.wrap(("$" + contents.length + "\r\n").getBytes()));
         this.channel.write(ByteBuffer.wrap(contents));
+
+    }
+
+    private void propagateCommand(String command, String... args) {
+        List<String> request = new ArrayList<>();
+        request.add(command);
+        request.addAll(Arrays.asList(args));
 
     }
 }

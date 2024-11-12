@@ -7,7 +7,6 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,6 +17,7 @@ public class EventLoop {
     private ServerSocketChannel serverSocketChannel;
     private Map<String, KeyValue> globalKeys = new ConcurrentHashMap<>();
     private Map<String, String> globalConfig = new ConcurrentHashMap<>();
+    public List<SocketChannel> replicaChannels;
 
     EventLoop(int port, String replicaOf) {
         this.port = port;
@@ -65,7 +65,7 @@ public class EventLoop {
                 if (key.isAcceptable()) acceptConnection();
 
                 if (key.isReadable()) {
-                    Client client = new Client((SocketChannel) key.channel(), this.globalKeys, this.globalConfig);
+                    Client client = new Client((SocketChannel) key.channel(), this.globalKeys, this.globalConfig, this);
                     client.handleClient();
                     this.globalKeys = client.getKeys();
                 }
@@ -201,5 +201,16 @@ public class EventLoop {
         byte[] responseBytes = new byte[bytesRead];
         buffer.get(responseBytes);
         System.out.println("Received response from master: " + new String(responseBytes));
+    }
+
+    public void propagateCommand(String command, String... args) throws IOException {
+        List<String> request = new ArrayList<>();
+        request.add(command);
+        request.addAll(Arrays.asList(args));
+        String encodedCommand = Parser.encodeArray(request);
+
+        for (SocketChannel replicaChannel : this.replicaChannels) {
+            if (replicaChannel.isConnected()) replicaChannel.write(ByteBuffer.wrap(encodedCommand.getBytes()));
+        }
     }
 }
