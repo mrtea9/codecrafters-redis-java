@@ -137,27 +137,71 @@ public class EventLoop {
     }
 
     private void sendHandshake(SocketChannel masterChannel) throws IOException, InterruptedException {
-        sendPing(masterChannel);
-        readResponse(masterChannel);
+        sendAwaitResponse(masterChannel, this::sendPing);
+        sendAwaitResponse(masterChannel, this::sendReplConfPort);
+        sendAwaitResponse(masterChannel, this::sendReplConfCapa);
+        sendAwaitResponse(masterChannel, this::sendPsync);
+//        sendPing(masterChannel);
+//        readResponse(masterChannel);
+//
+//        Thread.sleep(10);
+//
+//        sendReplConfPort(masterChannel);
+//        readResponse(masterChannel);
+//
+//        Thread.sleep(10);
+//
+//        sendReplConfCapa(masterChannel);
+//        readResponse(masterChannel);
+//
+//        Thread.sleep(1000);
+//
+//        sendPsync(masterChannel);
+//        readResponse(masterChannel);
+//
+//        Thread.sleep(1000);
+//
+//        processResponse(masterChannel);
+    }
 
-        Thread.sleep(10);
+    private void sendAwaitResponse(SocketChannel masterChannel, Runnable sendCommand) throws IOException {
+        sendCommand.run();
+        processContinuousResponse(masterChannel);
+    }
 
-        sendReplConfPort(masterChannel);
-        readResponse(masterChannel);
+    private void processContinuousResponse(SocketChannel masterChannel) throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        Selector readSelector = Selector.open();
+        masterChannel.register(readSelector, SelectionKey.OP_READ);
 
-        Thread.sleep(10);
+        while (masterChannel.isOpen()) {
+            if (readSelector.select(1000) <= 0) return;
 
-        sendReplConfCapa(masterChannel);
-        readResponse(masterChannel);
+            Iterator<SelectionKey> iterator = readSelector.selectedKeys().iterator();
 
-        Thread.sleep(1000);
+            while (iterator.hasNext()) {
+                SelectionKey key = iterator.next();
+                iterator.remove();
 
-        sendPsync(masterChannel);
-        readResponse(masterChannel);
+                if (!key.isReadable()) continue;
 
-        Thread.sleep(1000);
+                buffer.clear();
+                int bytesRead = masterChannel.read(buffer);
 
-        processResponse(masterChannel);
+                if (bytesRead <= 0) continue;
+
+                buffer.flip();
+                String response = new String(buffer.array(), 0, bytesRead);
+                parseAndProcessResponse(response);
+            }
+        }
+    }
+
+    private void parseAndProcessResponse(String response) {
+        Parser parser = new Parser(response);
+        parser.parse();
+        List<String> decodedList = parser.getDecodedResponse();
+        System.out.println(decodedList);
     }
 
     private void sendPing(SocketChannel masterChannel) throws IOException {
