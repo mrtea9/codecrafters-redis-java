@@ -77,6 +77,7 @@ public class Client {
 
             processReplconf();
         } else if (command.equalsIgnoreCase("psync")) {
+            this.eventLoop.replicaChannels.add(this.channel);
 
             processPsync();
         }
@@ -151,9 +152,9 @@ public class Client {
     }
 
     private void processReplconf() throws IOException {
-        this.eventLoop.replicaChannels.add(this.channel);
 
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
+
     }
 
     private void processPsync() throws IOException {
