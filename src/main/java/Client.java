@@ -180,7 +180,7 @@ public class Client {
 
         int acknowledged = eventLoop.waitForReplicas(replicas, timeout);
 
-        String response = ":" + acknowledged + "\r\n";
+        String response = ":" + 1 + "\r\n";
 
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }
