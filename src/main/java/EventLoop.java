@@ -196,22 +196,27 @@ public class EventLoop {
 
             System.out.println("first = " + firstElement);
 
-            if (firstElement.equalsIgnoreCase("replconf")) {
-                System.out.println("este");
-            }
+            if (firstElement.equalsIgnoreCase("replconf")) performReplConf(responsesList);
 
-            if (!firstElement.equalsIgnoreCase("set")) continue;
-
-            String key = responsesList.remove(0);
-            KeyValue value = new KeyValue(responsesList.remove(0), 0);
-
-            this.globalKeys.put(key, value);
-
-            System.out.println("key = " + key + "; value = " + value);
+            if (firstElement.equalsIgnoreCase("set")) performSet(responsesList);
         }
 
         // Clear the accumulator if all messages were processed
         responseAccumulator.setLength(0);
+    }
+
+    private void performReplConf(List<String> list) {
+        String element = list.remove(0);
+        System.out.println(element);
+    }
+
+    private void performSet(List<String> list) {
+        String key = list.remove(0);
+        KeyValue value = new KeyValue(list.remove(0), 0);
+
+        this.globalKeys.put(key, value);
+
+        System.out.println("key = " + key + "; value = " + value.value);
     }
 
     private void sendPing(SocketChannel masterChannel) {
