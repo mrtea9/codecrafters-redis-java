@@ -115,11 +115,6 @@ public class Client {
         this.eventLoop.propagateCommand("SET", key, value);
         this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
 
-        int requiredReplicas = 3; // Adjust this number based on your replication setup
-        int timeoutMillis = 2000; // Adjust the timeout as needed
-        int acknowledgments = this.eventLoop.waitForReplicas(requiredReplicas, timeoutMillis);
-
-        // Send the response to the client after propagation
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
 
