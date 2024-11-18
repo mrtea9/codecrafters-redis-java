@@ -177,6 +177,9 @@ public class Client {
         int replicas = Integer.parseInt(argument);
         int timeout = Integer.parseInt(timeWait);
 
+
+        this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
+
         int acknowledged = eventLoop.waitForReplicas(replicas, timeout);
 
         String response = ":" + acknowledged + "\r\n";
