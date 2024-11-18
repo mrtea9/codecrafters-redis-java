@@ -113,7 +113,6 @@ public class Client {
         this.eventLoop.propagateCommand("SET", key, value);
         this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
 
-
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
 
@@ -176,8 +175,9 @@ public class Client {
         int replicas = Integer.parseInt(argument);
         int timeout = Integer.parseInt(timeWait);
 
+        int acknowledged = this.eventLoop.replicaChannels.size();
 
-        String response = ":" + 1 + "\r\n";
+        String response = ":" + acknowledged + "\r\n";
 
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }
