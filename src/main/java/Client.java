@@ -118,6 +118,7 @@ public class Client {
             throw new RuntimeException(e);
         }
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
+        this.channel.write(ByteBuffer.wrap(("*3\\r\\n$3\\r\\nSET\\r\\n$3\\r\\nbaz\\r\\n$3\\r\\n789\\r\\n").getBytes()));
     }
 
     private void processGet(String key) throws IOException {
