@@ -170,8 +170,9 @@ public class Client {
     }
 
     private void processWait() throws IOException {
+        String response = ":" + this.eventLoop.replicaChannels.size() + "\r\n";
 
-        this.channel.write(ByteBuffer.wrap(":0\r\n".getBytes()));
+        this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }
 
     private void sendRdbFile() throws IOException {
