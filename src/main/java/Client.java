@@ -10,6 +10,7 @@ public class Client {
     private final Map<String, String> config;
     private String time;
     private final EventLoop eventLoop;
+    private boolean isMaster;
 
     public Client(SocketChannel channel, Map<String, KeyValue> keys, Map<String, String> config, EventLoop eventLoop) {
         this.channel = channel;
@@ -112,6 +113,8 @@ public class Client {
 
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
 
+        if (!this.isMaster) return;
+
         this.eventLoop.propagateCommand("SET", key, value);
         this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
     }
@@ -151,6 +154,7 @@ public class Client {
         String masterReplId = "master_replid:" + this.config.get("master_replid");
         String masterReplOffset = "master_repl_offset:" + this.config.get("master_repl_offset");
 
+        this.isMaster = replicaOf.isEmpty();
         result = replicaOf.isEmpty() ? "role:master" : "role:slave";
         result += "\r\n" + masterReplOffset + "\r\n" + masterReplId;
         result = Parser.encodeBulkString(result);
