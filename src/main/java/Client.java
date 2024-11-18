@@ -112,6 +112,8 @@ public class Client {
 
         this.keys.put(key, valueKey);
 
+        this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
+
         CompletableFuture<Void> propagationFuture = CompletableFuture.runAsync(() -> {
             try {
                 this.eventLoop.propagateCommand("SET", key, value);
@@ -126,7 +128,6 @@ public class Client {
         propagationFuture.join();
         System.out.println("Propagation completed. Responding to client...");
 
-        this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
 
     private void processGet(String key) throws IOException {
