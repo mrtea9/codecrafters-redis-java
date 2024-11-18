@@ -227,7 +227,6 @@ public class EventLoop {
         System.out.println(request);
 
         masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
-        System.out.println(Parser.encodeArray(request).getBytes().length);
         this.offset += 37;
     }
 
@@ -236,6 +235,8 @@ public class EventLoop {
         KeyValue value = new KeyValue(list.remove(0), 0);
 
         this.globalKeys.put(key, value);
+
+        this.offset += Parser.encodeArray(Arrays.asList("SET", key, value.value)).getBytes().length;
 
         System.out.println("key = " + key + "; value = " + value);
     }
