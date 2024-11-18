@@ -177,7 +177,7 @@ public class Client {
 
         int acknowledged = this.eventLoop.replicaChannels.size();
 
-        String response = ":" + acknowledged + "\r\n";
+        String response = ":" + 1 + "\r\n";
 
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }
