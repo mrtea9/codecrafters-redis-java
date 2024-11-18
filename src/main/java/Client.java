@@ -173,9 +173,12 @@ public class Client {
     }
 
     private void processWait(String argument, String timeWait) throws IOException {
+        int replicas = Integer.parseInt(argument);
+        int timeout = Integer.parseInt(timeWait);
 
-        //String response = ":" + this.eventLoop.replicaChannels.size() + "\r\n";
-        String response = ":" + this.eventLoop.processedReplica + "\r\n";
+        int acknowledged = eventLoop.waitForReplicas(replicas, timeout);
+
+        String response = ":" + acknowledged + "\r\n";
 
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }

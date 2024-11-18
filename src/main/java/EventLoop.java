@@ -9,7 +9,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -22,7 +22,8 @@ public class EventLoop {
     private final Map<String, String> globalConfig = new ConcurrentHashMap<>();
     public List<SocketChannel> replicaChannels = new ArrayList<>();
     private int offset = 0;
-    public int processedReplica = 0;
+    private final ConcurrentHashMap<String, Integer> replicaAcknowledgements = new ConcurrentHashMap<>();
+    private final ExecutorService executor = Executors.newCachedThreadPool();
 
     EventLoop(int port, String replicaOf) {
         this.port = port;
@@ -299,8 +300,28 @@ public class EventLoop {
         for (SocketChannel replicaChannel : this.replicaChannels) {
             if (replicaChannel.isConnected()) {
                 replicaChannel.write(ByteBuffer.wrap(encodedCommand.getBytes()));
-                this.processedReplica++;
             }
+        }
+    }
+
+    public int waitForReplicas(int requiredReplicas, int timeoutMillis) {
+        CompletableFuture<Integer> future = new CompletableFuture<>();
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        long startTime = System.currentTimeMillis();
+        scheduler.scheduleAtFixedRate(() -> {
+            int currentAcknowledgements = replicaAcknowledgements.values().stream().mapToInt(Integer::intValue).sum();
+            if (currentAcknowledgements >= requiredReplicas || System.currentTimeMillis() - startTime > timeoutMillis) {
+                scheduler.shutdown();
+                future.complete(Math.min(currentAcknowledgements, requiredReplicas));
+            }
+        }, 0, 100, TimeUnit.MILLISECONDS);
+
+        try {
+            return future.get(timeoutMillis, TimeUnit.MILLISECONDS);
+        } catch (TimeoutException | InterruptedException | ExecutionException e) {
+            scheduler.shutdown();
+            return replicaAcknowledgements.values().stream().mapToInt(Integer::intValue).sum();
         }
     }
 }
