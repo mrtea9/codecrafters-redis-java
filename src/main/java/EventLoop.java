@@ -304,6 +304,10 @@ public class EventLoop {
         }
     }
 
+    public void acknowledge(String command) {
+        replicaAcknowledgements.merge(command, 1, Integer::sum);
+    }
+
     public int waitForReplicas(int requiredReplicas, int timeoutMillis) {
         CompletableFuture<Integer> future = new CompletableFuture<>();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);

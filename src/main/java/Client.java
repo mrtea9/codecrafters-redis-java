@@ -75,6 +75,7 @@ public class Client {
             processInfo();
         } else if (command.equalsIgnoreCase("replconf")) {
 
+            eventLoop.acknowledge("replconf");
             processReplconf();
         } else if (command.equalsIgnoreCase("psync")) {
             this.eventLoop.replicaChannels.add(this.channel);
