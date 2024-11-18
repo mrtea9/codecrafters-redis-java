@@ -10,6 +10,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class EventLoop {
@@ -21,6 +22,7 @@ public class EventLoop {
     private final Map<String, String> globalConfig = new ConcurrentHashMap<>();
     public List<SocketChannel> replicaChannels = new ArrayList<>();
     private int offset = 0;
+    public int processedReplica = 0;
 
     EventLoop(int port, String replicaOf) {
         this.port = port;
@@ -295,7 +297,12 @@ public class EventLoop {
         String encodedCommand = Parser.encodeArray(request);
 
         for (SocketChannel replicaChannel : this.replicaChannels) {
-            if (replicaChannel.isConnected()) replicaChannel.write(ByteBuffer.wrap(encodedCommand.getBytes()));
+            if (replicaChannel.isConnected()) {
+                replicaChannel.write(ByteBuffer.wrap(encodedCommand.getBytes()));
+                this.processedReplica++;
+            }
         }
+
+        this.processedReplica = 0;
     }
 }

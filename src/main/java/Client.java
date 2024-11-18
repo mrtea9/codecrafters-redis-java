@@ -81,8 +81,10 @@ public class Client {
 
             processPsync();
         } else if (command.equalsIgnoreCase("wait")) {
+            String argument = decodedList.get(1);
+            String timeWait = decodedList.get(2);
 
-            processWait();
+            processWait(argument, timeWait);
         }
 
     }
@@ -170,8 +172,11 @@ public class Client {
         sendRdbFile();
     }
 
-    private void processWait() throws IOException {
-        String response = ":" + this.eventLoop.replicaChannels.size() + "\r\n";
+    private void processWait(String argument, String timeWait) throws IOException {
+
+        //String response = ":" + this.eventLoop.replicaChannels.size() + "\r\n";
+        String response = ":" + this.eventLoop.processedReplica + "\r\n";
+
 
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }
