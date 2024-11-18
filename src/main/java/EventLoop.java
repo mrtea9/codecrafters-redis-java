@@ -223,6 +223,7 @@ public class EventLoop {
 
     private void sendReplConfPort(SocketChannel masterChannel) {
         List<String> request = new ArrayList<>();
+
         request.add("REPLCONF");
         request.add("listening-port");
         request.add(String.valueOf(this.port));
