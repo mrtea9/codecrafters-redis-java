@@ -296,7 +296,7 @@ public class EventLoop {
         request.add(command);
         request.addAll(Arrays.asList(args));
         String encodedCommand = Parser.encodeArray(request);
-
+        System.out.println(encodedCommand);
         for (SocketChannel replicaChannel : this.replicaChannels) {
             if (replicaChannel.isConnected()) {
                 replicaChannel.write(ByteBuffer.wrap(encodedCommand.getBytes()));
