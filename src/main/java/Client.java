@@ -114,7 +114,7 @@ public class Client {
 
         this.eventLoop.propagateCommand("SET", key, value);
 
-        this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
+       // this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
     }
 
     private void processGet(String key) throws IOException {
@@ -155,7 +155,6 @@ public class Client {
         result = replicaOf.isEmpty() ? "role:master" : "role:slave";
         result += "\r\n" + masterReplOffset + "\r\n" + masterReplId;
         result = Parser.encodeBulkString(result);
-
 
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
     }
