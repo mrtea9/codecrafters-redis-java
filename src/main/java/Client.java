@@ -113,7 +113,7 @@ public class Client {
 
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
 
-        if (!this.isMaster) return;
+        if (this.isMaster) return;
 
         this.eventLoop.propagateCommand("SET", key, value);
         this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
