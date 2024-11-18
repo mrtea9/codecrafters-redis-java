@@ -164,7 +164,7 @@ public class EventLoop {
         StringBuilder responseAccumulator = new StringBuilder();
 
         while (masterChannel.isOpen()) {
-            if (readSelector.select(1100) <= 0) return;
+            if (readSelector.select(1200) <= 0) return;
 
             Iterator<SelectionKey> iterator = readSelector.selectedKeys().iterator();
 
