@@ -177,7 +177,6 @@ public class Client {
         //String response = ":" + this.eventLoop.replicaChannels.size() + "\r\n";
         String response = ":" + this.eventLoop.processedReplica + "\r\n";
 
-
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }
 

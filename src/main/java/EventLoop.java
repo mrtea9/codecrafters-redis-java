@@ -302,7 +302,5 @@ public class EventLoop {
                 this.processedReplica++;
             }
         }
-
-        this.processedReplica = 0;
     }
 }
