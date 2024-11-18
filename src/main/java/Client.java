@@ -76,7 +76,6 @@ public class Client {
             processInfo();
         } else if (command.equalsIgnoreCase("replconf")) {
 
-            eventLoop.acknowledge("replconf");
             processReplconf();
         } else if (command.equalsIgnoreCase("psync")) {
             this.eventLoop.replicaChannels.add(this.channel);
@@ -88,7 +87,6 @@ public class Client {
 
             processWait(argument, timeWait);
         }
-
     }
 
     private void processPing() throws IOException {
@@ -178,7 +176,6 @@ public class Client {
         int replicas = Integer.parseInt(argument);
         int timeout = Integer.parseInt(timeWait);
 
-        int acknowledged = eventLoop.waitForReplicas(replicas, timeout);
 
         String response = ":" + 1 + "\r\n";
 

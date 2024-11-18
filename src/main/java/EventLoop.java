@@ -302,29 +302,4 @@ public class EventLoop {
             }
         }
     }
-
-    public void acknowledge(String command) {
-        replicaAcknowledgements.merge(command, 1, Integer::sum);
-    }
-
-    public int waitForReplicas(int requiredReplicas, int timeoutMillis) {
-        CompletableFuture<Integer> future = new CompletableFuture<>();
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-        long startTime = System.currentTimeMillis();
-        scheduler.scheduleAtFixedRate(() -> {
-            int currentAcknowledgements = replicaAcknowledgements.values().stream().mapToInt(Integer::intValue).sum();
-            if (currentAcknowledgements >= requiredReplicas || System.currentTimeMillis() - startTime > timeoutMillis) {
-                scheduler.shutdown();
-                future.complete(currentAcknowledgements);
-            }
-        }, 0, 100, TimeUnit.MILLISECONDS);
-
-        try {
-            return future.get(timeoutMillis, TimeUnit.MILLISECONDS);
-        } catch (TimeoutException | InterruptedException | ExecutionException e) {
-            scheduler.shutdown();
-            return replicaAcknowledgements.values().stream().mapToInt(Integer::intValue).sum();
-        }
-    }
 }
