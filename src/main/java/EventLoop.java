@@ -227,7 +227,7 @@ public class EventLoop {
 
         this.globalKeys.put(key, value);
 
-        System.out.println("key = " + key + "; value = " + value.value);
+        System.out.println("key = " + key + "; value = " + value.value + "; timestamp = " + value.expiryTimestamp);
     }
 
     private void sendPing(SocketChannel masterChannel) {
