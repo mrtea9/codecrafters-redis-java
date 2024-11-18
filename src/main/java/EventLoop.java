@@ -199,10 +199,8 @@ public class EventLoop {
             System.out.println("first = " + firstElement);
 
             if (firstElement.equalsIgnoreCase("set")) performSet(responsesList);
-
             if (firstElement.equalsIgnoreCase("ping")) performPing();
             if (firstElement.equalsIgnoreCase("replconf")) performReplConf(responsesList, masterChannel);
-
         }
         // Clear the accumulator if all messages were processed
         responseAccumulator.setLength(0);
