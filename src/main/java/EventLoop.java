@@ -297,6 +297,7 @@ public class EventLoop {
 
         for (SocketChannel replicaChannel : this.replicaChannels) {
             if (replicaChannel.isConnected()) {
+                System.out.println("replica = " + encodedCommand);
                 replicaChannel.write(ByteBuffer.wrap(encodedCommand.getBytes()));
             }
         }
