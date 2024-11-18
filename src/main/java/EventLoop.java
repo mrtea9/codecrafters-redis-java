@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -10,7 +9,6 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class EventLoop {
@@ -22,8 +20,6 @@ public class EventLoop {
     private final Map<String, String> globalConfig = new ConcurrentHashMap<>();
     public List<SocketChannel> replicaChannels = new ArrayList<>();
     private int offset = 0;
-    private final ConcurrentHashMap<String, Integer> replicaAcknowledgements = new ConcurrentHashMap<>();
-    private final ExecutorService executor = Executors.newCachedThreadPool();
 
     EventLoop(int port, String replicaOf) {
         this.port = port;
@@ -59,6 +55,7 @@ public class EventLoop {
         this.serverSocketChannel.bind(new InetSocketAddress(this.port));
         this.serverSocketChannel.configureBlocking(false);
         this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+        System.out.println("Server started on port " + port);
     }
 
     public void runEventLoop() throws IOException {
@@ -130,7 +127,7 @@ public class EventLoop {
             masterChannel.register(this.selector, SelectionKey.OP_CONNECT);
 
             while (!masterChannel.finishConnect()) {
-                continue;
+                Thread.yield();
             }
 
             System.out.println("Connected to master: " + replicaOf);
