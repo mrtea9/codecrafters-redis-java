@@ -114,7 +114,7 @@ public class Client {
 
         this.eventLoop.propagateCommand("SET", key, value);
 
-       // this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
+        this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
     }
 
     private void processGet(String key) throws IOException {
