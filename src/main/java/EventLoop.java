@@ -203,7 +203,6 @@ public class EventLoop {
             if (firstElement.equalsIgnoreCase("replconf")) performReplConf(responsesList, masterChannel);
 
         }
-
         // Clear the accumulator if all messages were processed
         responseAccumulator.setLength(0);
     }
