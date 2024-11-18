@@ -111,9 +111,13 @@ public class Client {
 
         this.keys.put(key, valueKey);
         this.eventLoop.propagateCommand("SET", key, value);
-        this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
-
         this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
 
     private void processGet(String key) throws IOException {
