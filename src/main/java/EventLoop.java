@@ -74,6 +74,7 @@ public class EventLoop {
                     System.out.println("Handling client...");
                     Client client = new Client((SocketChannel) key.channel(), this.globalKeys, this.globalConfig, this);
                     client.handleClient();
+                    if (replicaChannels.contains(key.channel())) System.out.println("replica");
                     this.globalKeys = client.getKeys();
                 }
 
