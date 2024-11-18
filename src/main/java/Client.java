@@ -113,7 +113,7 @@ public class Client {
         this.eventLoop.propagateCommand("SET", key, value);
         this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1800);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
