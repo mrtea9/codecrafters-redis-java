@@ -197,8 +197,6 @@ public class EventLoop {
 
             System.out.println("first = " + firstElement);
 
-            if (firstElement.equalsIgnoreCase("replconf")) performReplConf(responsesList, masterChannel);
-
             if (firstElement.equalsIgnoreCase("set")) {
                 String key = responsesList.remove(0);
                 KeyValue value = new KeyValue(responsesList.remove(0), 0);
@@ -207,6 +205,9 @@ public class EventLoop {
 
                 System.out.println("key = " + key + "; value = " + value);
             }
+
+            if (firstElement.equalsIgnoreCase("replconf")) performReplConf(responsesList, masterChannel);
+
         }
 
         // Clear the accumulator if all messages were processed
