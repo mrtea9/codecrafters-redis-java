@@ -196,6 +196,10 @@ public class EventLoop {
 
             System.out.println("first = " + firstElement);
 
+            if (firstElement.equalsIgnoreCase("replconf")) {
+                System.out.println("este");
+            }
+
             if (!firstElement.equalsIgnoreCase("set")) continue;
 
             String key = responsesList.remove(0);
@@ -223,7 +227,6 @@ public class EventLoop {
 
     private void sendReplConfPort(SocketChannel masterChannel) {
         List<String> request = new ArrayList<>();
-
         request.add("REPLCONF");
         request.add("listening-port");
         request.add(String.valueOf(this.port));
