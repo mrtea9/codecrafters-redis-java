@@ -158,7 +158,6 @@ public class Client {
     private void processReplconf() throws IOException {
 
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
-
     }
 
     private void processPsync() throws IOException {
