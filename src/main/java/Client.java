@@ -115,6 +115,7 @@ public class Client {
         this.eventLoop.propagateCommand("SET", key, value);
         this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
 
+
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
 
