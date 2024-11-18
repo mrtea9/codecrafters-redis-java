@@ -197,14 +197,7 @@ public class EventLoop {
 
             System.out.println("first = " + firstElement);
 
-            if (firstElement.equalsIgnoreCase("set")) {
-                String key = responsesList.remove(0);
-                KeyValue value = new KeyValue(responsesList.remove(0), 0);
-
-                this.globalKeys.put(key, value);
-
-                System.out.println("key = " + key + "; value = " + value);
-            }
+            if (firstElement.equalsIgnoreCase("set")) performSet(responsesList);
 
             if (firstElement.equalsIgnoreCase("replconf")) performReplConf(responsesList, masterChannel);
 
@@ -227,6 +220,15 @@ public class EventLoop {
         System.out.println(request);
 
         masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
+    }
+
+    private void performSet(List<String> list) {
+        String key = list.remove(0);
+        KeyValue value = new KeyValue(list.remove(0), 0);
+
+        this.globalKeys.put(key, value);
+
+        System.out.println("key = " + key + "; value = " + value);
     }
 
     private void sendPing(SocketChannel masterChannel) {
