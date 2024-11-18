@@ -20,6 +20,7 @@ public class EventLoop {
     private final Map<String, String> globalConfig = new ConcurrentHashMap<>();
     public List<SocketChannel> replicaChannels = new ArrayList<>();
     private int offset = 0;
+    private final ExecutorService executor = Executors.newCachedThreadPool();
 
     EventLoop(int port, String replicaOf) {
         this.port = port;
@@ -70,6 +71,7 @@ public class EventLoop {
                 if (key.isAcceptable()) acceptConnection();
 
                 if (key.isReadable()) {
+                    System.out.println("Handling client...");
                     Client client = new Client((SocketChannel) key.channel(), this.globalKeys, this.globalConfig, this);
                     client.handleClient();
                     this.globalKeys = client.getKeys();
@@ -286,17 +288,26 @@ public class EventLoop {
         }
     }
 
-    public void propagateCommand(String command, String... args) throws IOException {
-        List<String> request = new ArrayList<>();
-        request.add(command);
-        request.addAll(Arrays.asList(args));
-        String encodedCommand = Parser.encodeArray(request);
+    public void propagateCommand(String command, String... args) {
+        System.out.println("Propagating command: " + command + " with args: " + Arrays.toString(args));
+        executor.submit(() -> {
+            List<String> request = new ArrayList<>();
+            request.add(command);
+            request.addAll(Arrays.asList(args));
+            String encodedCommand = Parser.encodeArray(request);
 
-        for (SocketChannel replicaChannel : this.replicaChannels) {
-            if (replicaChannel.isConnected()) {
-                System.out.println("replica = ");
-                replicaChannel.write(ByteBuffer.wrap(encodedCommand.getBytes()));
+            for (SocketChannel replicaChannel : replicaChannels) {
+                if (replicaChannel.isConnected()) {
+                    try {
+                        replicaChannel.write(ByteBuffer.wrap(encodedCommand.getBytes()));
+                        System.out.println("Command propagated to replica: " + replicaChannel.getRemoteAddress());
+                    } catch (IOException e) {
+                        System.err.println("Error propagating to replica: " + e.getMessage());
+                    }
+                } else {
+                    System.out.println("Replica channel not connected: " + replicaChannel);
+                }
             }
-        }
+        });
     }
 }
