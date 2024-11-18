@@ -199,7 +199,14 @@ public class EventLoop {
 
             if (firstElement.equalsIgnoreCase("replconf")) performReplConf(responsesList, masterChannel);
 
-            if (firstElement.equalsIgnoreCase("set")) performSet(responsesList);
+            if (firstElement.equalsIgnoreCase("set")) {
+                String key = responsesList.remove(0);
+                KeyValue value = new KeyValue(responsesList.remove(0), 0);
+
+                this.globalKeys.put(key, value);
+
+                System.out.println("key = " + key + "; value = " + value);
+            }
         }
 
         // Clear the accumulator if all messages were processed
@@ -219,15 +226,6 @@ public class EventLoop {
         System.out.println(request);
 
         masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
-    }
-
-    private void performSet(List<String> list) {
-        String key = list.remove(0);
-        KeyValue value = new KeyValue(list.remove(0), 0);
-
-        this.globalKeys.put(key, value);
-
-        System.out.println("key = " + key + "; value = " + value);
     }
 
     private void sendPing(SocketChannel masterChannel) {
