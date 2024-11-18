@@ -316,7 +316,7 @@ public class EventLoop {
             int currentAcknowledgements = replicaAcknowledgements.values().stream().mapToInt(Integer::intValue).sum();
             if (currentAcknowledgements >= requiredReplicas || System.currentTimeMillis() - startTime > timeoutMillis) {
                 scheduler.shutdown();
-                future.complete(Math.min(currentAcknowledgements, requiredReplicas));
+                future.complete(currentAcknowledgements);
             }
         }, 0, 100, TimeUnit.MILLISECONDS);
 
