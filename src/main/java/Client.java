@@ -111,19 +111,22 @@ public class Client {
         }
 
         this.keys.put(key, valueKey);
+
         CompletableFuture<Void> propagationFuture = CompletableFuture.runAsync(() -> {
             try {
                 this.eventLoop.propagateCommand("SET", key, value);
                 this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
             } catch (IOException e) {
-                System.err.println("Error during propagation: " + e.getMessage());
+                throw new RuntimeException("Error during propagation: " + e.getMessage());
             }
         });
 
-        // Wait for propagation to complete
+        // Wait for the propagation to complete
+        System.out.println("Starting propagation...");
         propagationFuture.join();
+        System.out.println("Propagation completed. Responding to client...");
 
-        // Respond to the client
+
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
 
