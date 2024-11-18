@@ -80,6 +80,8 @@ public class Client {
             this.eventLoop.replicaChannels.add(this.channel);
 
             processPsync();
+        } else if (command.equalsIgnoreCase("wait")) {
+            System.out.println("wait");
         }
 
     }
