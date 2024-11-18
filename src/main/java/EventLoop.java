@@ -227,7 +227,7 @@ public class EventLoop {
         System.out.println(request);
 
         masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
-
+        System.out.println(Parser.encodeArray(request).getBytes().length);
         this.offset += 37;
     }
 
