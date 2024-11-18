@@ -110,6 +110,8 @@ public class Client {
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
 
         this.eventLoop.propagateCommand("SET", key, value);
+
+        this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
     }
 
     private void processGet(String key) throws IOException {
