@@ -200,12 +200,18 @@ public class EventLoop {
 
             if (firstElement.equalsIgnoreCase("set")) performSet(responsesList);
 
+            if (firstElement.equalsIgnoreCase("ping")) performPing();
+
             if (firstElement.equalsIgnoreCase("replconf")) performReplConf(responsesList, masterChannel);
 
         }
 
         // Clear the accumulator if all messages were processed
         responseAccumulator.setLength(0);
+    }
+
+    private void performPing() {
+        this.offset += 14;
     }
 
     private void performReplConf(List<String> list, SocketChannel masterChannel) throws IOException {
