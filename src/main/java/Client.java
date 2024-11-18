@@ -81,7 +81,8 @@ public class Client {
 
             processPsync();
         } else if (command.equalsIgnoreCase("wait")) {
-            System.out.println("wait");
+
+            processWait();
         }
 
     }
@@ -166,6 +167,11 @@ public class Client {
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
 
         sendRdbFile();
+    }
+
+    private void processWait() throws IOException {
+
+        this.channel.write(ByteBuffer.wrap("0".getBytes()));
     }
 
     private void sendRdbFile() throws IOException {
