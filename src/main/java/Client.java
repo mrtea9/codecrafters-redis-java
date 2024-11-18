@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class Client {
     private final SocketChannel channel;
@@ -110,9 +111,19 @@ public class Client {
         }
 
         this.keys.put(key, valueKey);
-        this.eventLoop.propagateCommand("SET", key, value);
-        this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
+        CompletableFuture<Void> propagationFuture = CompletableFuture.runAsync(() -> {
+            try {
+                this.eventLoop.propagateCommand("SET", key, value);
+                this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
+            } catch (IOException e) {
+                System.err.println("Error during propagation: " + e.getMessage());
+            }
+        });
 
+        // Wait for propagation to complete
+        propagationFuture.join();
+
+        // Respond to the client
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
 
