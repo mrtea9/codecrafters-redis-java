@@ -171,7 +171,7 @@ public class Client {
     }
 
     private void processWait() throws IOException {
-        String response = ":" + this.eventLoop.replicaChannels.size() + "\r\n";
+        String response = ":" + "1" + "\r\n";
 
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }
