@@ -171,7 +171,7 @@ public class Client {
 
     private void processWait() throws IOException {
 
-        this.channel.write(ByteBuffer.wrap("+0".getBytes()));
+        this.channel.write(ByteBuffer.wrap("+0\r\n".getBytes()));
     }
 
     private void sendRdbFile() throws IOException {
