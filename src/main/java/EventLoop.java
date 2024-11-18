@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -179,12 +180,12 @@ public class EventLoop {
                 responseAccumulator.append(responseChunk);
 
                 // Process complete responses
-                parseAndProcessResponse(responseAccumulator);
+                parseAndProcessResponse(responseAccumulator, masterChannel);
             }
         }
     }
 
-    private void parseAndProcessResponse(StringBuilder responseAccumulator) {
+    private void parseAndProcessResponse(StringBuilder responseAccumulator, SocketChannel masterChannel) throws IOException {
         // Split the accumulated response into RESP messages
         String[] responses = responseAccumulator.toString().split("\r\n");
 
@@ -196,7 +197,7 @@ public class EventLoop {
 
             System.out.println("first = " + firstElement);
 
-            if (firstElement.equalsIgnoreCase("replconf")) performReplConf(responsesList);
+            if (firstElement.equalsIgnoreCase("replconf")) performReplConf(responsesList, masterChannel);
 
             if (firstElement.equalsIgnoreCase("set")) performSet(responsesList);
         }
@@ -205,9 +206,19 @@ public class EventLoop {
         responseAccumulator.setLength(0);
     }
 
-    private void performReplConf(List<String> list) {
+    private void performReplConf(List<String> list, SocketChannel masterChannel) throws IOException {
         String element = list.remove(0);
+        List<String> request = new ArrayList<>();
+
         System.out.println(element);
+        if (!element.equalsIgnoreCase("getack")) return;
+
+        request.add("REPLCONF");
+        request.add("ACK");
+        request.add("0");
+        System.out.println(request);
+
+        masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
     }
 
     private void performSet(List<String> list) {
