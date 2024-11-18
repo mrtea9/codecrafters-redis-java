@@ -127,7 +127,6 @@ public class EventLoop {
             SocketChannel masterChannel = SocketChannel.open();
             masterChannel.configureBlocking(false);
             masterChannel.connect(new InetSocketAddress(host, port));
-
             masterChannel.register(this.selector, SelectionKey.OP_CONNECT);
 
             while (!masterChannel.finishConnect()) {
@@ -137,7 +136,6 @@ public class EventLoop {
             System.out.println("Connected to master: " + replicaOf);
 
             sendHandshake(masterChannel);
-
         } catch (IOException | InterruptedException e) {
             System.out.println(e.getMessage());
         }
@@ -296,7 +294,7 @@ public class EventLoop {
         request.add(command);
         request.addAll(Arrays.asList(args));
         String encodedCommand = Parser.encodeArray(request);
-        System.out.println(encodedCommand);
+
         for (SocketChannel replicaChannel : this.replicaChannels) {
             if (replicaChannel.isConnected()) {
                 replicaChannel.write(ByteBuffer.wrap(encodedCommand.getBytes()));

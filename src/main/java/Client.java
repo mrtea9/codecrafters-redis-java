@@ -175,6 +175,7 @@ public class Client {
     private void processWait(String argument, String timeWait) throws IOException {
         int replicas = Integer.parseInt(argument);
         int timeout = Integer.parseInt(timeWait);
+        System.out.println("aici");
 
         int acknowledged = eventLoop.waitForReplicas(replicas, timeout);
 
