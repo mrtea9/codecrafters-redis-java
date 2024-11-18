@@ -20,6 +20,7 @@ public class EventLoop {
     private Map<String, KeyValue> globalKeys = new ConcurrentHashMap<>();
     private final Map<String, String> globalConfig = new ConcurrentHashMap<>();
     public List<SocketChannel> replicaChannels = new ArrayList<>();
+    private int offset = 0;
 
     EventLoop(int port, String replicaOf) {
         this.port = port;
@@ -216,10 +217,12 @@ public class EventLoop {
 
         request.add("REPLCONF");
         request.add("ACK");
-        request.add("0");
+        request.add(Integer.toString(this.offset));
         System.out.println(request);
 
         masterChannel.write(ByteBuffer.wrap(Parser.encodeArray(request).getBytes()));
+
+        this.offset += 37;
     }
 
     private void performSet(List<String> list) {
