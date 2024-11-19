@@ -117,6 +117,7 @@ public class Client {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        if (this.eventLoop.replicaChannels.contains(this.channel)) return;
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
 
