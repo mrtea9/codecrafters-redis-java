@@ -296,11 +296,6 @@ public class EventLoop {
             String encodedCommand = Parser.encodeArray(request);
 
             for (SocketChannel replicaChannel : replicaChannels) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
                 if (replicaChannel.isConnected()) {
                     try {
                         replicaChannel.write(ByteBuffer.wrap(encodedCommand.getBytes()));
