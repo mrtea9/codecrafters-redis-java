@@ -185,12 +185,9 @@ public class Client {
         int replicas = Integer.parseInt(argument);
         int timeout = Integer.parseInt(timeWait);
 
+        // If no commands have been propagated, return the number of connected replicas
         if (this.eventLoop.acknowledged.get() == 0) {
-            // Get the count of connected replicas
             int connectedReplicas = this.eventLoop.replicaChannels.size();
-            System.out.println("No commands propagated. Connected replicas: " + connectedReplicas);
-
-            // Respond with the minimum of requested replicas and connected replicas
             String response = ":" + Math.min(connectedReplicas, replicas) + "\r\n";
             this.channel.write(ByteBuffer.wrap(response.getBytes()));
             return;
@@ -216,7 +213,9 @@ public class Client {
                 String response = ":" + result + "\r\n";
 
                 // Reset the acknowledged count after responding
-                this.eventLoop.acknowledged.set(0);
+                synchronized (this.eventLoop) { // Synchronize to avoid concurrent issues
+                    this.eventLoop.acknowledged.set(0);
+                }
 
                 this.channel.write(ByteBuffer.wrap(response.getBytes()));
             } catch (IOException e) {
