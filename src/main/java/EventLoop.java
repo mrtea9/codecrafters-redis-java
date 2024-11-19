@@ -9,6 +9,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class EventLoop {
@@ -19,7 +20,7 @@ public class EventLoop {
     private Map<String, KeyValue> globalKeys = new ConcurrentHashMap<>();
     private final Map<String, String> globalConfig = new ConcurrentHashMap<>();
     public List<SocketChannel> replicaChannels = new ArrayList<>();
-    public int acknowledged;
+    public AtomicInteger acknowledged = new AtomicInteger(0);
     private int offset = 0;
 
     EventLoop(int port, String replicaOf) {
@@ -288,7 +289,6 @@ public class EventLoop {
     }
 
     public void propagateCommand(String command, String... args) {
-        System.out.println(this.acknowledged);
         System.out.println("Propagating command: " + command + " with args: " + Arrays.toString(args));
         List<String> request = new ArrayList<>();
         request.add(command);

@@ -166,7 +166,7 @@ public class Client {
         if (commandArg.equalsIgnoreCase("capa")) this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
         if (commandArg.equalsIgnoreCase("ack")) {
             System.out.println("este");
-            this.eventLoop.acknowledged++;
+            this.eventLoop.acknowledged.incrementAndGet();
         }
 
     }
@@ -183,7 +183,7 @@ public class Client {
         int replicas = Integer.parseInt(argument);
         int timeout = Integer.parseInt(timeWait);
 
-        int acknowledged = this.eventLoop.acknowledged;
+        int acknowledged = this.eventLoop.acknowledged.get();
 
         String response = ":" + acknowledged + "\r\n";
 
