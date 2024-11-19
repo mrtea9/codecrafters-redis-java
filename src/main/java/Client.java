@@ -113,7 +113,7 @@ public class Client {
         this.eventLoop.propagateCommand("SET", key, value);
 
         try {
-            Thread.sleep(500);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
