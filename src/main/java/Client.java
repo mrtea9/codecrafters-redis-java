@@ -206,16 +206,16 @@ public class Client {
                 int result = Math.min(acknowledged, replicas); // Ensure we do not exceed expected replicas
                 String response = ":" + result + "\r\n";
 
-                // Reset the acknowledged count after responding
-                synchronized (this.eventLoop) { // Synchronize to avoid concurrent issues
-                    this.eventLoop.acknowledged.set(0);
-                }
-
                 if (this.eventLoop.acknowledged.get() == 0) {
                     int connectedReplicas = this.eventLoop.replicaChannels.size();
                     response = ":" + Math.min(connectedReplicas, replicas) + "\r\n";
                     this.channel.write(ByteBuffer.wrap(response.getBytes()));
                     return;
+                }
+
+                // Reset the acknowledged count after responding
+                synchronized (this.eventLoop) { // Synchronize to avoid concurrent issues
+                    this.eventLoop.acknowledged.set(0);
                 }
 
                 this.channel.write(ByteBuffer.wrap(response.getBytes()));
