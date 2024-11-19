@@ -185,8 +185,6 @@ public class Client {
         int replicas = Integer.parseInt(argument);
         int timeout = Integer.parseInt(timeWait);
 
-
-
         CompletableFuture<Integer> waitFuture = new CompletableFuture<>();
         this.eventLoop.addWaitingClient(this, waitFuture);
 
@@ -206,14 +204,6 @@ public class Client {
                 int result = Math.min(acknowledged, replicas); // Ensure we do not exceed expected replicas
                 String response = ":" + result + "\r\n";
 
-                if (this.eventLoop.acknowledged.get() == 0) {
-                    System.out.println("este");
-                    int connectedReplicas = this.eventLoop.replicaChannels.size();
-                    response = ":" + Math.min(connectedReplicas, replicas) + "\r\n";
-                    this.channel.write(ByteBuffer.wrap(response.getBytes()));
-                    return;
-                }
-
                 // Reset the acknowledged count after responding
                 synchronized (this.eventLoop) { // Synchronize to avoid concurrent issues
                     this.eventLoop.acknowledged.set(0);
@@ -224,6 +214,14 @@ public class Client {
                 e.printStackTrace();
             }
         });
+
+        if (this.eventLoop.acknowledged.get() == 0) {
+            System.out.println("este");
+            int connectedReplicas = this.eventLoop.replicaChannels.size();
+            String response = ":" + Math.min(connectedReplicas, replicas) + "\r\n";
+            this.channel.write(ByteBuffer.wrap(response.getBytes()));
+            return;
+        }
     }
 
     private void sendRdbFile() throws IOException {
