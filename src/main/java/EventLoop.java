@@ -288,6 +288,7 @@ public class EventLoop {
     }
 
     public void propagateCommand(String command, String... args) {
+        System.out.println(this.acknowledged);
         System.out.println("Propagating command: " + command + " with args: " + Arrays.toString(args));
         List<String> request = new ArrayList<>();
         request.add(command);
