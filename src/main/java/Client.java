@@ -112,11 +112,6 @@ public class Client {
         this.keys.put(key, valueKey);
         this.eventLoop.propagateCommand("SET", key, value);
 
-        try {
-            Thread.sleep(1200);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         if (this.eventLoop.replicaChannels.contains(this.channel)) return;
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
@@ -183,7 +178,7 @@ public class Client {
 
         int acknowledged = this.eventLoop.replicaChannels.size();
         try {
-            Thread.sleep(500);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
