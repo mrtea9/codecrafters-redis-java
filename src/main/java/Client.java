@@ -165,6 +165,9 @@ public class Client {
 
         if (commandArg.equalsIgnoreCase("listening-port")) this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
         if (commandArg.equalsIgnoreCase("capa")) this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
+        if (commandArg.equalsIgnoreCase("ack")) {
+            System.out.println("este");
+        }
 
     }
 
