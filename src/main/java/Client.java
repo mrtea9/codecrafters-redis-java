@@ -185,6 +185,17 @@ public class Client {
         int replicas = Integer.parseInt(argument);
         int timeout = Integer.parseInt(timeWait);
 
+        if (this.eventLoop.acknowledged.get() == 0) {
+            // Get the count of connected replicas
+            int connectedReplicas = this.eventLoop.replicaChannels.size();
+            System.out.println("No commands propagated. Connected replicas: " + connectedReplicas);
+
+            // Respond with the minimum of requested replicas and connected replicas
+            String response = ":" + Math.min(connectedReplicas, replicas) + "\r\n";
+            this.channel.write(ByteBuffer.wrap(response.getBytes()));
+            return;
+        }
+
         CompletableFuture<Integer> waitFuture = new CompletableFuture<>();
         this.eventLoop.addWaitingClient(this, waitFuture);
 
