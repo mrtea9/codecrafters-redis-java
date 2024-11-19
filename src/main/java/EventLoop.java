@@ -21,7 +21,6 @@ public class EventLoop {
     private final Map<String, String> globalConfig = new ConcurrentHashMap<>();
     public List<SocketChannel> replicaChannels = new ArrayList<>();
     public AtomicInteger acknowledged = new AtomicInteger(0);
-    public CountDownLatch waitLatch = null;
     private int offset = 0;
 
     EventLoop(int port, String replicaOf) {
