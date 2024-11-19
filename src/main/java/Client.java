@@ -214,14 +214,6 @@ public class Client {
                 e.printStackTrace();
             }
         });
-
-        if (this.eventLoop.acknowledged.get() == 0) {
-            System.out.println("este");
-            int connectedReplicas = this.eventLoop.replicaChannels.size();
-            String response = ":" + Math.min(connectedReplicas, replicas) + "\r\n";
-            this.channel.write(ByteBuffer.wrap(response.getBytes()));
-            return;
-        }
     }
 
     private void sendRdbFile() throws IOException {
