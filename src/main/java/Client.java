@@ -184,16 +184,30 @@ public class Client {
         int replicas = Integer.parseInt(argument);
         int timeout = Integer.parseInt(timeWait);
 
-        try {
-            Thread.sleep(1000);
-            System.out.println("acum");
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        long startTime = System.currentTimeMillis();
+        while (true) {
+            // Check the current number of acknowledgments
+            int acknowledged = this.eventLoop.acknowledged.get();
+
+            if (acknowledged >= replicas) {
+                break; // Required replicas have acknowledged
+            }
+
+            // Check if the timeout has expired
+            if (System.currentTimeMillis() - startTime >= timeout) {
+                break;
+            }
+
+            try {
+                Thread.sleep(50); // Small delay to avoid busy-waiting
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
 
-        int acknowledged = this.eventLoop.acknowledged.get();
-
-        String response = ":" + acknowledged + "\r\n";
+        // Send the final number of acknowledgments back to the client
+        int finalAcknowledged = this.eventLoop.acknowledged.get();
+        String response = ":" + finalAcknowledged + "\r\n";
 
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }
