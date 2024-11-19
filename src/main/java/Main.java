@@ -15,6 +15,7 @@ public class Main {
         } else if (args.length >= 4 && args[0].equals("--port") && args[2].equals("--replica")) {
             port = Integer.parseInt(args[1]);
             replicaOf = args[3];
+            System.out.println(replicaOf);
 
             eventLoop = new EventLoop(port, replicaOf);
         } else if (args.length >= 2 && args[0].equals("--port")) {
