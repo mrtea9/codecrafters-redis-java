@@ -21,6 +21,7 @@ public class EventLoop {
     private final Map<String, String> globalConfig = new ConcurrentHashMap<>();
     public List<SocketChannel> replicaChannels = new ArrayList<>();
     public AtomicInteger acknowledged = new AtomicInteger(0);
+    public boolean noCommand = true;
     private final ConcurrentHashMap<Client, CompletableFuture<Integer>> waitingClients = new ConcurrentHashMap<>();
     private int offset = 0;
 
