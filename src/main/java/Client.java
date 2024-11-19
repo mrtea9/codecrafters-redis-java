@@ -184,6 +184,12 @@ public class Client {
         int replicas = Integer.parseInt(argument);
         int timeout = Integer.parseInt(timeWait);
 
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         int acknowledged = this.eventLoop.acknowledged.get();
 
         String response = ":" + acknowledged + "\r\n";
