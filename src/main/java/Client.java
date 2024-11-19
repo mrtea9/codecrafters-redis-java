@@ -10,6 +10,7 @@ public class Client {
     private final Map<String, String> config;
     private String time;
     private final EventLoop eventLoop;
+    private final Object waitLock = new Object();
 
 
     public Client(SocketChannel channel, Map<String, KeyValue> keys, Map<String, String> config, EventLoop eventLoop) {
@@ -165,9 +166,12 @@ public class Client {
         if (commandArg.equalsIgnoreCase("listening-port")) this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
         if (commandArg.equalsIgnoreCase("capa")) this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
         if (commandArg.equalsIgnoreCase("ack")) {
-            System.out.println("Processing ack command");
-            this.eventLoop.acknowledged.incrementAndGet();
-            System.out.println("Acknowledged incremented: " + this.eventLoop.acknowledged);
+            synchronized (waitLock) {
+                System.out.println("Processing REPLCONF ACK command");
+                this.eventLoop.acknowledged.incrementAndGet();
+                System.out.println("Acknowledged incremented to: " + this.eventLoop.acknowledged.get());
+                waitLock.notifyAll(); // Notify waiting WAIT command
+            }
         }
 
     }
@@ -185,30 +189,35 @@ public class Client {
         int timeout = Integer.parseInt(timeWait);
 
         long startTime = System.currentTimeMillis();
-        while (true) {
-            // Check the current number of acknowledgments
-            int acknowledged = this.eventLoop.acknowledged.get();
+        System.out.println("Starting WAIT command. Required replicas: " + replicas + ", Timeout: " + timeout);
 
-            if (acknowledged >= replicas) {
-                break; // Required replicas have acknowledged
-            }
+        synchronized (waitLock) {
+            while (true) {
+                int acknowledged = this.eventLoop.acknowledged.get();
+                System.out.println("Current acknowledged count: " + acknowledged);
 
-            // Check if the timeout has expired
-            if (System.currentTimeMillis() - startTime >= timeout) {
-                break;
-            }
+                if (acknowledged >= replicas) {
+                    System.out.println("Required replicas acknowledged. Exiting WAIT.");
+                    break;
+                }
 
-            try {
-                Thread.sleep(50); // Small delay to avoid busy-waiting
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                if (System.currentTimeMillis() - startTime >= timeout) {
+                    System.out.println("Timeout reached. Exiting WAIT.");
+                    break;
+                }
+
+                try {
+                    waitLock.wait(50); // Wait for acknowledgments or timeout
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
-        // Send the final number of acknowledgments back to the client
         int finalAcknowledged = this.eventLoop.acknowledged.get();
-        String response = ":" + finalAcknowledged + "\r\n";
+        System.out.println("Final acknowledged count: " + finalAcknowledged);
 
+        String response = ":" + finalAcknowledged + "\r\n";
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }
 
