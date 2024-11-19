@@ -186,12 +186,12 @@ public class Client {
         int timeout = Integer.parseInt(timeWait);
 
         // If no commands have been propagated, return the number of connected replicas
-        if (this.eventLoop.acknowledged.get() == 0) {
-            int connectedReplicas = this.eventLoop.replicaChannels.size();
-            String response = ":" + Math.min(connectedReplicas, replicas) + "\r\n";
-            this.channel.write(ByteBuffer.wrap(response.getBytes()));
-            return;
-        }
+//        if (this.eventLoop.acknowledged.get() == 0) {
+//            int connectedReplicas = this.eventLoop.replicaChannels.size();
+//            String response = ":" + Math.min(connectedReplicas, replicas) + "\r\n";
+//            this.channel.write(ByteBuffer.wrap(response.getBytes()));
+//            return;
+//        }
 
         CompletableFuture<Integer> waitFuture = new CompletableFuture<>();
         this.eventLoop.addWaitingClient(this, waitFuture);
