@@ -57,7 +57,7 @@ public class EventLoop {
         try {
             initialize();
 
-            System.out.println(this.globalConfig.get("--replicaof"));
+            System.out.println("este" + this.globalConfig.get("--replicaof"));
             Thread connectMasterThread = new Thread(this::connectMaster);
             connectMasterThread.start();
 
