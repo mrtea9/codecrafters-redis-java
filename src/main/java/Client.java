@@ -3,6 +3,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class Client {
     private final SocketChannel channel;
@@ -166,11 +168,13 @@ public class Client {
         if (commandArg.equalsIgnoreCase("listening-port")) this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
         if (commandArg.equalsIgnoreCase("capa")) this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
         if (commandArg.equalsIgnoreCase("ack")) {
-            synchronized (waitLock) {
+            synchronized (this.eventLoop) {
                 System.out.println("Processing REPLCONF ACK command");
                 this.eventLoop.acknowledged.incrementAndGet();
                 System.out.println("Acknowledged incremented to: " + this.eventLoop.acknowledged.get());
-                waitLock.notifyAll(); // Notify waiting WAIT command
+                if (this.eventLoop.waitLatch != null) {
+                    this.eventLoop.waitLatch.countDown(); // Notify WAIT
+                }
             }
         }
 
@@ -188,32 +192,25 @@ public class Client {
         int replicas = Integer.parseInt(argument);
         int timeout = Integer.parseInt(timeWait);
 
+        // Setup the CountDownLatch
+        this.eventLoop.waitLatch = new CountDownLatch(replicas);
+
         long startTime = System.currentTimeMillis();
         System.out.println("Starting WAIT command. Required replicas: " + replicas + ", Timeout: " + timeout);
 
-        synchronized (waitLock) {
-            while (true) {
-                int acknowledged = this.eventLoop.acknowledged.get();
-                System.out.println("Current acknowledged count: " + acknowledged);
-
-                if (acknowledged >= replicas) {
-                    System.out.println("Required replicas acknowledged. Exiting WAIT.");
-                    break;
-                }
-
-                if (System.currentTimeMillis() - startTime >= timeout) {
-                    System.out.println("Timeout reached. Exiting WAIT.");
-                    break;
-                }
-
-                try {
-                    waitLock.wait(50); // Wait for acknowledgments or timeout
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+        try {
+            // Wait for replicas or timeout
+            boolean completed = this.eventLoop.waitLatch.await(timeout, TimeUnit.MILLISECONDS);
+            if (completed) {
+                System.out.println("Required replicas acknowledged. Exiting WAIT.");
+            } else {
+                System.out.println("Timeout reached. Exiting WAIT.");
             }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
+        // Send the final number of acknowledgments back to the client
         int finalAcknowledged = this.eventLoop.acknowledged.get();
         System.out.println("Final acknowledged count: " + finalAcknowledged);
 
