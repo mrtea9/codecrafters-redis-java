@@ -299,7 +299,6 @@ public class EventLoop {
                 try {
                     replicaChannel.write(ByteBuffer.wrap(encodedCommand.getBytes()));
                     System.out.println("Command propagated to replica: " + replicaChannel.getRemoteAddress());
-                    break;
                 } catch (IOException e) {
                     System.err.println("Error propagating to replica: " + e.getMessage());
                 }
