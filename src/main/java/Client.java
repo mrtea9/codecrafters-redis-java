@@ -113,7 +113,6 @@ public class Client {
 
         this.eventLoop.propagateCommand("SET", key, value);
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
-        this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
     }
 
     private void processGet(String key) throws IOException {
@@ -177,6 +176,7 @@ public class Client {
         int timeout = Integer.parseInt(timeWait);
 
         int acknowledged = this.eventLoop.replicaChannels.size();
+        this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
 
         String response = ":" + 1 + "\r\n";
 
