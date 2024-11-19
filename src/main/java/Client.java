@@ -168,6 +168,7 @@ public class Client {
             System.out.println("Processing ack command");
             this.eventLoop.acknowledged.incrementAndGet();
             System.out.println("Acknowledged incremented: " + this.eventLoop.acknowledged);
+            this.eventLoop.notifyAcknowledged();
         }
 
     }
@@ -184,19 +185,33 @@ public class Client {
         int replicas = Integer.parseInt(argument);
         int timeout = Integer.parseInt(timeWait);
 
-        System.out.println("Starting WAIT command. Required replicas: " + replicas + ", Timeout: " + timeout);
-        try {
-            Thread.sleep(1000);
-            System.out.println("acum");
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        System.out.println("Starting WAIT command asynchronously. Required replicas: " + replicas + ", Timeout: " + timeout);
 
-        int acknowledged = this.eventLoop.acknowledged.get();
+        CompletableFuture<Integer> waitFuture = new CompletableFuture<>();
+        this.eventLoop.addWaitingClient(this, waitFuture);
 
-        String response = ":" + acknowledged + "\r\n";
+        // Set up a timeout to complete the future if the replicas are not reached in time
+        CompletableFuture<Void> timeoutFuture = CompletableFuture.runAsync(() -> {
+            try {
+                Thread.sleep(timeout);
+            } catch (InterruptedException ignored) {
+            }
+            if (!waitFuture.isDone()) {
+                waitFuture.complete(this.eventLoop.acknowledged.get());
+            }
+        });
 
-        this.channel.write(ByteBuffer.wrap(response.getBytes()));
+        waitFuture.thenAccept(acknowledged -> {
+            try {
+                String response = ":" + acknowledged + "\r\n";
+                this.channel.write(ByteBuffer.wrap(response.getBytes()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).exceptionally(e -> {
+            e.printStackTrace();
+            return null;
+        });
     }
 
     private void sendRdbFile() throws IOException {

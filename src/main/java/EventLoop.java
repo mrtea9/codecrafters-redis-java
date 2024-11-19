@@ -21,6 +21,7 @@ public class EventLoop {
     private final Map<String, String> globalConfig = new ConcurrentHashMap<>();
     public List<SocketChannel> replicaChannels = new ArrayList<>();
     public AtomicInteger acknowledged = new AtomicInteger(0);
+    private final ConcurrentHashMap<Client, CompletableFuture<Integer>> waitingClients = new ConcurrentHashMap<>();
     private int offset = 0;
 
     EventLoop(int port, String replicaOf) {
@@ -36,6 +37,19 @@ public class EventLoop {
         this.globalConfig.put("dbfilename", dbFileName);
 
         readConfig(dirName, dbFileName);
+    }
+
+    public void addWaitingClient(Client client, CompletableFuture<Integer> future) {
+        this.waitingClients.put(client, future);
+    }
+
+    public void notifyAcknowledged() {
+        for (Map.Entry<Client, CompletableFuture<Integer>> entry : waitingClients.entrySet()) {
+            CompletableFuture<Integer> future = entry.getValue();
+            if (future != null && future.isDone()) {
+                future.complete(acknowledged.get());
+            }
+        }
     }
 
     public void start() {
