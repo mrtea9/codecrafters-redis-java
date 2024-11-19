@@ -167,6 +167,7 @@ public class Client {
         if (commandArg.equalsIgnoreCase("ack")) {
             System.out.println("este");
             this.eventLoop.acknowledged++;
+            System.out.println(this.eventLoop.acknowledged);
         }
 
     }
