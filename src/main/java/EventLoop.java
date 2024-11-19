@@ -289,24 +289,22 @@ public class EventLoop {
 
     public void propagateCommand(String command, String... args) {
         System.out.println("Propagating command: " + command + " with args: " + Arrays.toString(args));
-        executor.submit(() -> {
-            List<String> request = new ArrayList<>();
-            request.add(command);
-            request.addAll(Arrays.asList(args));
-            String encodedCommand = Parser.encodeArray(request);
+        List<String> request = new ArrayList<>();
+        request.add(command);
+        request.addAll(Arrays.asList(args));
+        String encodedCommand = Parser.encodeArray(request);
 
-            for (SocketChannel replicaChannel : replicaChannels) {
-                if (replicaChannel.isConnected()) {
-                    try {
-                        replicaChannel.write(ByteBuffer.wrap(encodedCommand.getBytes()));
-                        System.out.println("Command propagated to replica: " + replicaChannel.getRemoteAddress());
-                    } catch (IOException e) {
-                        System.err.println("Error propagating to replica: " + e.getMessage());
-                    }
-                } else {
-                    System.out.println("Replica channel not connected: " + replicaChannel);
+        for (SocketChannel replicaChannel : replicaChannels) {
+            if (replicaChannel.isConnected()) {
+                try {
+                    replicaChannel.write(ByteBuffer.wrap(encodedCommand.getBytes()));
+                    System.out.println("Command propagated to replica: " + replicaChannel.getRemoteAddress());
+                } catch (IOException e) {
+                    System.err.println("Error propagating to replica: " + e.getMessage());
                 }
+            } else {
+                System.out.println("Replica channel not connected: " + replicaChannel);
             }
-        });
+        }
     }
 }
