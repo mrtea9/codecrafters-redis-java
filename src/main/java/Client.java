@@ -186,6 +186,7 @@ public class Client {
 
         try {
             Thread.sleep(1000);
+            System.out.println("acum");
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
