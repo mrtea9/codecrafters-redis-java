@@ -10,7 +10,7 @@ public class Client {
     private final Map<String, String> config;
     private String time;
     private final EventLoop eventLoop;
-    private boolean isMaster;
+
 
     public Client(SocketChannel channel, Map<String, KeyValue> keys, Map<String, String> config, EventLoop eventLoop) {
         this.channel = channel;
@@ -153,7 +153,6 @@ public class Client {
         String masterReplId = "master_replid:" + this.config.get("master_replid");
         String masterReplOffset = "master_repl_offset:" + this.config.get("master_repl_offset");
 
-        this.isMaster = replicaOf.isEmpty();
         result = replicaOf.isEmpty() ? "role:master" : "role:slave";
         result += "\r\n" + masterReplOffset + "\r\n" + masterReplId;
         result = Parser.encodeBulkString(result);
@@ -167,6 +166,7 @@ public class Client {
         if (commandArg.equalsIgnoreCase("capa")) this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
         if (commandArg.equalsIgnoreCase("ack")) {
             System.out.println("este");
+            this.eventLoop.acknowledged++;
         }
 
     }
@@ -183,9 +183,9 @@ public class Client {
         int replicas = Integer.parseInt(argument);
         int timeout = Integer.parseInt(timeWait);
 
-        int acknowledged = this.eventLoop.replicaChannels.size();
+        int acknowledged = this.eventLoop.acknowledged;
 
-        String response = ":" + 1 + "\r\n";
+        String response = ":" + acknowledged + "\r\n";
 
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }

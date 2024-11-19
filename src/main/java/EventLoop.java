@@ -19,8 +19,8 @@ public class EventLoop {
     private Map<String, KeyValue> globalKeys = new ConcurrentHashMap<>();
     private final Map<String, String> globalConfig = new ConcurrentHashMap<>();
     public List<SocketChannel> replicaChannels = new ArrayList<>();
+    public int acknowledged = 0;
     private int offset = 0;
-    private final ExecutorService executor = Executors.newCachedThreadPool();
 
     EventLoop(int port, String replicaOf) {
         this.port = port;
