@@ -146,7 +146,7 @@ public class EventLoop {
             masterChannel.register(this.selector, SelectionKey.OP_CONNECT);
 
             while (!masterChannel.finishConnect()) {
-                Thread.yield();
+                continue;
             }
 
             System.out.println("Connected to master: " + replicaOf);
