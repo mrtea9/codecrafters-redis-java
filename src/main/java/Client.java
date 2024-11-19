@@ -176,6 +176,11 @@ public class Client {
         int timeout = Integer.parseInt(timeWait);
 
         int acknowledged = this.eventLoop.replicaChannels.size();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
 
         String response = ":" + 1 + "\r\n";
