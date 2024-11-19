@@ -76,8 +76,10 @@ public class Client {
 
             processInfo();
         } else if (command.equalsIgnoreCase("replconf")) {
+            String commandArg = decodedList.get(1);
+            String bytes = decodedList.get(2);
 
-            processReplconf();
+            processReplconf(commandArg, bytes);
         } else if (command.equalsIgnoreCase("psync")) {
             this.eventLoop.replicaChannels.add(this.channel);
 
@@ -159,7 +161,9 @@ public class Client {
         this.channel.write(ByteBuffer.wrap(result.getBytes()));
     }
 
-    private void processReplconf() throws IOException {
+    private void processReplconf(String commandArg, String bytes) throws IOException {
+
+        System.out.println(commandArg + " " + bytes);
 
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
