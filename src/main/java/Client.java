@@ -113,8 +113,8 @@ public class Client {
 
         this.keys.put(key, valueKey);
         this.eventLoop.propagateCommand("SET", key, value);
+        this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
 
-        if (this.eventLoop.replicaChannels.contains(this.channel)) return;
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
 
@@ -181,12 +181,6 @@ public class Client {
         int timeout = Integer.parseInt(timeWait);
 
         int acknowledged = this.eventLoop.replicaChannels.size();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
 
         String response = ":" + 1 + "\r\n";
 
