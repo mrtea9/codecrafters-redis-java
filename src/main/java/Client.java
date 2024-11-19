@@ -185,8 +185,6 @@ public class Client {
         int replicas = Integer.parseInt(argument);
         int timeout = Integer.parseInt(timeWait);
 
-        System.out.println("Starting WAIT command asynchronously. Required replicas: " + replicas + ", Timeout: " + timeout);
-
         CompletableFuture<Integer> waitFuture = new CompletableFuture<>();
         this.eventLoop.addWaitingClient(this, waitFuture);
 
@@ -203,14 +201,16 @@ public class Client {
 
         waitFuture.thenAccept(acknowledged -> {
             try {
-                String response = ":" + acknowledged + "\r\n";
+                int result = Math.min(acknowledged, replicas); // Ensure we do not exceed expected replicas
+                String response = ":" + result + "\r\n";
+
+                // Reset the acknowledged count after responding
+                this.eventLoop.acknowledged.set(0);
+
                 this.channel.write(ByteBuffer.wrap(response.getBytes()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }).exceptionally(e -> {
-            e.printStackTrace();
-            return null;
         });
     }
 
