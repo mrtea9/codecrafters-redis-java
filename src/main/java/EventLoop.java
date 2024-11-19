@@ -19,7 +19,7 @@ public class EventLoop {
     private Map<String, KeyValue> globalKeys = new ConcurrentHashMap<>();
     private final Map<String, String> globalConfig = new ConcurrentHashMap<>();
     public List<SocketChannel> replicaChannels = new ArrayList<>();
-    public int acknowledged = 0;
+    public int acknowledged;
     private int offset = 0;
 
     EventLoop(int port, String replicaOf) {
