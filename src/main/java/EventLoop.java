@@ -130,6 +130,7 @@ public class EventLoop {
     private void connectMaster() {
         String replicaOf = this.globalConfig.get("--replicaof");
 
+        System.out.println(replicaOf);
         if (replicaOf == null || replicaOf.isEmpty()) return;
 
         String[] parts = replicaOf.split(" ");
