@@ -110,14 +110,14 @@ public class Client {
         }
 
         this.keys.put(key, valueKey);
-        this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
+        this.eventLoop.propagateCommand("SET", key, value);
 
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        this.eventLoop.propagateCommand("SET", key, value);
+        this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
 
     private void processGet(String key) throws IOException {
