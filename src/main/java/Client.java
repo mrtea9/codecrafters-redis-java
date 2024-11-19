@@ -187,7 +187,7 @@ public class Client {
 
         if (this.eventLoop.acknowledged.get() == 0) {
             int connectedReplicas = this.eventLoop.replicaChannels.size();
-            String response = ":" + Math.min(connectedReplicas, replicas) + "\r\n";
+            String response = ":" + connectedReplicas + "\r\n";
             this.channel.write(ByteBuffer.wrap(response.getBytes()));
             return;
         }
