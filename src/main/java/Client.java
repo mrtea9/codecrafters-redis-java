@@ -163,9 +163,9 @@ public class Client {
 
     private void processReplconf(String commandArg, String bytes) throws IOException {
 
-        System.out.println(commandArg + " " + bytes);
+        if (commandArg.equalsIgnoreCase("listening-port")) this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
+        if (commandArg.equalsIgnoreCase("capa")) this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
 
-        this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
     }
 
     private void processPsync() throws IOException {
