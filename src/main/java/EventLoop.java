@@ -57,6 +57,7 @@ public class EventLoop {
         try {
             initialize();
 
+            System.out.println("sad");
             Thread connectMasterThread = new Thread(this::connectMaster);
             connectMasterThread.start();
 
@@ -130,7 +131,6 @@ public class EventLoop {
     private void connectMaster() {
         String replicaOf = this.globalConfig.get("--replicaof");
 
-        System.out.println(replicaOf);
         if (replicaOf == null || replicaOf.isEmpty()) return;
 
         String[] parts = replicaOf.split(" ");
