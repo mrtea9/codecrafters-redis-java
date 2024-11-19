@@ -112,6 +112,11 @@ public class Client {
         this.keys.put(key, valueKey);
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
 
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         this.eventLoop.propagateCommand("SET", key, value);
     }
 
