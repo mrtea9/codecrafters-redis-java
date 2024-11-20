@@ -118,7 +118,7 @@ public class Client {
     }
 
     private void processSet(String key, String value) throws IOException {
-        KeyValue valueKey = new KeyValue(value, 0);
+        KeyValue valueKey = new KeyValue(value, 0, ValueType.STRING);
 
         if (this.time.isEmpty()) {
             valueKey.expiryTimestamp = 0;
@@ -256,11 +256,11 @@ public class Client {
             return;
         }
 
-        String type = value.value.getClass().getSimpleName();
+        ValueType type = value.type;
 
-        if (type.equalsIgnoreCase("string")) {
-            result = "+string\r\n";
-            this.channel.write(ByteBuffer.wrap(result.getBytes()));
-        }
+        if (type == ValueType.STRING) result = "+string\r\n";
+        if (type == ValueType.STREAM) result = "+stream\r\n";
+
+        this.channel.write(ByteBuffer.wrap(result.getBytes()));
     }
 }

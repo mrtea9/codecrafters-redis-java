@@ -245,7 +245,7 @@ public class EventLoop {
 
     private void performSet(List<String> list) {
         String key = list.remove(0);
-        KeyValue value = new KeyValue(list.remove(0), 0);
+        KeyValue value = new KeyValue(list.remove(0), 0, ValueType.STRING);
 
         this.globalKeys.put(key, value);
 
