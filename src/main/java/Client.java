@@ -239,7 +239,17 @@ public class Client {
 
     private void processType(String key) throws IOException {
         KeyValue value = this.keys.get(key);
+        String result = "+none\r\n";
+        if (value == null) {
+            this.channel.write(ByteBuffer.wrap(result.getBytes()));
+            return;
+        }
 
-        System.out.println(value.value.getClass().getSimpleName());
+        String type = value.value.getClass().getSimpleName();
+
+        if (type.equalsIgnoreCase("string")) {
+            result = "+string\r\n";
+            this.channel.write(ByteBuffer.wrap(result.getBytes()));
+        }
     }
 }
