@@ -94,8 +94,17 @@ public class Client {
 
             processType(key);
         } else if (command.equalsIgnoreCase("xadd")) {
-            System.out.println("da");
+            String streamKey = decodedList.get(1);
+            String entryId = decodedList.get(2);
+
+            processXadd(entryId);
         }
+    }
+
+    private void processXadd(String entryId) throws IOException {
+        String response = Parser.encodeBulkString(entryId);
+
+        this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }
 
     private void processPing() throws IOException {
