@@ -43,7 +43,7 @@ public class Client {
 
     private void processResponse(List<String> decodedList) throws IOException {
         String command = decodedList.get(0);
-        System.out.println("client = " + this.channel.getRemoteAddress() + " " + decodedList);
+        System.out.println(decodedList);
         if (command.equalsIgnoreCase("ping")) {
             processPing();
         } else if (command.equalsIgnoreCase("echo")) {
