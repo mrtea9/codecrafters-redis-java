@@ -94,14 +94,20 @@ public class Client {
 
             processType(key);
         } else if (command.equalsIgnoreCase("xadd")) {
-            String streamKey = decodedList.get(1);
-            String entryId = decodedList.get(2);
 
-            processXadd(entryId);
+            processXadd(decodedList);
         }
     }
 
-    private void processXadd(String entryId) throws IOException {
+    private void processXadd(List<String> list) throws IOException {
+        String streamKey = list.get(1);
+        String entryId = list.get(2);
+        String key = list.get(3);
+        String value = list.get(4);
+
+        KeyValue keyValue = new KeyValue(value, 0, ValueType.STREAM);
+        this.keys.put(key, keyValue);
+
         String response = Parser.encodeBulkString(entryId);
 
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
