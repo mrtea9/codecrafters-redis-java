@@ -93,6 +93,8 @@ public class Client {
             String key = decodedList.get(1);
 
             processType(key);
+        } else if (command.equalsIgnoreCase("xadd")) {
+            System.out.println("da");
         }
     }
 
