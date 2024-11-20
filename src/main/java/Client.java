@@ -240,6 +240,6 @@ public class Client {
     private void processType(String key) throws IOException {
         KeyValue value = this.keys.get(key);
 
-        System.out.println(value.value);
+        System.out.println(value.value.getClass().getName());
     }
 }
