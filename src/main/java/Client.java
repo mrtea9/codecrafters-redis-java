@@ -104,7 +104,6 @@ public class Client {
         String entryId = list.get(2);
         String key = list.get(3);
         String value = list.get(4);
-
         String response = "";
 
         if (entryId.equals("0-0")) {
@@ -113,10 +112,10 @@ public class Client {
             return;
         }
 
-        KeyValue test = this.keys.get(streamKey);
-        if (test != null) {
-            System.out.println(test.key);
-            System.out.println(test.value);
+        if (eventLoop.minStreamId.isEmpty()) {
+            System.out.println("este");
+        } else {
+            System.out.println("nu este");
         }
 
         KeyValue keyValue = new KeyValue(key, value, ValueType.STREAM);
