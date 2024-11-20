@@ -114,8 +114,10 @@ public class Client {
         }
 
         KeyValue test = this.keys.get(streamKey);
-        System.out.println(test.key);
-        System.out.println(test.value);
+        if (test != null) {
+            System.out.println(test.key);
+            System.out.println(test.value);
+        }
 
         KeyValue keyValue = new KeyValue(key, value, ValueType.STREAM);
         this.keys.put(streamKey, keyValue);
