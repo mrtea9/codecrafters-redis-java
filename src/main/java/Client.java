@@ -115,6 +115,7 @@ public class Client {
         if (eventLoop.minStreamId.isEmpty()) {
             System.out.println("este");
         } else {
+            eventLoop.minStreamId = entryId;
             System.out.println("nu este");
         }
 
