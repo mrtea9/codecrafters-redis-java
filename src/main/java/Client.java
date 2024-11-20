@@ -105,10 +105,22 @@ public class Client {
         String key = list.get(3);
         String value = list.get(4);
 
-        KeyValue keyValue = new KeyValue(value, 0, ValueType.STREAM);
+        String response = "";
+
+        if (entryId.equals("0-0")) {
+            response = "-ERR The ID specified in XADD must be greater than 0-0\\r\\n";
+            this.channel.write(ByteBuffer.wrap(response.getBytes()));
+            return;
+        }
+
+        KeyValue test = this.keys.get(streamKey);
+        System.out.println(test.key);
+        System.out.println(test.value);
+
+        KeyValue keyValue = new KeyValue(key, value, ValueType.STREAM);
         this.keys.put(streamKey, keyValue);
 
-        String response = Parser.encodeBulkString(entryId);
+        response = Parser.encodeBulkString(entryId);
 
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }
