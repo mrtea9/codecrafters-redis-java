@@ -22,7 +22,7 @@ public class EventLoop {
     public List<SocketChannel> replicaChannels = new ArrayList<>();
     public AtomicInteger acknowledged = new AtomicInteger(0);
     public boolean noCommand = true;
-    public String minStreamId;
+    public String minStreamId = "";
     private final ConcurrentHashMap<Client, CompletableFuture<Integer>> waitingClients = new ConcurrentHashMap<>();
     private int offset = 0;
 
