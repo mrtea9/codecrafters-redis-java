@@ -92,7 +92,6 @@ public class EventLoop {
                     Client client = new Client((SocketChannel) key.channel(), this.globalKeys, this.globalConfig, this);
                     client.handleClient();
                     this.globalKeys = client.getKeys();
-                    System.out.println(this.globalKeys);
                 }
 
                 iterator.remove();
