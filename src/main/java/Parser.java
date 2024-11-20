@@ -188,7 +188,7 @@ public class Parser {
         System.out.println("expiresTable size = " + expiresTable);
 
         while (!hexFile.get(0).equals("FF")) {
-            KeyValue value = new KeyValue("", 0);
+            KeyValue value = new KeyValue("", 0, ValueType.STRING);
 
             //System.out.println(hexFile);
             if (hexFile.get(0).equals("FC")) {
