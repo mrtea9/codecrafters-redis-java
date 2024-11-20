@@ -238,6 +238,8 @@ public class Client {
     }
 
     private void processType(String key) throws IOException {
-        System.out.println(key);
+        KeyValue value = this.keys.get(key);
+
+        System.out.println(value.value);
     }
 }
