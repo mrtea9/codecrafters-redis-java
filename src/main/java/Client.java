@@ -106,7 +106,7 @@ public class Client {
         String value = list.get(4);
 
         KeyValue keyValue = new KeyValue(value, 0, ValueType.STREAM);
-        this.keys.put(key, keyValue);
+        this.keys.put(streamKey, keyValue);
 
         String response = Parser.encodeBulkString(entryId);
 
