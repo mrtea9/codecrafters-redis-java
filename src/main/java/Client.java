@@ -117,6 +117,7 @@ public class Client {
             eventLoop.minStreamId = entryId;
         } else {
             System.out.println(eventLoop.minStreamId);
+            eventLoop.minStreamId = entryId;
         }
 
         KeyValue keyValue = new KeyValue(key, value, ValueType.STREAM);
