@@ -112,13 +112,13 @@ public class Client {
             return;
         }
 
-        if (eventLoop.minStreamId.isEmpty()) eventLoop.minStreamId = entryId;
-
         if (eventLoop.minStreamId.equals(entryId)) {
-            response = "ERR The ID specified in XADD is equal or smaller than the target stream top item";
+            response = "-ERR The ID specified in XADD is equal or smaller than the target stream top item";
             this.channel.write(ByteBuffer.wrap(response.getBytes()));
             return;
         }
+
+        if (eventLoop.minStreamId.isEmpty()) eventLoop.minStreamId = entryId;
 
         KeyValue keyValue = new KeyValue(key, value, ValueType.STREAM);
         this.keys.put(streamKey, keyValue);
