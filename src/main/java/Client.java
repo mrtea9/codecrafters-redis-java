@@ -113,7 +113,6 @@ public class Client {
 
         this.keys.put(key, valueKey);
         this.eventLoop.propagateCommand("SET", key, value);
-        this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
         this.eventLoop.noCommand = false;
 
         this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
@@ -185,6 +184,8 @@ public class Client {
     private void processWait(String argument, String timeWait) throws IOException {
         int replicas = Integer.parseInt(argument);
         int timeout = Integer.parseInt(timeWait);
+
+        this.eventLoop.propagateCommand("REPLCONF", "GETACK", "*");
 
         if (this.eventLoop.noCommand) {
             String response = ":" + this.eventLoop.replicaChannels.size() + "\r\n";
