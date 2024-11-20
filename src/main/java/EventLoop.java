@@ -305,13 +305,15 @@ public class EventLoop {
     }
 
     public void propagateCommand(String command, String... args) {
+        if (this.replicaChannels.isEmpty()) return;
+
         System.out.println("Propagating command: " + command + " with args: " + Arrays.toString(args));
         List<String> request = new ArrayList<>();
         request.add(command);
         request.addAll(Arrays.asList(args));
         String encodedCommand = Parser.encodeArray(request);
 
-        for (SocketChannel replicaChannel : replicaChannels) {
+        for (SocketChannel replicaChannel : this.replicaChannels) {
             if (replicaChannel.isConnected()) {
                 try {
                     replicaChannel.write(ByteBuffer.wrap(encodedCommand.getBytes()));

@@ -89,6 +89,10 @@ public class Client {
             String timeWait = decodedList.get(2);
 
             processWait(argument, timeWait);
+        } else if (command.equalsIgnoreCase("type")) {
+            String key = decodedList.get(1);
+
+            processType(key);
         }
     }
 
@@ -231,5 +235,9 @@ public class Client {
 
         this.channel.write(ByteBuffer.wrap(("$" + contents.length + "\r\n").getBytes()));
         this.channel.write(ByteBuffer.wrap(contents));
+    }
+
+    private void processType(String key) throws IOException {
+        System.out.println(key);
     }
 }
