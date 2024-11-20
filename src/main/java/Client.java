@@ -107,7 +107,7 @@ public class Client {
         String response = "";
 
         if (entryId.equals("0-0")) {
-            response = "-ERR The ID specified in XADD must be greater than 0-0\\r\\n";
+            response = "-ERR The ID specified in XADD must be greater than 0-0\r\n";
             this.channel.write(ByteBuffer.wrap(response.getBytes()));
             return;
         }
@@ -116,7 +116,7 @@ public class Client {
         System.out.println(eventLoop.minStreamId);
 
         if (eventLoop.minStreamId.equals(entryId)) {
-            response = "-ERR The ID specified in XADD is equal or smaller than the target stream top item";
+            response = "-ERR The ID specified in XADD is equal or smaller than the target stream top item\r\n";
             this.channel.write(ByteBuffer.wrap(response.getBytes()));
             return;
         }
