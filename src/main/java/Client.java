@@ -128,6 +128,8 @@ public class Client {
 
         response = Parser.encodeBulkString(entryId);
 
+        eventLoop.minStreamId = entryId;
+
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }
 
