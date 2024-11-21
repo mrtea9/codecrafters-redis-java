@@ -127,6 +127,8 @@ public class Client {
             if (!processing) continue;
 
             System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
+
+            if (k.equals(endRange)) break;
         }
 
         writeResponse(Parser.encodeArray(List.of("da", "este")));
