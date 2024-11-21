@@ -150,8 +150,9 @@ public class Client {
         } else {
             streamValue.addEntry(entryId, new KeyValue(key, value));
             System.out.println(streamValue.entries);
-            System.out.println(streamValue.entries.get(entryId).key);
-            System.out.println(streamValue.entries.get(entryId).value);
+            System.out.println("entryId = " + entryId);
+            System.out.println("key = " + streamValue.entries.get(entryId).key);
+            System.out.println("value = " + streamValue.entries.get(entryId).value);
         }
 
         eventLoop.minStreamId = entryId;
