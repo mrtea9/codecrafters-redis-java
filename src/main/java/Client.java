@@ -105,50 +105,65 @@ public class Client {
 
     private void processXadd(List<String> list) throws IOException {
         String streamKey = list.get(1);
-        String entryId = list.get(2);
+        String rawEntryId = list.get(2);
         String key = list.get(3);
         String value = list.get(4);
 
-        if (entryId.equals("0-0")) {
+        if (rawEntryId.equals("0-0")) {
             writeResponse("-ERR The ID specified in XADD must be greater than 0-0\r\n");
             return;
         }
 
-        System.out.println(entryId);
-        System.out.println(eventLoop.minStreamId);
+        System.out.println(rawEntryId);
 
-        if (entryId.contains("*")) {
-            String[] elements = entryId.split("-");
-            System.out.println(Arrays.toString(elements));
-            if (eventLoop.minStreamId.isEmpty()) {
-                entryId = elements[0] + "-1";
-            } else {
-                String[] minStreamIdElements = eventLoop.minStreamId.split("-");
-                int minStreamIdTime = Integer.parseInt(minStreamIdElements[0]);
-                int minIdTime = Integer.parseInt(elements[0]);
+        String entryId = resolveEntryId(rawEntryId);
 
-                if (minIdTime == minStreamIdTime) {
-                    int minStreamIdNumber = Integer.parseInt(minStreamIdElements[1]);
-                    int minIdNumber = minStreamIdNumber + 1;
-                    entryId = elements[0] + "-" + minIdNumber;
-                } else {
-                    int minIdNumber = 0;
-                    entryId = elements[0] + "-" + minIdNumber;
-                }
-            }
-        }
-
-        if (eventLoop.minStreamId.equals(entryId) || ( entryId.compareTo(eventLoop.minStreamId) < 0 && !eventLoop.minStreamId.isEmpty())) {
+        if (isIdSmallerOrEqual(entryId, eventLoop.minStreamId)) {
             writeResponse("-ERR The ID specified in XADD is equal or smaller than the target stream top item\r\n");
             return;
         }
 
         KeyValue keyValue = new KeyValue(key, value, ValueType.STREAM);
         this.keys.put(streamKey, keyValue);
-
         eventLoop.minStreamId = entryId;
 
         writeResponse(Parser.encodeBulkString(entryId));
+    }
+
+    private String resolveEntryId(String rawEntryId) {
+        if (!rawEntryId.contains("*")) return rawEntryId;
+
+        String[] elements = rawEntryId.split("-");
+
+        int baseTime = Integer.parseInt(elements[0]);
+        int sequenceNumber = (eventLoop.minStreamId.isEmpty()) ? 1 : calculateNextNumber(baseTime);
+
+        return baseTime + "-" + sequenceNumber;
+    }
+
+    private int calculateNextNumber(int baseTime) {
+        String[] minStreamIdParts = eventLoop.minStreamId.split("-");
+        int minStreamTime = Integer.parseInt(minStreamIdParts[0]);
+        int minStreamSequence = Integer.parseInt(minStreamIdParts[1]);
+
+        return (baseTime == minStreamTime) ? minStreamSequence + 1 : 0;
+    }
+
+    private boolean isIdSmallerOrEqual(String id1, String id2) {
+        if (id2.isEmpty()) return false;
+
+        String[] id1Parts = id1.split("-");
+        String[] id2Parts = id2.split("-");
+
+        int id1Time = Integer.parseInt(id1Parts[0]);
+        int id2Time = Integer.parseInt(id2Parts[0]);
+
+        if (id1Time < id2Time) return true;
+
+        int id1Seq = Integer.parseInt(id1Parts[1]);
+        int id2Seq = Integer.parseInt(id2Parts[1]);
+
+        return id1Seq <= id2Seq;
     }
 
     private void processPing() throws IOException {
