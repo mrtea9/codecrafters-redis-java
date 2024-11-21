@@ -148,8 +148,7 @@ public class Client {
             KeyValue keyValue = new KeyValue(entryId, key, value, ValueType.STREAM);
             this.keys.put(streamKey, keyValue);
         } else {
-            System.out.println(streamValue.entries.get(entryId).key);
-            System.out.println(streamValue.entries.get(entryId).value);
+            System.out.println(streamValue.entries);
         }
 
 
