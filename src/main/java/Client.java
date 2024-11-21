@@ -99,16 +99,18 @@ public class Client {
         }
     }
 
+    private void writeResponse(String response) throws IOException {
+        this.channel.write(ByteBuffer.wrap(response.getBytes()));
+    }
+
     private void processXadd(List<String> list) throws IOException {
         String streamKey = list.get(1);
         String entryId = list.get(2);
         String key = list.get(3);
         String value = list.get(4);
-        String response = "";
 
         if (entryId.equals("0-0")) {
-            response = "-ERR The ID specified in XADD must be greater than 0-0\r\n";
-            this.channel.write(ByteBuffer.wrap(response.getBytes()));
+            writeResponse("-ERR The ID specified in XADD must be greater than 0-0\r\n");
             return;
         }
 
@@ -116,31 +118,24 @@ public class Client {
         System.out.println(eventLoop.minStreamId);
 
         if (eventLoop.minStreamId.equals(entryId) || ( entryId.compareTo(eventLoop.minStreamId) < 0 && !eventLoop.minStreamId.isEmpty())) {
-            response = "-ERR The ID specified in XADD is equal or smaller than the target stream top item\r\n";
-            this.channel.write(ByteBuffer.wrap(response.getBytes()));
+            writeResponse("-ERR The ID specified in XADD is equal or smaller than the target stream top item\r\n");
             return;
         }
-
-        if (eventLoop.minStreamId.isEmpty()) eventLoop.minStreamId = entryId;
 
         KeyValue keyValue = new KeyValue(key, value, ValueType.STREAM);
         this.keys.put(streamKey, keyValue);
 
-        response = Parser.encodeBulkString(entryId);
-
         eventLoop.minStreamId = entryId;
 
-        this.channel.write(ByteBuffer.wrap(response.getBytes()));
+        writeResponse(Parser.encodeBulkString(entryId));
     }
 
     private void processPing() throws IOException {
-        this.channel.write(ByteBuffer.wrap(("+PONG\r\n").getBytes()));
+        writeResponse("+PONG\r\n");
     }
 
     private void processEcho(String value) throws IOException {
-        String response = "+" + value + "\r\n";
-
-        this.channel.write(ByteBuffer.wrap(response.getBytes()));
+        writeResponse("+" + value + "\r\n");
     }
 
     private void processSet(String key, String value) throws IOException {
@@ -156,7 +151,7 @@ public class Client {
         this.eventLoop.propagateCommand("SET", key, value);
         this.eventLoop.noCommand = false;
 
-        this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
+        writeResponse("+OK\r\n");
     }
 
     private void processGet(String key) throws IOException {
@@ -169,7 +164,7 @@ public class Client {
             result = Parser.encodeBulkString(value.value);
         }
 
-        this.channel.write(ByteBuffer.wrap(result.getBytes()));
+        writeResponse(result);
     }
 
     private void processConfig(String key, String commandArg) throws IOException {
@@ -179,13 +174,13 @@ public class Client {
 
         String result = Parser.encodeArray(inter);
 
-        this.channel.write(ByteBuffer.wrap(result.getBytes()));
+        writeResponse(result);
     }
 
     private void processKeys() throws IOException {
         String result = Parser.encodeArray(this.keys.keySet());
 
-        this.channel.write(ByteBuffer.wrap(result.getBytes()));
+        writeResponse(result);
     }
 
     private void processInfo() throws IOException {
@@ -198,7 +193,7 @@ public class Client {
         result += "\r\n" + masterReplOffset + "\r\n" + masterReplId;
         result = Parser.encodeBulkString(result);
 
-        this.channel.write(ByteBuffer.wrap(result.getBytes()));
+        writeResponse(result);
     }
 
     private void processReplconf(String commandArg, String bytes) throws IOException {
@@ -217,7 +212,7 @@ public class Client {
     private void processPsync() throws IOException {
         String response = "+FULLRESYNC " + this.config.get("master_replid") + " " + this.config.get("master_repl_offset") + "\r\n";
 
-        this.channel.write(ByteBuffer.wrap(response.getBytes()));
+        writeResponse(response);
 
         sendRdbFile();
     }
@@ -230,7 +225,7 @@ public class Client {
 
         if (this.eventLoop.noCommand) {
             String response = ":" + this.eventLoop.replicaChannels.size() + "\r\n";
-            this.channel.write(ByteBuffer.wrap(response.getBytes()));
+            writeResponse(response);
             return;
         }
 
@@ -258,7 +253,7 @@ public class Client {
                     this.eventLoop.acknowledged.set(0);
                 }
 
-                this.channel.write(ByteBuffer.wrap(response.getBytes()));
+                writeResponse(response);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -270,7 +265,7 @@ public class Client {
 
         byte[] contents = HexFormat.of().parseHex(content);
 
-        this.channel.write(ByteBuffer.wrap(("$" + contents.length + "\r\n").getBytes()));
+        writeResponse("$" + contents.length + "\r\n");
         this.channel.write(ByteBuffer.wrap(contents));
     }
 
@@ -278,7 +273,7 @@ public class Client {
         KeyValue value = this.keys.get(key);
         String result = "+none\r\n";
         if (value == null) {
-            this.channel.write(ByteBuffer.wrap(result.getBytes()));
+            writeResponse(result);
             return;
         }
 
@@ -287,6 +282,6 @@ public class Client {
         if (type == ValueType.STRING) result = "+string\r\n";
         if (type == ValueType.STREAM) result = "+stream\r\n";
 
-        this.channel.write(ByteBuffer.wrap(result.getBytes()));
+        writeResponse(result);
     }
 }
