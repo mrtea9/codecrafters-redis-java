@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.Map;
 
 public class KeyValue {
@@ -6,7 +7,7 @@ public class KeyValue {
     public long expiryTimestamp;
     public ValueType type;
     public String entryId;
-    public Map<String, KeyValue> entries;
+    public Map<String, KeyValue> entries = new HashMap<>();
 
     public KeyValue(String value, long expiryTimestamp, ValueType type) {
         this.value = value;
