@@ -113,6 +113,9 @@ public class Client {
         System.out.println(startRange);
         System.out.println(endRange);
         System.out.println(value.entries);
+        value.entries.forEach( (k, v) -> {
+            System.out.println("key = " + k + ", value key = " + value.key + ", value value = " + value.value);
+        });
 
         writeResponse(Parser.encodeArray(List.of("da", "este")));
     }
@@ -143,7 +146,6 @@ public class Client {
         }
 
         KeyValue streamValue = this.keys.get(streamKey);
-
         if (streamValue == null) {
             KeyValue keyValue = new KeyValue(entryId, key, value, ValueType.STREAM);
             this.keys.put(streamKey, keyValue);
