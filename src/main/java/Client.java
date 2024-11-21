@@ -135,7 +135,7 @@ public class Client {
         if (!rawEntryId.contains("*")) return rawEntryId;
 
         String[] elements = rawEntryId.split("-");
-        System.out.println(Arrays.toString(elements));
+
         if (elements.length == 1) return System.currentTimeMillis() + "-0";
 
         int baseTime = Integer.parseInt(elements[0]);
