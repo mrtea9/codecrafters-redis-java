@@ -136,6 +136,7 @@ public class Client {
 
         String[] elements = rawEntryId.split("-");
         System.out.println(Arrays.toString(elements));
+        if (elements.length == 1) return System.currentTimeMillis() + "-0";
 
         int baseTime = Integer.parseInt(elements[0]);
         int sequenceNumber = (eventLoop.minStreamId.isEmpty()) ? 1 : calculateNextNumber(baseTime);
