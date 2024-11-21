@@ -113,9 +113,14 @@ public class Client {
         System.out.println(startRange);
         System.out.println(endRange);
         System.out.println(value.entries);
-        for (Map.Entry<String, KeyValue> entry: value.entries.entrySet()) {
+
+        Iterator<Map.Entry<String, KeyValue>> iterator = value.entries.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<String, KeyValue> entry = iterator.next();
             String k = entry.getKey();
             KeyValue v = entry.getValue();
+
             if (!k.equals(startRange)) continue;
             System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
         }
