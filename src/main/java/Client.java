@@ -111,7 +111,7 @@ public class Client {
         System.out.println(startRange);
         System.out.println(endRange);
 
-        writeResponse("+OK\r\n");
+        writeResponse(Parser.encodeArray(List.of("da", "este")));
     }
 
     private void writeResponse(String response) throws IOException {
