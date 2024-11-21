@@ -115,13 +115,17 @@ public class Client {
         System.out.println(value.entries);
 
         Iterator<Map.Entry<String, KeyValue>> iterator = value.entries.entrySet().iterator();
+        boolean processing = false;
 
         while (iterator.hasNext()) {
             Map.Entry<String, KeyValue> entry = iterator.next();
             String k = entry.getKey();
             KeyValue v = entry.getValue();
 
-            if (!k.equals(startRange)) continue;
+            if (k.equals(startRange)) processing = true;
+
+            if (!processing) continue;
+
             System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
         }
 
