@@ -96,7 +96,15 @@ public class Client {
         } else if (command.equalsIgnoreCase("xadd")) {
 
             processXadd(decodedList);
+        } else if (command.equalsIgnoreCase("xrange")) {
+
+            processXrange(decodedList);
         }
+    }
+
+    private void processXrange(List<String> list) {
+
+        System.out.println(list);
     }
 
     private void writeResponse(String response) throws IOException {
