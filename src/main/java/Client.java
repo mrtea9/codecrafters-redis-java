@@ -160,6 +160,7 @@ public class Client {
         int id2Time = Integer.parseInt(id2Parts[0]);
 
         if (id1Time < id2Time) return true;
+        if (id1Time > id2Time) return false;
 
         int id1Seq = Integer.parseInt(id1Parts[1]);
         int id2Seq = Integer.parseInt(id2Parts[1]);
