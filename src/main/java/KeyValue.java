@@ -7,7 +7,7 @@ public class KeyValue {
     public long expiryTimestamp;
     public ValueType type;
     public String entryId;
-    public Map<String, KeyValue> entries = new HashMap<>();
+    public Map<String, KeyValue> entries;
 
     public KeyValue(String value, long expiryTimestamp, ValueType type) {
         this.value = value;
@@ -18,8 +18,8 @@ public class KeyValue {
     public KeyValue(String entryId, String key, String value, ValueType type) {
         this.entryId = entryId;
         this.type = type;
-        KeyValue keyValue = new KeyValue(key, value);
-        addEntry(entryId, keyValue);
+        this.entries = new HashMap<>();
+        addEntry(entryId, new KeyValue(key, value));
     }
 
     public KeyValue(String key, String value) {
