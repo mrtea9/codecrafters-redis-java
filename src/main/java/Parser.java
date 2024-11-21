@@ -29,7 +29,7 @@ public class Parser {
     private void parseSourceList(String[] sourceList) {
         for (String element : sourceList) {
             System.out.println(element);
-            if (element.charAt(0) == '*' && element.charAt(1) != '\r') continue;
+            if (element.charAt(0) == '*' && element.length() != 1) continue;
 
             if (element.charAt(0) == '$') continue;
 
