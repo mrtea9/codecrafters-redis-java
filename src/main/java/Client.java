@@ -129,9 +129,17 @@ public class Client {
                 entryId = elements[0] + "-1";
             } else {
                 String[] minStreamIdElements = eventLoop.minStreamId.split("-");
-                int minStreamIdNumber = Integer.parseInt(minStreamIdElements[1]);
-                int minIdNumber = minStreamIdNumber + 1;
-                entryId = elements[0] + "-" + minIdNumber;
+                int minStreamIdTime = Integer.parseInt(minStreamIdElements[0]);
+                int minIdTime = Integer.parseInt(elements[0]);
+
+                if (minIdTime == minStreamIdTime) {
+                    int minStreamIdNumber = Integer.parseInt(minStreamIdElements[1]);
+                    int minIdNumber = minStreamIdNumber + 1;
+                    entryId = elements[0] + "-" + minIdNumber;
+                } else {
+                    int minIdNumber = 0;
+                    entryId = elements[0] + "-" + minIdNumber;
+                }
             }
         }
 
