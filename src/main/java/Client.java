@@ -109,6 +109,7 @@ public class Client {
         String key = list.get(3);
         String value = list.get(4);
 
+
         if (entryId.equals("0-0")) {
             writeResponse("-ERR The ID specified in XADD must be greater than 0-0\r\n");
             return;
