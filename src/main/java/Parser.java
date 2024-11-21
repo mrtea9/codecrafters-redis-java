@@ -41,7 +41,7 @@ public class Parser {
     public static List<String> decodeArray(String[] encodedArray) {
         List<String> result = new ArrayList<>();
         for (String element : encodedArray) {
-            if (element.charAt(0) == '*' && element.charAt(0) != '\r') continue;
+            if (element.charAt(0) == '*' && element.charAt(1) != '\r') continue;
 
             if (element.charAt(0) == '$') continue;
 
