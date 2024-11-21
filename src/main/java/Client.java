@@ -115,7 +115,7 @@ public class Client {
         System.out.println(entryId);
         System.out.println(eventLoop.minStreamId);
 
-        if (eventLoop.minStreamId.equals(entryId) || entryId.compareTo(eventLoop.minStreamId) > 0) {
+        if (eventLoop.minStreamId.equals(entryId) || ( entryId.compareTo(eventLoop.minStreamId) > 0 && !eventLoop.minStreamId.isEmpty())) {
             response = "-ERR The ID specified in XADD is equal or smaller than the target stream top item\r\n";
             this.channel.write(ByteBuffer.wrap(response.getBytes()));
             return;
