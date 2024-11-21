@@ -107,10 +107,12 @@ public class Client {
         String startRange = list.get(2);
         String endRange = list.get(3);
 
+        KeyValue value = this.keys.get(streamKey);
+
         System.out.println(streamKey);
         System.out.println(startRange);
         System.out.println(endRange);
-        System.out.println(this.keys);
+        System.out.println(value.key);
 
         writeResponse(Parser.encodeArray(List.of("da", "este")));
     }
