@@ -102,9 +102,16 @@ public class Client {
         }
     }
 
-    private void processXrange(List<String> list) {
+    private void processXrange(List<String> list) throws IOException {
+        String streamKey = list.get(1);
+        String startRange = list.get(2);
+        String endRange = list.get(3);
 
-        System.out.println(list);
+        System.out.println(streamKey);
+        System.out.println(startRange);
+        System.out.println(endRange);
+
+        writeResponse("+OK\r\n");
     }
 
     private void writeResponse(String response) throws IOException {
@@ -132,7 +139,7 @@ public class Client {
             return;
         }
 
-        KeyValue keyValue = new KeyValue(key, value, ValueType.STREAM);
+        KeyValue keyValue = new KeyValue(entryId, key, value, ValueType.STREAM);
         this.keys.put(streamKey, keyValue);
         eventLoop.minStreamId = entryId;
 
