@@ -106,7 +106,7 @@ public class Client {
         String streamKey = list.get(1);
         String startRange = list.get(2);
         String endRange = list.get(3);
-
+        List<String> result = new ArrayList<>();
         KeyValue value = this.keys.get(streamKey);
 
         System.out.println(streamKey);
@@ -125,11 +125,16 @@ public class Client {
             if (k.equals(startRange)) processing = true;
 
             if (!processing) continue;
+            result.add(k);
+            result.add(v.key);
+            result.add(v.value);
 
             System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
 
             if (k.equals(endRange)) break;
         }
+
+        System.out.println(result);
 
         writeResponse(Parser.encodeArray(List.of("da", "este")));
     }
