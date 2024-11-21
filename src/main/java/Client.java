@@ -135,7 +135,7 @@ public class Client {
         if (!rawEntryId.contains("*")) return rawEntryId;
 
         String[] elements = rawEntryId.split("-");
-        System.out.println(elements);
+        System.out.println(Arrays.toString(elements));
 
         int baseTime = Integer.parseInt(elements[0]);
         int sequenceNumber = (eventLoop.minStreamId.isEmpty()) ? 1 : calculateNextNumber(baseTime);
