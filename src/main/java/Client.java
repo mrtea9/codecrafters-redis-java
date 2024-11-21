@@ -112,7 +112,7 @@ public class Client {
         System.out.println(streamKey);
         System.out.println(startRange);
         System.out.println(endRange);
-        System.out.println(value.key);
+        System.out.println(value);
 
         writeResponse(Parser.encodeArray(List.of("da", "este")));
     }
@@ -149,10 +149,6 @@ public class Client {
             this.keys.put(streamKey, keyValue);
         } else {
             streamValue.addEntry(entryId, new KeyValue(key, value));
-            System.out.println(streamValue.entries);
-            System.out.println("entryId = " + entryId);
-            System.out.println("key = " + streamValue.entries.get(entryId).key);
-            System.out.println("value = " + streamValue.entries.get(entryId).value);
         }
 
         eventLoop.minStreamId = entryId;
