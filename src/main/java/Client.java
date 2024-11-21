@@ -114,7 +114,7 @@ public class Client {
         System.out.println(endRange);
         System.out.println(value.entries);
         value.entries.forEach( (k, v) -> {
-            System.out.println("key = " + k + ", value key = " + value.key + ", value value = " + value.value);
+            System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
         });
 
         writeResponse(Parser.encodeArray(List.of("da", "este")));
