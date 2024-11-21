@@ -19,7 +19,7 @@ public class KeyValue {
         this.entryId = entryId;
         this.type = type;
         KeyValue keyValue = new KeyValue(key, value);
-        addEntry(keyValue);
+        addEntry(entryId, keyValue);
     }
 
     public KeyValue(String key, String value) {
@@ -28,7 +28,7 @@ public class KeyValue {
         this.type = ValueType.KEYVALUE;
     }
 
-    public void addEntry(KeyValue keyValue) {
-        this.entries.put(this.entryId, keyValue);
+    public void addEntry(String entryId, KeyValue keyValue) {
+        this.entries.put(entryId, keyValue);
     }
 }
