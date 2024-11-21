@@ -149,6 +149,7 @@ public class Client {
             this.keys.put(streamKey, keyValue);
         } else {
             System.out.println(streamValue.entries);
+            streamValue.addEntry(new KeyValue(key, value));
         }
 
 
