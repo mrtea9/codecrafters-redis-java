@@ -125,6 +125,14 @@ public class Client {
         if (entryId.contains("*")) {
             String[] elements = entryId.split("-");
             System.out.println(Arrays.toString(elements));
+            if (eventLoop.minStreamId.isEmpty()) {
+                entryId = elements[0] + "-1";
+            } else {
+                String[] minStreamIdElements = eventLoop.minStreamId.split("-");
+                int minStreamIdNumber = Integer.parseInt(minStreamIdElements[1]);
+                int minIdNumber = minStreamIdNumber + 1;
+                entryId = elements[0] + "-" + minIdNumber;
+            }
         }
 
         KeyValue keyValue = new KeyValue(key, value, ValueType.STREAM);
