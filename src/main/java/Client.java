@@ -113,9 +113,12 @@ public class Client {
         System.out.println(startRange);
         System.out.println(endRange);
         System.out.println(value.entries);
-        value.entries.forEach( (k, v) -> {
+        for (Map.Entry<String, KeyValue> entry: value.entries.entrySet()) {
+            String k = entry.getKey();
+            KeyValue v = entry.getValue();
+            if (!k.equals(startRange)) continue;
             System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
-        });
+        }
 
         writeResponse(Parser.encodeArray(List.of("da", "este")));
     }
