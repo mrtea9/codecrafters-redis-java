@@ -117,11 +117,6 @@ public class Client {
         System.out.println(entryId);
         System.out.println(eventLoop.minStreamId);
 
-        if (eventLoop.minStreamId.equals(entryId) || ( entryId.compareTo(eventLoop.minStreamId) < 0 && !eventLoop.minStreamId.isEmpty())) {
-            writeResponse("-ERR The ID specified in XADD is equal or smaller than the target stream top item\r\n");
-            return;
-        }
-
         if (entryId.contains("*")) {
             String[] elements = entryId.split("-");
             System.out.println(Arrays.toString(elements));
@@ -141,6 +136,11 @@ public class Client {
                     entryId = elements[0] + "-" + minIdNumber;
                 }
             }
+        }
+
+        if (eventLoop.minStreamId.equals(entryId) || ( entryId.compareTo(eventLoop.minStreamId) < 0 && !eventLoop.minStreamId.isEmpty())) {
+            writeResponse("-ERR The ID specified in XADD is equal or smaller than the target stream top item\r\n");
+            return;
         }
 
         KeyValue keyValue = new KeyValue(key, value, ValueType.STREAM);
