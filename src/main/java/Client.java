@@ -149,8 +149,8 @@ public class Client {
             this.keys.put(streamKey, keyValue);
         } else {
             streamValue.addEntry(entryId, new KeyValue(key, value));
+            System.out.println(streamValue.entries);
         }
-        System.out.println(streamValue.entries);
 
         eventLoop.minStreamId = entryId;
 
