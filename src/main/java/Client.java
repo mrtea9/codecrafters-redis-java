@@ -110,6 +110,7 @@ public class Client {
         System.out.println(streamKey);
         System.out.println(startRange);
         System.out.println(endRange);
+        System.out.println(this.keys);
 
         writeResponse(Parser.encodeArray(List.of("da", "este")));
     }
