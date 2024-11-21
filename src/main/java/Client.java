@@ -142,8 +142,16 @@ public class Client {
             return;
         }
 
-        KeyValue keyValue = new KeyValue(entryId, key, value, ValueType.STREAM);
-        this.keys.put(streamKey, keyValue);
+        KeyValue streamValue = this.keys.get(streamKey);
+
+        if (streamValue == null) {
+            KeyValue keyValue = new KeyValue(entryId, key, value, ValueType.STREAM);
+            this.keys.put(streamKey, keyValue);
+        } else {
+            System.out.println(streamValue.value);
+        }
+
+
         eventLoop.minStreamId = entryId;
 
         writeResponse(Parser.encodeBulkString(entryId));

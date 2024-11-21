@@ -1,5 +1,5 @@
 
 
 public enum ValueType {
-    STRING, STREAM
+    STRING, STREAM, KEYVALUE
 }
