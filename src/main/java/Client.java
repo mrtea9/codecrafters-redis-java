@@ -135,9 +135,9 @@ public class Client {
         }
 
 
-        System.out.println(Parser.encodeRange(result));
+        //System.out.println(Parser.encodeRange(result));
 
-        writeResponse(Parser.encodeArray(List.of("da", "este")));
+        writeResponse(Parser.encodeRange(result));
     }
 
     private void writeResponse(String response) throws IOException {
