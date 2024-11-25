@@ -123,13 +123,40 @@ public class Client {
             String streamKey = streamKeys.get(i);
             String startRange = list.get(i);
 
-            System.out.println("streamKey = " + streamKey + "; startRange = " + startRange);
+            KeyValue value = this.keys.get(streamKey);
+            List<String> result = new ArrayList<>();
+
+            System.out.println(streamKey);
+            System.out.println(startRange);
+            System.out.println(value.entries);
+
+            Iterator<Map.Entry<String, KeyValue>> iterator = value.entries.entrySet().iterator();
+            boolean processing = false;
+
+            result.add(streamKey);
+
+            while (iterator.hasNext()) {
+                Map.Entry<String, KeyValue> entry = iterator.next();
+                String k = entry.getKey();
+                KeyValue v = entry.getValue();
+
+                if (isIdSmallerOrEqual(startRange, k)) processing = true;
+
+                if (!processing) continue;
+
+                result.add(k);
+                result.add(v.key);
+                result.add(v.value);
+
+                System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
+            }
+
+            System.out.println(result);
         }
 
 
         return;
-//        String streamKey = list.get(2);
-//        String startRange = list.get(3);
+
 //        KeyValue value = this.keys.get(streamKey);
 //        List<String> result = new ArrayList<>();
 //
