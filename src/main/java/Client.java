@@ -159,9 +159,12 @@ public class Client {
         System.out.println(finalResult);
         System.out.println(Parser.encodeMultipleRead(finalResult));
 
-        if (finalResult.size() == 1) writeResponse(Parser.encodeRead(finalResult.get(0)));
-        else writeResponse(Parser.encodeMultipleRead(finalResult));
+        String response = (finalResult.size() == 1)
+                ? Parser.encodeRead(finalResult.get(0))
+                : Parser.encodeMultipleRead(finalResult);
 
+        System.out.println(response);
+        writeResponse(response);
     }
 
     private boolean isValidEntryId(String entryId) {
