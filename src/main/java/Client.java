@@ -108,6 +108,8 @@ public class Client {
     }
 
     private void processXread(List<String> list) throws IOException {
+        list.remove(0);
+
         List<String> streamKeys = new ArrayList<>();
 
         while (!isValidEntryId(list.get(0))) {
