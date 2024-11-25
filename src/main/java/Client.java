@@ -157,6 +157,7 @@ public class Client {
         }
 
         System.out.println(encodeNestedArray(finalResult));
+        writeResponse(encodeNestedArray(finalResult));
     }
 
     private String encodeNestedArray(List<?> nestedList) {
