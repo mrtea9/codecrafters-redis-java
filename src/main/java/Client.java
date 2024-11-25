@@ -130,11 +130,11 @@ public class Client {
 
         System.out.println(finalResult);
 
-        String response = (finalResult.size() == 1)
-                ? Parser.encodeRead(finalResult.get(0))
-                : Parser.encodeMultipleRead(finalResult);
-
-        writeResponse(response);
+        if (!finalResult.isEmpty()) {
+            String response = Parser.encodeMultipleRead(finalResult);
+            writeResponse(response);
+            return;
+        }
 
         if (blockTime > 0) {
             waitForEntries(streamKeys, startIds, blockTime);
