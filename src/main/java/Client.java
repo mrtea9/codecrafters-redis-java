@@ -123,7 +123,7 @@ public class Client {
             String k = entry.getKey();
             KeyValue v = entry.getValue();
 
-            System.out.println(isIdSmallerOrEqual(k, startRange));
+            System.out.println(isIdSmallerOrEqual(startRange, k));
 
             System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
         }
