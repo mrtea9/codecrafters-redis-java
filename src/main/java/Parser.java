@@ -70,6 +70,7 @@ public class Parser {
             stringBuilder.append("*2\r\n");
             stringBuilder.append(key);
             stringBuilder.append(value);
+            stringBuilder.append("*2\r\n");
         }
 
         return stringBuilder.toString();
