@@ -125,6 +125,7 @@ public class Client {
             if (k.equals(startRange)) processing = true;
 
             if (!processing) continue;
+
             result.add(k);
             result.add(v.key);
             result.add(v.value);
