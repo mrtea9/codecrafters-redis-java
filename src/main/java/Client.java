@@ -136,18 +136,18 @@ public class Client {
 
 
         System.out.println(Parser.encodeRange(result));
-        //String test = Parser.encodeRange(result);
-        String test = "*2\r\n" +
-                "*2\r\n" +
-                "$3\r\n0-2\r\n" +
-                "*2\r\n" +
-                "$3\r\nfoo\r\n" +
-                "$3\r\nbar\r\n" +
-                "*2\r\n" +
-                "$3\r\n0-3\r\n" +
-                "*2\r\n" +
-                "$3\r\nfoo\r\n" +
-                "$3\r\nbar\r\n";
+        String test = Parser.encodeRange(result);
+//        String test = "*2\r\n" +
+//                "*2\r\n" +
+//                "$3\r\n0-2\r\n" +
+//                "*2\r\n" +
+//                "$3\r\nfoo\r\n" +
+//                "$3\r\nbar\r\n" +
+//                "*2\r\n" +
+//                "$3\r\n0-3\r\n" +
+//                "*2\r\n" +
+//                "$3\r\nfoo\r\n" +
+//                "$3\r\nbar\r\n";
 
         writeResponse(test);
     }

@@ -55,7 +55,9 @@ public class Parser {
 
     public static String encodeRange(List<String> list) {
         StringBuilder stringBuilder = new StringBuilder();
-        int entriesNumber = list.size() / 3; // Assuming each entry has an ID, a key, and a value
+
+        // There are two entries, hence "*2\r\n"
+        int entriesNumber = list.size() / 3;
         stringBuilder.append("*").append(entriesNumber).append("\r\n");
 
         while (!list.isEmpty()) {
@@ -63,14 +65,14 @@ public class Parser {
             String key = list.remove(0);
             String value = list.remove(0);
 
-            // Each entry consists of two parts: the ID and the key-value list
-            stringBuilder.append("*2\r\n"); // The entry itself is an array of size 2
+            // Each entry consists of two parts: the entry ID and the key-value list
+            stringBuilder.append("*2\r\n"); // Each entry array has 2 elements (ID and key-value pairs)
 
-            // Add the entry ID as a bulk string
+            // Add entry ID as a bulk string
             stringBuilder.append(encodeBulkString(entryId));
 
-            // The key-value pairs are represented as another array
-            stringBuilder.append("*4\r\n"); // Each key-value pair array has 2 elements (key and value)
+            // Key-value pairs as a RESP array of 2 elements (key, value)
+            stringBuilder.append("*2\r\n");
             stringBuilder.append(encodeBulkString(key));
             stringBuilder.append(encodeBulkString(value));
         }
