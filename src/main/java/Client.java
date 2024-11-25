@@ -119,6 +119,13 @@ public class Client {
         System.out.println(streamKeys);
         System.out.println(list);
 
+        for (int i = 0; i < streamKeys.size(); i++) {
+            String streamKey = streamKeys.get(i);
+            String startRange = list.get(i);
+
+            System.out.println("streamKey = " + streamKey + "; startRange = " + startRange);
+        }
+
 
         return;
 //        String streamKey = list.get(2);
