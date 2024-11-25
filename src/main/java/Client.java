@@ -117,6 +117,7 @@ public class Client {
         }
 
         System.out.println(streamKeys);
+        System.out.println(list);
 
 
         return;
