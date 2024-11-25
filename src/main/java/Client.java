@@ -129,7 +129,7 @@ public class Client {
                 continue;
             }
 
-            List<String> streamResult = new ArrayList<>();
+            List<Object> streamResult = new ArrayList<>();
             streamResult.add(streamKey);
 
             List<List<String>> streamEntries = new ArrayList<>();
@@ -154,15 +154,37 @@ public class Client {
 
             if (!streamEntries.isEmpty()) {
                 // Add stream entries if there are any
-                streamResult.add(Parser.encodeArray((Map<String, String>) streamEntries));
+                streamResult.add(streamEntries);
             }
 
             // Add the result for the current stream
-            result.add(Parser.encodeArray(streamResult));
+            result.add(encodeNestedArray(streamResult));
         }
 
         // Encode and send the overall result as a RESP array
-        writeResponse(Parser.encodeArray(result));
+        writeResponse(encodeNestedArray(result));
+    }
+
+    /**
+     * Helper method to encode a nested list structure into RESP array format.
+     */
+    private String encodeNestedArray(List<?> nestedList) {
+        StringBuilder sb = new StringBuilder();
+
+        if (nestedList == null || nestedList.isEmpty()) {
+            sb.append("*0\r\n");
+            return sb.toString();
+        }
+
+        sb.append("*").append(nestedList.size()).append("\r\n");
+        for (Object element : nestedList) {
+            if (element instanceof String str) {
+                sb.append("$").append(str.length()).append("\r\n").append(str).append("\r\n");
+            } else if (element instanceof List) {
+                sb.append(encodeNestedArray((List<?>) element));
+            }
+        }
+        return sb.toString();
     }
 
     private void processXrange(List<String> list) throws IOException {
