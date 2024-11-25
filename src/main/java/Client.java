@@ -198,11 +198,11 @@ public class Client {
             }
         });
 
-        future.thenRun(() -> {
-            try {
-                List<String> finalResult = f
-            }
-        })
+//        future.thenRun(() -> {
+//            try {
+//                List<String> finalResult = f
+//            }
+//        })
     }
 
     private boolean isValidEntryId(String entryId) {
