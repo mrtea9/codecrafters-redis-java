@@ -301,6 +301,8 @@ public class Client {
 
         eventLoop.minStreamId = entryId;
 
+        eventLoop.notifyBlockedClients(streamKey);
+
         writeResponse(Parser.encodeBulkString(entryId));
     }
 
