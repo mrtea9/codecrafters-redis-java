@@ -65,6 +65,9 @@ public class Parser {
             String value = encodeBulkString(list.remove(0));
 
             stringBuilder.append(entryId);
+            stringBuilder.append("*2\r\n");
+            stringBuilder.append(key);
+            stringBuilder.append(value);
         }
 
         return stringBuilder.toString();
