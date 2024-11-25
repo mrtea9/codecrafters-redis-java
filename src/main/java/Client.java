@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.security.Key;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -113,6 +114,17 @@ public class Client {
         System.out.println(streamKey);
         System.out.println(startRange);
         System.out.println(value.entries);
+
+        Iterator<Map.Entry<String, KeyValue>> iterator = value.entries.entrySet().iterator();
+        boolean processing = false;
+
+        while (iterator.hasNext()) {
+            Map.Entry<String, KeyValue> entry = iterator.next();
+            String k = entry.getKey();
+            KeyValue v = entry.getValue();
+
+            System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
+        }
     }
 
     private void processXrange(List<String> list) throws IOException {
