@@ -154,7 +154,7 @@ public class Client {
 
             if (!streamEntries.isEmpty()) {
                 // Add stream entries if there are any
-                streamResult.add(Parser.encodeArray(streamEntries));
+                streamResult.add(Parser.encodeArray((Map<String, String>) streamEntries));
             }
 
             // Add the result for the current stream
