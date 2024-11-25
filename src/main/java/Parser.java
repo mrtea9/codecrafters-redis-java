@@ -53,6 +53,19 @@ public class Parser {
         return result;
     }
 
+    public static String encodeRange(List<String> list) {
+        StringBuilder stringBuilder = new StringBuilder();
+        int entriesNumber = list.size() / 3;
+        stringBuilder.append("*").append(entriesNumber).append("\r\n");
+        stringBuilder.append("*").append(entriesNumber).append("\r\n");
+
+        while (!list.isEmpty()) {
+            String entryId = list.remove(0);
+        }
+
+        return stringBuilder.toString();
+    }
+
     public static String encodeBulkString(String decoded) {
         return "$" + decoded.length() + "\r\n" + decoded + "\r\n";
     }

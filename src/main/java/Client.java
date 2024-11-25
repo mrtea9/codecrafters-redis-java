@@ -135,7 +135,7 @@ public class Client {
         }
 
 
-        System.out.println(result);
+        System.out.println(Parser.encodeRange(result));
 
         writeResponse(Parser.encodeArray(List.of("da", "este")));
     }
