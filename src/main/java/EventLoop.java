@@ -24,6 +24,7 @@ public class EventLoop {
     public boolean noCommand = true;
     public String minStreamId = "";
     private final ConcurrentHashMap<Client, CompletableFuture<Integer>> waitingClients = new ConcurrentHashMap<>();
+    private final Map<String, List<BlockedClient>> blockedClients = new ConcurrentHashMap<>();
     private int offset = 0;
 
     EventLoop(int port, String replicaOf) {
@@ -40,6 +41,19 @@ public class EventLoop {
         this.globalConfig.put("dbfilename", dbFileName);
 
         readConfig(dirName, dbFileName);
+    }
+
+    public void registerBlockedClient(String streamKey, BlockedClient blockedClient) {
+        blockedClients.computeIfAbsent(streamKey, k -> new CopyOnWriteArrayList<>()).add(blockedClient);
+    }
+
+    public void notifyBlockedClients(String streamKey) {
+        List<BlockedClient> clients = blockedClients.remove(streamKey);
+        if (clients == null) return;
+
+        for (BlockedClient client : clients) {
+            client.getFuture().complete(null);
+        }
     }
 
     public void addWaitingClient(Client client, CompletableFuture<Integer> future) {

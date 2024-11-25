@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.security.Key;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -109,25 +108,41 @@ public class Client {
 
     private void processXread(List<String> list) throws IOException {
         String param = list.remove(0);
+        long blockTime = 0;
 
         if (param.equalsIgnoreCase("block")) {
-            System.out.println(param);
-            return;
+            blockTime = Long.parseLong(list.remove(0));
+            list.remove(0);
         }
 
         List<String> streamKeys = new ArrayList<>();
-        List<List<String>> finalResult = new ArrayList<>();
 
         while (!isValidEntryId(list.get(0))) {
             streamKeys.add(list.remove(0));
         }
 
+        List<String> startIds = new ArrayList<>(list);
+
         System.out.println(streamKeys);
-        System.out.println(list);
+        System.out.println(startIds);
+
+        List<List<String>> finalResult = fetchStreamEntries(streamKeys, startIds);
+
+        System.out.println(finalResult);
+
+        String response = (finalResult.size() == 1)
+                ? Parser.encodeRead(finalResult.get(0))
+                : Parser.encodeMultipleRead(finalResult);
+
+        writeResponse(response);
+    }
+
+    private List<List<String>> fetchStreamEntries(List<String> streamKeys, List<String> startIds) {
+        List<List<String>> finalResult = new ArrayList<>();
 
         for (int i = 0; i < streamKeys.size(); i++) {
             String streamKey = streamKeys.get(i);
-            String startRange = list.get(i);
+            String startRange = startIds.get(i);
 
             KeyValue value = this.keys.get(streamKey);
             List<String> result = new ArrayList<>();
@@ -161,13 +176,33 @@ public class Client {
             finalResult.add(result);
         }
 
-        System.out.println(finalResult);
+        return finalResult;
+    }
 
-        String response = (finalResult.size() == 1)
-                ? Parser.encodeRead(finalResult.get(0))
-                : Parser.encodeMultipleRead(finalResult);
+    private void waitForEntries(List<String> streamKeys, List<String> startIds, long blockTime) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
 
-        writeResponse(response);
+        for (String streamKey : streamKeys) {
+            BlockedClient blockedClient = new BlockedClient(this.channel, startIds, future);
+            eventLoop.registerBlockedClient(streamKey, blockedClient);
+        }
+
+        CompletableFuture<Void> timeoutFuture = CompletableFuture.runAsync(() -> {
+            try {
+                Thread.sleep(blockTime);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (!future.isDone()) {
+                future.complete(null);
+            }
+        });
+
+        future.thenRun(() -> {
+            try {
+                List<String> finalResult = f
+            }
+        })
     }
 
     private boolean isValidEntryId(String entryId) {
@@ -370,7 +405,6 @@ public class Client {
             System.out.println("Acknowledged incremented: " + this.eventLoop.acknowledged);
             this.eventLoop.notifyAcknowledged();
         }
-
     }
 
     private void processPsync() throws IOException {
