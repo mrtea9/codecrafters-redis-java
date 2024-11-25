@@ -99,7 +99,20 @@ public class Client {
         } else if (command.equalsIgnoreCase("xrange")) {
 
             processXrange(decodedList);
+        } else if (command.equalsIgnoreCase("xread")) {
+
+            processXread(decodedList);
         }
+    }
+
+    private void processXread(List<String> list) {
+        String streamKey = list.get(2);
+        String startRange = list.get(3);
+        KeyValue value = this.keys.get(streamKey);
+
+        System.out.println(streamKey);
+        System.out.println(startRange);
+        System.out.println(value.entries);
     }
 
     private void processXrange(List<String> list) throws IOException {
