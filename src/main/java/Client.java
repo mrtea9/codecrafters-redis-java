@@ -291,13 +291,20 @@ public class Client {
             return;
         }
 
-        KeyValue streamValue = this.keys.get(streamKey);
-        if (streamValue == null) {
-            KeyValue keyValue = new KeyValue(entryId, key, value, ValueType.STREAM);
-            this.keys.put(streamKey, keyValue);
-        } else {
-            streamValue.addEntry(entryId, new KeyValue(key, value));
-        }
+//        KeyValue streamValue = this.keys.get(streamKey);
+//        if (streamValue == null) {
+//            KeyValue keyValue = new KeyValue(entryId, key, value, ValueType.STREAM);
+//            this.keys.put(streamKey, keyValue);
+//        } else {
+//            streamValue.addEntry(entryId, new KeyValue(key, value));
+//        }
+
+        KeyValue stream = keys.computeIfAbsent(streamKey, k -> new KeyValue(entryId, key, value, ValueType.STREAM));
+        stream.addEntry(entryId, new KeyValue(key, value));
+
+        // Notify any blocked clients waiting on this stream
+        eventLoop.notifyBlockedClients(streamKey);
+
 
         eventLoop.minStreamId = entryId;
 
