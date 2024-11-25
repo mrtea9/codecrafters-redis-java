@@ -156,27 +156,7 @@ public class Client {
             finalResult.add(result);
         }
 
-        System.out.println(encodeNestedArray(finalResult));
-        writeResponse(encodeNestedArray(finalResult));
-    }
-
-    private String encodeNestedArray(List<?> nestedList) {
-        StringBuilder sb = new StringBuilder();
-
-        if (nestedList == null || nestedList.isEmpty()) {
-            sb.append("*0\r\n");
-            return sb.toString();
-        }
-
-        sb.append("*").append(nestedList.size()).append("\r\n");
-        for (Object element : nestedList) {
-            if (element instanceof String str) {
-                sb.append("$").append(str.length()).append("\r\n").append(str).append("\r\n");
-            } else if (element instanceof List) {
-                sb.append(encodeNestedArray((List<?>) element));
-            }
-        }
-        return sb.toString();
+        System.out.println(finalResult);
     }
 
     private boolean isValidEntryId(String entryId) {
