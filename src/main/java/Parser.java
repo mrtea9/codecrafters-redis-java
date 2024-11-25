@@ -60,7 +60,11 @@ public class Parser {
         stringBuilder.append("*").append(entriesNumber).append("\r\n");
 
         while (!list.isEmpty()) {
-            String entryId = list.remove(0);
+            String entryId = encodeBulkString(list.remove(0));
+            String key = encodeBulkString(list.remove(0));
+            String value = encodeBulkString(list.remove(0));
+
+            stringBuilder.append(entryId);
         }
 
         return stringBuilder.toString();
