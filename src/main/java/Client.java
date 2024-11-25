@@ -135,7 +135,7 @@ public class Client {
         }
 
 
-        //System.out.println(Parser.encodeRange(result));
+        System.out.println(Parser.encodeRange(result));
 
         writeResponse(Parser.encodeRange(result));
     }
