@@ -135,6 +135,12 @@ public class Client {
                 : Parser.encodeMultipleRead(finalResult);
 
         writeResponse(response);
+
+        if (blockTime > 0) {
+            waitForEntries(streamKeys, startIds, blockTime);
+        } else {
+            writeResponse("$-1\r\n");
+        }
     }
 
     private List<List<String>> fetchStreamEntries(List<String> streamKeys, List<String> startIds) {
@@ -198,11 +204,19 @@ public class Client {
             }
         });
 
-//        future.thenRun(() -> {
-//            try {
-//                List<String> finalResult = f
-//            }
-//        })
+        future.thenRun(() -> {
+            try {
+                List<List<String>> finalResult = fetchStreamEntries(streamKeys, startIds);
+                if (!finalResult.isEmpty()) {
+                    String response = Parser.encodeMultipleRead(finalResult);
+                    writeResponse(response);
+                } else {
+                    writeResponse("$-1\r\n");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private boolean isValidEntryId(String entryId) {
