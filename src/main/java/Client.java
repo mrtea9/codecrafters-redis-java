@@ -117,6 +117,8 @@ public class Client {
         Iterator<Map.Entry<String, KeyValue>> iterator = value.entries.entrySet().iterator();
         boolean processing = false;
 
+        if (startRange.equals("-")) processing = true;
+
         while (iterator.hasNext()) {
             Map.Entry<String, KeyValue> entry = iterator.next();
             String k = entry.getKey();
@@ -134,10 +136,10 @@ public class Client {
             if (k.equals(endRange)) break;
         }
 
-        String test = Parser.encodeRange(result);
-        System.out.println(test);
+        String response = Parser.encodeRange(result);
+        System.out.println(response);
 
-        writeResponse(test);
+        writeResponse(response);
     }
 
     private void writeResponse(String response) throws IOException {
