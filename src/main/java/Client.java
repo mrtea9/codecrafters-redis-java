@@ -130,17 +130,13 @@ public class Client {
 
         System.out.println(finalResult);
 
-        if (!finalResult.isEmpty()) {
-            String response = Parser.encodeMultipleRead(finalResult);
-            writeResponse(response);
-            return;
-        }
+        String response = (finalResult.size() == 1)
+                ? Parser.encodeRead(finalResult.get(0))
+                : Parser.encodeMultipleRead(finalResult);
 
-        if (blockTime > 0) {
-            waitForEntries(streamKeys, startIds, blockTime);
-        } else {
-            writeResponse("$-1\r\n");
-        }
+        if (blockTime > 0) waitForEntries(streamKeys, startIds, blockTime);
+
+        writeResponse(response);
     }
 
     private List<List<String>> fetchStreamEntries(List<String> streamKeys, List<String> startIds) {
@@ -291,20 +287,13 @@ public class Client {
             return;
         }
 
-//        KeyValue streamValue = this.keys.get(streamKey);
-//        if (streamValue == null) {
-//            KeyValue keyValue = new KeyValue(entryId, key, value, ValueType.STREAM);
-//            this.keys.put(streamKey, keyValue);
-//        } else {
-//            streamValue.addEntry(entryId, new KeyValue(key, value));
-//        }
-
-        KeyValue stream = keys.computeIfAbsent(streamKey, k -> new KeyValue(entryId, key, value, ValueType.STREAM));
-        stream.addEntry(entryId, new KeyValue(key, value));
-
-        // Notify any blocked clients waiting on this stream
-        eventLoop.notifyBlockedClients(streamKey);
-
+        KeyValue streamValue = this.keys.get(streamKey);
+        if (streamValue == null) {
+            KeyValue keyValue = new KeyValue(entryId, key, value, ValueType.STREAM);
+            this.keys.put(streamKey, keyValue);
+        } else {
+            streamValue.addEntry(entryId, new KeyValue(key, value));
+        }
 
         eventLoop.minStreamId = entryId;
 
