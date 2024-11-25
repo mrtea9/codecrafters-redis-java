@@ -55,28 +55,26 @@ public class Parser {
 
     public static String encodeRange(List<String> list) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("[\n");
+        int entriesNumber = list.size() / 3; // Assuming each entry has an ID, a key, and a value
+        stringBuilder.append("*").append(entriesNumber).append("\r\n");
 
         while (!list.isEmpty()) {
             String entryId = list.remove(0);
             String key = list.remove(0);
             String value = list.remove(0);
 
-            stringBuilder.append("  {\n");
-            stringBuilder.append("    \"ID\": \"").append(entryId).append("\",\n");
-            stringBuilder.append("    \"Values\": {\n");
-            stringBuilder.append("      \"").append(key).append("\": \"").append(value).append("\"\n");
-            stringBuilder.append("    }\n");
-            stringBuilder.append("  }");
+            // Each entry consists of two parts: the ID and the key-value list
+            stringBuilder.append("*2\r\n"); // The entry itself is an array of size 2
 
-            if (!list.isEmpty()) {
-                stringBuilder.append(",\n");
-            } else {
-                stringBuilder.append("\n");
-            }
+            // Add the entry ID as a bulk string
+            stringBuilder.append(encodeBulkString(entryId));
+
+            // The key-value pairs are represented as another array
+            stringBuilder.append("*2\r\n"); // Each key-value pair array has 2 elements (key and value)
+            stringBuilder.append(encodeBulkString(key));
+            stringBuilder.append(encodeBulkString(value));
         }
 
-        stringBuilder.append("]");
         return stringBuilder.toString();
     }
 
