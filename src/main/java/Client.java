@@ -108,7 +108,12 @@ public class Client {
     }
 
     private void processXread(List<String> list) throws IOException {
-        list.remove(0);
+        String param = list.remove(0);
+
+        if (param.equalsIgnoreCase("block")) {
+            System.out.println(param);
+            return;
+        }
 
         List<String> streamKeys = new ArrayList<>();
         List<List<String>> finalResult = new ArrayList<>();
@@ -157,13 +162,11 @@ public class Client {
         }
 
         System.out.println(finalResult);
-        System.out.println(Parser.encodeMultipleRead(finalResult));
 
         String response = (finalResult.size() == 1)
                 ? Parser.encodeRead(finalResult.get(0))
                 : Parser.encodeMultipleRead(finalResult);
 
-        System.out.println(response);
         writeResponse(response);
     }
 
