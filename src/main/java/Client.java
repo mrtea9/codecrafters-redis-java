@@ -115,9 +115,7 @@ public class Client {
         System.out.println(value.entries);
 
         Iterator<Map.Entry<String, KeyValue>> iterator = value.entries.entrySet().iterator();
-        boolean processing = false;
-
-        if (startRange.equals("-")) processing = true;
+        boolean processing = startRange.equals("-");
 
         while (iterator.hasNext()) {
             Map.Entry<String, KeyValue> entry = iterator.next();
