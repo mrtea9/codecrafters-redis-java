@@ -135,6 +135,7 @@ public class Client {
             result.add(v.value);
 
             System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
+
         }
 
         writeResponse(Parser.encodeRead(result));
