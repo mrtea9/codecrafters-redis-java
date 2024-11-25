@@ -134,6 +134,7 @@ public class Client {
             if (k.equals(endRange)) break;
         }
 
+
         System.out.println(result);
 
         writeResponse(Parser.encodeArray(List.of("da", "este")));
