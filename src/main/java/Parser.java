@@ -54,29 +54,32 @@ public class Parser {
     }
 
     public static String encodeRange(List<String> list) {
-        System.out.println(list);
-
         StringBuilder stringBuilder = new StringBuilder();
-        int entriesNumber = list.size() / 3;
-        stringBuilder.append("*").append(entriesNumber).append("\r\n");
+        stringBuilder.append("[\n");
 
         while (!list.isEmpty()) {
-            // Append entry ID
-            String entryId = encodeBulkString(list.remove(0));
-            stringBuilder.append("*2\r\n"); // Each entry is an array with 2 elements: ID and Key-Value pairs
-            stringBuilder.append(entryId);
+            String entryId = list.remove(0);
+            String key = list.remove(0);
+            String value = list.remove(0);
 
-            // Append key-value pairs
-            stringBuilder.append("*").append(2).append("\r\n"); // Assuming each entry has a fixed number of key-value pairs (2)
-            String key = encodeBulkString(list.remove(0));
-            String value = encodeBulkString(list.remove(0));
+            stringBuilder.append("  {\n");
+            stringBuilder.append("    \"ID\": \"").append(entryId).append("\",\n");
+            stringBuilder.append("    \"Values\": {\n");
+            stringBuilder.append("      \"").append(key).append("\": \"").append(value).append("\"\n");
+            stringBuilder.append("    }\n");
+            stringBuilder.append("  }");
 
-            stringBuilder.append(key);
-            stringBuilder.append(value);
+            if (!list.isEmpty()) {
+                stringBuilder.append(",\n");
+            } else {
+                stringBuilder.append("\n");
+            }
         }
 
+        stringBuilder.append("]");
         return stringBuilder.toString();
     }
+
 
     public static String encodeBulkString(String decoded) {
         return "$" + decoded.length() + "\r\n" + decoded + "\r\n";
