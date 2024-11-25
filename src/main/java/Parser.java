@@ -53,6 +53,18 @@ public class Parser {
         return result;
     }
 
+    public static String encodeMultipleRead(List<List<String>> finalList) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("*").append(finalList.size()).append("\r\n");
+
+        for (List<String> list : finalList) {
+            stringBuilder.append("*2\r\n");
+            System.out.println(list);
+        }
+
+        return stringBuilder.toString();
+    }
+
     public static String encodeRead(List<String> list) {
         StringBuilder stringBuilder = new StringBuilder();
         String streamKey = list.remove(0);

@@ -157,6 +157,11 @@ public class Client {
         }
 
         System.out.println(finalResult);
+        System.out.println(Parser.encodeMultipleRead(finalResult));
+
+        if (finalResult.size() == 1) writeResponse(Parser.encodeRead(finalResult.get(0)));
+        else writeResponse(Parser.encodeMultipleRead(finalResult));
+
     }
 
     private boolean isValidEntryId(String entryId) {
