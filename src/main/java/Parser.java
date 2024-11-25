@@ -54,6 +54,8 @@ public class Parser {
     }
 
     public static String encodeRange(List<String> list) {
+        System.out.println(list);
+
         StringBuilder stringBuilder = new StringBuilder();
         int entriesNumber = list.size() / 3;
         stringBuilder.append("*").append(entriesNumber).append("\r\n");
