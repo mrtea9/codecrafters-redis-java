@@ -101,90 +101,62 @@ public class Client {
 
             processXrange(decodedList);
         } else if (command.equalsIgnoreCase("xread")) {
+            decodedList.remove(0);
 
             processXread(decodedList);
         }
     }
 
     private void processXread(List<String> list) throws IOException {
-        List<String> result = new ArrayList<>();
+        List<String> streamKeys = new ArrayList<>();
 
-        // Parse the streams and start ranges from the input
-        int streamsIndex = list.indexOf("streams");
-        if (streamsIndex == -1 || streamsIndex + 1 >= list.size()) {
-            throw new IllegalArgumentException("Invalid XREAD command format");
+        while (!isValidEntryId(list.get(0))) {
+            streamKeys.add(list.remove(0));
         }
 
-        // Extract stream keys and their corresponding start IDs
-        List<String> streamKeys = list.subList(streamsIndex + 1, list.size() / 2 + streamsIndex + 1);
-        List<String> startRanges = list.subList(list.size() / 2 + streamsIndex + 1, list.size());
+        System.out.println(streamKeys);
 
-        for (int i = 0; i < streamKeys.size(); i++) {
-            String streamKey = streamKeys.get(i);
-            String startRange = startRanges.get(i);
-            KeyValue value = this.keys.get(streamKey);
 
-            if (value == null) {
-                // If the stream key does not exist, skip it
-                continue;
-            }
-
-            List<Object> streamResult = new ArrayList<>();
-            streamResult.add(streamKey);
-
-            List<List<String>> streamEntries = new ArrayList<>();
-            Iterator<Map.Entry<String, KeyValue>> iterator = value.entries.entrySet().iterator();
-            boolean processing = false;
-
-            while (iterator.hasNext()) {
-                Map.Entry<String, KeyValue> entry = iterator.next();
-                String k = entry.getKey();
-                KeyValue v = entry.getValue();
-
-                if (isIdSmallerOrEqual(startRange, k)) processing = true;
-                if (!processing) continue;
-
-                // Add entry to the stream-specific result
-                List<String> entryData = new ArrayList<>();
-                entryData.add(k); // Entry ID
-                entryData.add(v.key); // Field name
-                entryData.add(v.value); // Field value
-                streamEntries.add(entryData);
-            }
-
-            if (!streamEntries.isEmpty()) {
-                // Add stream entries if there are any
-                streamResult.add(streamEntries);
-            }
-
-            // Add the result for the current stream
-            result.add(encodeNestedArray(streamResult));
-        }
-
-        // Encode and send the overall result as a RESP array
-        writeResponse(encodeNestedArray(result));
+        return;
+//        String streamKey = list.get(2);
+//        String startRange = list.get(3);
+//        KeyValue value = this.keys.get(streamKey);
+//        List<String> result = new ArrayList<>();
+//
+//        System.out.println(streamKey);
+//        System.out.println(startRange);
+//        System.out.println(value.entries);
+//
+//        Iterator<Map.Entry<String, KeyValue>> iterator = value.entries.entrySet().iterator();
+//        boolean processing = false;
+//
+//        result.add(streamKey);
+//
+//        while (iterator.hasNext()) {
+//            Map.Entry<String, KeyValue> entry = iterator.next();
+//            String k = entry.getKey();
+//            KeyValue v = entry.getValue();
+//
+//            if (isIdSmallerOrEqual(startRange, k)) processing = true;
+//
+//            if (!processing) continue;
+//
+//            result.add(k);
+//            result.add(v.key);
+//            result.add(v.value);
+//
+//            System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
+//        }
+//
+//        writeResponse(Parser.encodeRead(result));
     }
 
-    /**
-     * Helper method to encode a nested list structure into RESP array format.
-     */
-    private String encodeNestedArray(List<?> nestedList) {
-        StringBuilder sb = new StringBuilder();
+    private boolean isValidEntryId(String entryId) {
+        if (!entryId.contains("-")) return false;
 
-        if (nestedList == null || nestedList.isEmpty()) {
-            sb.append("*0\r\n");
-            return sb.toString();
-        }
+        String[] parts = entryId.split("-");
 
-        sb.append("*").append(nestedList.size()).append("\r\n");
-        for (Object element : nestedList) {
-            if (element instanceof String str) {
-                sb.append("$").append(str.length()).append("\r\n").append(str).append("\r\n");
-            } else if (element instanceof List) {
-                sb.append(encodeNestedArray((List<?>) element));
-            }
-        }
-        return sb.toString();
+        return parts.length == 2;
     }
 
     private void processXrange(List<String> list) throws IOException {
