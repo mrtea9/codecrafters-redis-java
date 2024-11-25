@@ -107,38 +107,62 @@ public class Client {
     }
 
     private void processXread(List<String> list) throws IOException {
-        String streamKey = list.get(2);
-        String startRange = list.get(3);
-        KeyValue value = this.keys.get(streamKey);
         List<String> result = new ArrayList<>();
 
-        System.out.println(streamKey);
-        System.out.println(startRange);
-        System.out.println(value.entries);
-
-        Iterator<Map.Entry<String, KeyValue>> iterator = value.entries.entrySet().iterator();
-        boolean processing = false;
-
-        result.add(streamKey);
-
-        while (iterator.hasNext()) {
-            Map.Entry<String, KeyValue> entry = iterator.next();
-            String k = entry.getKey();
-            KeyValue v = entry.getValue();
-
-            if (isIdSmallerOrEqual(startRange, k)) processing = true;
-
-            if (!processing) continue;
-
-            result.add(k);
-            result.add(v.key);
-            result.add(v.value);
-
-            System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
-
+        // Parse the streams and start ranges from the input
+        int streamsIndex = list.indexOf("streams");
+        if (streamsIndex == -1 || streamsIndex + 1 >= list.size()) {
+            throw new IllegalArgumentException("Invalid XREAD command format");
         }
 
-        writeResponse(Parser.encodeRead(result));
+        // Extract stream keys and their corresponding start IDs
+        List<String> streamKeys = list.subList(streamsIndex + 1, list.size() / 2 + streamsIndex + 1);
+        List<String> startRanges = list.subList(list.size() / 2 + streamsIndex + 1, list.size());
+
+        for (int i = 0; i < streamKeys.size(); i++) {
+            String streamKey = streamKeys.get(i);
+            String startRange = startRanges.get(i);
+            KeyValue value = this.keys.get(streamKey);
+
+            if (value == null) {
+                // If the stream key does not exist, skip it
+                continue;
+            }
+
+            List<String> streamResult = new ArrayList<>();
+            streamResult.add(streamKey);
+
+            List<List<String>> streamEntries = new ArrayList<>();
+            Iterator<Map.Entry<String, KeyValue>> iterator = value.entries.entrySet().iterator();
+            boolean processing = false;
+
+            while (iterator.hasNext()) {
+                Map.Entry<String, KeyValue> entry = iterator.next();
+                String k = entry.getKey();
+                KeyValue v = entry.getValue();
+
+                if (isIdSmallerOrEqual(startRange, k)) processing = true;
+                if (!processing) continue;
+
+                // Add entry to the stream-specific result
+                List<String> entryData = new ArrayList<>();
+                entryData.add(k); // Entry ID
+                entryData.add(v.key); // Field name
+                entryData.add(v.value); // Field value
+                streamEntries.add(entryData);
+            }
+
+            if (!streamEntries.isEmpty()) {
+                // Add stream entries if there are any
+                streamResult.add(Parser.encodeArray(streamEntries));
+            }
+
+            // Add the result for the current stream
+            result.add(Parser.encodeArray(streamResult));
+        }
+
+        // Encode and send the overall result as a RESP array
+        writeResponse(Parser.encodeArray(result));
     }
 
     private void processXrange(List<String> list) throws IOException {
@@ -244,8 +268,6 @@ public class Client {
 
         String[] id1Parts = id1.split("-");
         String[] id2Parts = id2.split("-");
-
-        System.out.println(id1 + " " + id2);
 
         int id1Time = Integer.parseInt(id1Parts[0]);
         int id2Time = Integer.parseInt(id2Parts[0]);
