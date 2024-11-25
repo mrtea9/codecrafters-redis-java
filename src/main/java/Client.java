@@ -136,22 +136,22 @@ public class Client {
 
 
         System.out.println(Parser.encodeRange(result));
-
-        String test = "*2\r\n" +
-                "*2\r\n" +
-                "$15\r\n1526985054069-0\r\n" +
-                "*4\r\n" +
-                "$11\r\ntemperature\r\n" +
-                "$2\r\n36\r\n" +
-                "$8\r\nhumidity\r\n" +
-                "$2\r\n95\r\n" +
-                "*2\r\n" +
-                "$15\r\n1526985054079-0\r\n" +
-                "*4\r\n" +
-                "$11\r\ntemperature\r\n" +
-                "$2\r\n37\r\n" +
-                "$8\r\nhumidity\r\n" +
-                "$2\r\n94\r\n";
+        String test = Parser.encodeRange(result);
+//        String test = "*2\r\n" +
+//                "*2\r\n" +
+//                "$15\r\n1526985054069-0\r\n" +
+//                "*4\r\n" +
+//                "$11\r\ntemperature\r\n" +
+//                "$2\r\n36\r\n" +
+//                "$8\r\nhumidity\r\n" +
+//                "$2\r\n95\r\n" +
+//                "*2\r\n" +
+//                "$15\r\n1526985054079-0\r\n" +
+//                "*4\r\n" +
+//                "$11\r\ntemperature\r\n" +
+//                "$2\r\n37\r\n" +
+//                "$8\r\nhumidity\r\n" +
+//                "$2\r\n94\r\n";
 
         writeResponse(test);
     }
