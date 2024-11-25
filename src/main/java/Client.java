@@ -245,7 +245,7 @@ public class Client {
         String[] id1Parts = id1.split("-");
         String[] id2Parts = id2.split("-");
 
-        System.out.println(id1, id2);
+        System.out.println(id1 + " " + id2);
 
         int id1Time = Integer.parseInt(id1Parts[0]);
         int id2Time = Integer.parseInt(id2Parts[0]);
