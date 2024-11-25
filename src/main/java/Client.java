@@ -137,6 +137,7 @@ public class Client {
 
         System.out.println(Parser.encodeRange(result));
         String test = Parser.encodeRange(result);
+        System.out.println(test);
 //        String test = "*2\r\n" +
 //                "*2\r\n" +
 //                "$3\r\n0-2\r\n" +
