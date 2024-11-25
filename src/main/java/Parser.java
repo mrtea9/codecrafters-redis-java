@@ -59,7 +59,13 @@ public class Parser {
 
         for (List<String> list : finalList) {
             stringBuilder.append("*2\r\n");
-            System.out.println(list);
+            stringBuilder.append(encodeBulkString(list.get(0)));
+            stringBuilder.append("*1\r\n");
+            stringBuilder.append("*2\r\n");
+            stringBuilder.append(encodeBulkString(list.get(1)));
+            stringBuilder.append("*2\r\n");
+            stringBuilder.append(encodeBulkString(list.get(2)));
+            stringBuilder.append(encodeBulkString(list.get(3)));
         }
 
         return stringBuilder.toString();
