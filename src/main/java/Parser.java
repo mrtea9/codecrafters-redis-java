@@ -59,18 +59,20 @@ public class Parser {
         StringBuilder stringBuilder = new StringBuilder();
         int entriesNumber = list.size() / 3;
         stringBuilder.append("*").append(entriesNumber).append("\r\n");
-        stringBuilder.append("*").append(entriesNumber).append("\r\n");
 
         while (!list.isEmpty()) {
+            // Append entry ID
             String entryId = encodeBulkString(list.remove(0));
+            stringBuilder.append("*2\r\n"); // Each entry is an array with 2 elements: ID and Key-Value pairs
+            stringBuilder.append(entryId);
+
+            // Append key-value pairs
+            stringBuilder.append("*").append(2).append("\r\n"); // Assuming each entry has a fixed number of key-value pairs (2)
             String key = encodeBulkString(list.remove(0));
             String value = encodeBulkString(list.remove(0));
 
-            stringBuilder.append(entryId);
-            stringBuilder.append("*2\r\n");
             stringBuilder.append(key);
             stringBuilder.append(value);
-            if (!list.isEmpty()) stringBuilder.append("*2\r\n");
         }
 
         return stringBuilder.toString();
