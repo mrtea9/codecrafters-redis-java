@@ -297,9 +297,9 @@ public class Client {
 
         eventLoop.minStreamId = entryId;
 
-        eventLoop.notifyBlockedClients(streamKey);
-
         writeResponse(Parser.encodeBulkString(entryId));
+
+        eventLoop.notifyBlockedClients(streamKey);
     }
 
     private String resolveEntryId(String rawEntryId) {
