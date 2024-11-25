@@ -122,7 +122,6 @@ public class Client {
             String k = entry.getKey();
             KeyValue v = entry.getValue();
 
-
             if (k.equals(startRange)) processing = true;
 
             if (!processing) continue;
