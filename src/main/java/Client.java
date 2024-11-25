@@ -110,6 +110,7 @@ public class Client {
         String streamKey = list.get(2);
         String startRange = list.get(3);
         KeyValue value = this.keys.get(streamKey);
+        List<String> result = new ArrayList<>();
 
         System.out.println(streamKey);
         System.out.println(startRange);
@@ -117,6 +118,8 @@ public class Client {
 
         Iterator<Map.Entry<String, KeyValue>> iterator = value.entries.entrySet().iterator();
         boolean processing = false;
+
+        result.add(streamKey);
 
         while (iterator.hasNext()) {
             Map.Entry<String, KeyValue> entry = iterator.next();
@@ -127,8 +130,14 @@ public class Client {
 
             if (!processing) continue;
 
+            result.add(k);
+            result.add(v.key);
+            result.add(v.value);
+
             System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
         }
+
+        System.out.println(result);
     }
 
     private void processXrange(List<String> list) throws IOException {
