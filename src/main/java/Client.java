@@ -111,6 +111,7 @@ public class Client {
         list.remove(0);
 
         List<String> streamKeys = new ArrayList<>();
+        List<List<String>> finalResult = new ArrayList<>();
 
         while (!isValidEntryId(list.get(0))) {
             streamKeys.add(list.remove(0));
@@ -152,40 +153,29 @@ public class Client {
             }
 
             System.out.println(result);
+            finalResult.add(result);
         }
 
+        System.out.println(encodeNestedArray(finalResult));
+    }
 
-        return;
+    private String encodeNestedArray(List<?> nestedList) {
+        StringBuilder sb = new StringBuilder();
 
-//        KeyValue value = this.keys.get(streamKey);
-//        List<String> result = new ArrayList<>();
-//
-//        System.out.println(streamKey);
-//        System.out.println(startRange);
-//        System.out.println(value.entries);
-//
-//        Iterator<Map.Entry<String, KeyValue>> iterator = value.entries.entrySet().iterator();
-//        boolean processing = false;
-//
-//        result.add(streamKey);
-//
-//        while (iterator.hasNext()) {
-//            Map.Entry<String, KeyValue> entry = iterator.next();
-//            String k = entry.getKey();
-//            KeyValue v = entry.getValue();
-//
-//            if (isIdSmallerOrEqual(startRange, k)) processing = true;
-//
-//            if (!processing) continue;
-//
-//            result.add(k);
-//            result.add(v.key);
-//            result.add(v.value);
-//
-//            System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
-//        }
-//
-//        writeResponse(Parser.encodeRead(result));
+        if (nestedList == null || nestedList.isEmpty()) {
+            sb.append("*0\r\n");
+            return sb.toString();
+        }
+
+        sb.append("*").append(nestedList.size()).append("\r\n");
+        for (Object element : nestedList) {
+            if (element instanceof String str) {
+                sb.append("$").append(str.length()).append("\r\n").append(str).append("\r\n");
+            } else if (element instanceof List) {
+                sb.append(encodeNestedArray((List<?>) element));
+            }
+        }
+        return sb.toString();
     }
 
     private boolean isValidEntryId(String entryId) {
