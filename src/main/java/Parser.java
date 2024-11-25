@@ -53,6 +53,30 @@ public class Parser {
         return result;
     }
 
+    public static String encodeRead(List<String> list) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String streamKey = list.remove(0);
+        String entryId = list.remove(0);
+
+        stringBuilder.append("*1\r\n");
+        stringBuilder.append("*2\r\n");
+        stringBuilder.append(encodeBulkString(streamKey));
+        stringBuilder.append("*1\r\n");
+        stringBuilder.append("*2\r\n");
+        stringBuilder.append(encodeBulkString(entryId));
+
+        while (!list.isEmpty()) {
+            stringBuilder.append("*2\r\n");
+            String key = list.remove(0);
+            String value = list.remove(0);
+
+            stringBuilder.append(encodeBulkString(key));
+            stringBuilder.append(encodeBulkString(value));
+        }
+
+        return stringBuilder.toString();
+    }
+
     public static String encodeRange(List<String> list) {
         StringBuilder stringBuilder = new StringBuilder();
 

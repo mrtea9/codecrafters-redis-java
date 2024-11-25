@@ -106,7 +106,7 @@ public class Client {
         }
     }
 
-    private void processXread(List<String> list) {
+    private void processXread(List<String> list) throws IOException {
         String streamKey = list.get(2);
         String startRange = list.get(3);
         KeyValue value = this.keys.get(streamKey);
@@ -137,7 +137,7 @@ public class Client {
             System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
         }
 
-        System.out.println(result);
+        writeResponse(Parser.encodeRead(result));
     }
 
     private void processXrange(List<String> list) throws IOException {
