@@ -70,7 +70,7 @@ public class Parser {
             stringBuilder.append(encodeBulkString(entryId));
 
             // The key-value pairs are represented as another array
-            stringBuilder.append("*2\r\n"); // Each key-value pair array has 2 elements (key and value)
+            stringBuilder.append("*4\r\n"); // Each key-value pair array has 2 elements (key and value)
             stringBuilder.append(encodeBulkString(key));
             stringBuilder.append(encodeBulkString(value));
         }
