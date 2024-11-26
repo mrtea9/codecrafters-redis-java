@@ -51,6 +51,8 @@ public class EventLoop {
         List<BlockedClient> clients = blockedClients.remove(streamKey);
         if (clients == null) return;
 
+        System.out.println("Notifying clients for stream key: " + streamKey);
+
         for (BlockedClient client : clients) {
             client.getFuture().complete(null);
         }
