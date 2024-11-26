@@ -211,6 +211,11 @@ public class Client {
             }
             if (!future.isDone()) {
                 future.complete(null);
+                try {
+                    writeResponse("$-1\r\n");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -254,8 +259,6 @@ public class Client {
                 Map.Entry<String, KeyValue> entry = iterator.next();
                 String k = entry.getKey();
                 KeyValue v = entry.getValue();
-
-                System.out.println("da");
 
                 if (isIdSmallerOrEqual(startRange, k) && !processing) {
                     processing = true;
