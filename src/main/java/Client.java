@@ -135,6 +135,7 @@ public class Client {
                 : Parser.encodeMultipleRead(finalResult);
 
         if (blockTime > 0) waitForEntries(streamKeys, startIds, blockTime);
+        else writeResponse(response);
 
        // writeResponse(response);
     }
