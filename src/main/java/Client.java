@@ -174,7 +174,6 @@ public class Client {
                 System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
             }
 
-            System.out.println(result);
             finalResult.add(result);
         }
 
