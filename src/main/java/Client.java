@@ -120,13 +120,17 @@ public class Client {
             return;
         }
 
-        int number = Integer.parseInt(value.value) + 1;
+        try {
+            int number = Integer.parseInt(value.value) + 1;
 
-        value.value = String.valueOf(number);
+            value.value = String.valueOf(number);
 
-        this.keys.put(key, value);
+            this.keys.put(key, value);
 
-        writeResponse(":" + number + "\r\n");
+            writeResponse(":" + number + "\r\n");
+        } catch (NumberFormatException e) {
+            writeResponse("-ERR value is not an integer or out of range\\r\\n");
+        }
     }
 
     private void processXread(List<String> list) throws IOException {
