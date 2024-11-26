@@ -217,7 +217,7 @@ public class Client {
         future.thenRun(() -> {
             try {
                 System.out.println("streamKeys = " + streamKeys + "; startIds = " + startIds + " future");
-                List<List<String>> finalResult = fetchStreamEntries(streamKeys, startIds);
+                List<List<String>> finalResult = fetchStreamEntries(streamKeys, List.of("0-2"));
                 if (!finalResult.isEmpty()) {
                     String response = Parser.encodeMultipleRead(finalResult);
                     System.out.println("final future = " + finalResult);
