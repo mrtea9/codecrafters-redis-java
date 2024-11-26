@@ -123,6 +123,8 @@ public class Client {
             streamKeys.add(list.remove(0));
         }
 
+        System.out.println(streamKeys);
+
         List<String> startIds = new ArrayList<>(list);
 
         System.out.println(streamKeys);
