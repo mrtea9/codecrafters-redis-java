@@ -30,7 +30,7 @@ public class Parser {
         for (String element : sourceList) {
             if (element.charAt(0) == '*' && element.length() != 1) continue;
 
-            if (element.charAt(0) == '$') continue;
+            if (element.charAt(0) == '$' && element.length() != 1) continue;
 
             if (element.charAt(0) == ':') continue;
 
