@@ -404,6 +404,7 @@ public class Client {
 
     private boolean isIdSmallerOrEqual(String id1, String id2) {
         if (id2.isEmpty()) return false;
+        if (id1.equals("$")) return false;
 
         String[] id1Parts = id1.split("-");
         String[] id2Parts = id2.split("-");
