@@ -164,8 +164,6 @@ public class Client {
                 String k = entry.getKey();
                 KeyValue v = entry.getValue();
 
-                if (startRange.equals("0-1")) continue;
-
                 if (isIdSmallerOrEqual(startRange, k)) processing = true;
 
                 if (!processing) continue;
