@@ -128,7 +128,7 @@ public class Client {
 
             writeResponse(":" + number + "\r\n");
         } catch (NumberFormatException e) {
-            writeResponse("-ERR value is not an integer or out of range\\r\\n");
+            writeResponse("-ERR value is not an integer or out of range\r\n");
         }
     }
 
