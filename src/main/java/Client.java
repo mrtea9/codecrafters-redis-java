@@ -241,9 +241,9 @@ public class Client {
             KeyValue value = this.keys.get(streamKey);
             List<String> result = new ArrayList<>();
 
-            System.out.println("fetch = " + streamKey);
-            System.out.println("fetch = " + startRange);
-            System.out.println("fetch = " + value.entries);
+            System.out.println("last = " + streamKey);
+            System.out.println("last = " + startRange);
+            System.out.println("last = " + value.entries);
 
             Iterator<Map.Entry<String, KeyValue>> iterator = value.entries.entrySet().iterator();
             boolean processing = false;
@@ -266,7 +266,7 @@ public class Client {
                 result.add(v.key);
                 result.add(v.value);
 
-                System.out.println("key fetch = " + k + ", value key = " + v.key + ", value value = " + v.value);
+                System.out.println("key last = " + k + ", value key = " + v.key + ", value value = " + v.value);
             }
 
             finalResult.add(result);
