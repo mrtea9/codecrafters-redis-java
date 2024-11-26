@@ -117,6 +117,8 @@ public class Client {
 
         List<String> streamKeys = new ArrayList<>();
 
+        System.out.println(list);
+
         while (!isValidEntryId(list.get(0))) {
             streamKeys.add(list.remove(0));
         }
