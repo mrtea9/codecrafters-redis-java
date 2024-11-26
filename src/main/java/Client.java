@@ -127,7 +127,7 @@ public class Client {
         System.out.println(startIds);
 
         if (blockTime > 0) {
-            waitForEntries(streamKeys, blockTime);
+            waitForEntries(streamKeys, startIds, blockTime);
         }
         else {
             List<List<String>> finalResult = fetchStreamEntries(streamKeys, startIds);
@@ -195,11 +195,11 @@ public class Client {
         return finalResult;
     }
 
-    private void waitForEntries(List<String> streamKeys, long blockTime) {
+    private void waitForEntries(List<String> streamKeys, List<String> startIds, long blockTime) {
         CompletableFuture<Void> future = new CompletableFuture<>();
 
         for (String streamKey : streamKeys) {
-            BlockedClient blockedClient = new BlockedClient(this.channel, future);
+            BlockedClient blockedClient = new BlockedClient(this.channel, startIds, future);
             eventLoop.registerBlockedClient(streamKey, blockedClient);
         }
 
@@ -216,8 +216,8 @@ public class Client {
 
         future.thenRun(() -> {
             try {
-                System.out.println("streamKeys = " + streamKeys + " future");
-                List<List<String>> finalResult = fetchStreamLast(streamKeys);
+                System.out.println("streamKeys = " + streamKeys + "; startIds = " + startIds + " future");
+                List<List<String>> finalResult = fetchStreamLast(streamKeys, startIds);
                 if (!finalResult.isEmpty()) {
                     String response = Parser.encodeMultipleRead(finalResult);
                     System.out.println("final future = " + finalResult);
@@ -231,17 +231,19 @@ public class Client {
         });
     }
 
-    private List<List<String>> fetchStreamLast(List<String> streamKeys) {
+    private List<List<String>> fetchStreamLast(List<String> streamKeys, List<String> startIds) {
         List<List<String>> finalResult = new ArrayList<>();
 
         for (int i = 0; i < streamKeys.size(); i++) {
             String streamKey = streamKeys.get(i);
+            String startRange = startIds.get(i);
 
             KeyValue value = this.keys.get(streamKey);
             List<String> result = new ArrayList<>();
 
-            System.out.println("last = " + streamKey);
-            System.out.println("last = " + value.entries);
+            System.out.println("fetch = " + streamKey);
+            System.out.println("fetch = " + startRange);
+            System.out.println("fetch = " + value.entries);
 
             Iterator<Map.Entry<String, KeyValue>> iterator = value.entries.entrySet().iterator();
             boolean processing = false;
@@ -252,6 +254,11 @@ public class Client {
                 Map.Entry<String, KeyValue> entry = iterator.next();
                 String k = entry.getKey();
                 KeyValue v = entry.getValue();
+
+                if (isIdSmallerOrEqual(startRange, k)) {
+                    processing = true;
+                    continue;
+                }
 
                 if (!processing) continue;
 
