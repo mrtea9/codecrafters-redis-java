@@ -204,7 +204,7 @@ public class Client {
                 List<List<String>> finalResult = fetchStreamEntries(streamKeys, startIds);
                 if (!finalResult.isEmpty()) {
                     String response = Parser.encodeMultipleRead(finalResult);
-                    writeResponse(response);
+                    //writeResponse(response);
                 } else {
                     writeResponse("$-1\r\n");
                 }
