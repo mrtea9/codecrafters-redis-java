@@ -212,10 +212,12 @@ public class Client {
             }
             if (!future.isDone()) {
                 future.complete(null);
-                try {
-                    writeResponse("$-1\r\n");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                if (blockTime != 0) {
+                    try {
+                        writeResponse("$-1\r\n");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         });
