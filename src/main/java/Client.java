@@ -201,6 +201,7 @@ public class Client {
 
         future.thenRun(() -> {
             try {
+                System.out.println("streamKeys = " + streamKeys + "; startIds = " + startIds + " future");
                 List<List<String>> finalResult = fetchStreamEntries(streamKeys, startIds);
                 if (!finalResult.isEmpty()) {
                     String response = Parser.encodeMultipleRead(finalResult);
@@ -295,10 +296,10 @@ public class Client {
         }
 
         eventLoop.minStreamId = entryId;
+        eventLoop.notifyBlockedClients(streamKey);
 
         writeResponse(Parser.encodeBulkString(entryId));
 
-        eventLoop.notifyBlockedClients(streamKey);
     }
 
     private String resolveEntryId(String rawEntryId) {
