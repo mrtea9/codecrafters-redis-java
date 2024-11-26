@@ -127,7 +127,7 @@ public class Client {
         System.out.println(startIds);
 
         if (blockTime > 0) {
-            waitForEntries(streamKeys, startIds, blockTime);
+            waitForEntries(streamKeys, blockTime);
         }
         else {
             List<List<String>> finalResult = fetchStreamEntries(streamKeys, startIds);
@@ -195,11 +195,11 @@ public class Client {
         return finalResult;
     }
 
-    private void waitForEntries(List<String> streamKeys, List<String> startIds, long blockTime) {
+    private void waitForEntries(List<String> streamKeys, long blockTime) {
         CompletableFuture<Void> future = new CompletableFuture<>();
 
         for (String streamKey : streamKeys) {
-            BlockedClient blockedClient = new BlockedClient(this.channel, startIds, future);
+            BlockedClient blockedClient = new BlockedClient(this.channel, future);
             eventLoop.registerBlockedClient(streamKey, blockedClient);
         }
 
@@ -216,8 +216,8 @@ public class Client {
 
         future.thenRun(() -> {
             try {
-                System.out.println("streamKeys = " + streamKeys + "; startIds = " + startIds + " future");
-                List<List<String>> finalResult = fetchStreamEntries(streamKeys, List.of("0-2"));
+                System.out.println("streamKeys = " + streamKeys + " future");
+                List<List<String>> finalResult = fetchStreamLast(streamKeys);
                 if (!finalResult.isEmpty()) {
                     String response = Parser.encodeMultipleRead(finalResult);
                     System.out.println("final future = " + finalResult);
@@ -229,6 +229,43 @@ public class Client {
                 e.printStackTrace();
             }
         });
+    }
+
+    private List<List<String>> fetchStreamLast(List<String> streamKeys) {
+        List<List<String>> finalResult = new ArrayList<>();
+
+        for (int i = 0; i < streamKeys.size(); i++) {
+            String streamKey = streamKeys.get(i);
+
+            KeyValue value = this.keys.get(streamKey);
+            List<String> result = new ArrayList<>();
+
+            System.out.println("last = " + streamKey);
+            System.out.println("last = " + value.entries);
+
+            Iterator<Map.Entry<String, KeyValue>> iterator = value.entries.entrySet().iterator();
+            boolean processing = false;
+
+            result.add(streamKey);
+
+            while (iterator.hasNext()) {
+                Map.Entry<String, KeyValue> entry = iterator.next();
+                String k = entry.getKey();
+                KeyValue v = entry.getValue();
+
+                if (!processing) continue;
+
+                result.add(k);
+                result.add(v.key);
+                result.add(v.value);
+
+                System.out.println("key fetch = " + k + ", value key = " + v.key + ", value value = " + v.value);
+            }
+
+            finalResult.add(result);
+        }
+
+        return finalResult;
     }
 
     private boolean isValidEntryId(String entryId) {
