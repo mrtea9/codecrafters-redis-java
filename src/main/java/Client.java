@@ -136,7 +136,6 @@ public class Client {
 
         if (blockTime > 0) waitForEntries(streamKeys, startIds, blockTime);
 
-
         writeResponse(response);
     }
 
