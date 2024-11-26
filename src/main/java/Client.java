@@ -127,6 +127,8 @@ public class Client {
         System.out.println(startIds);
 
         if (blockTime >= 0) {
+            System.out.println("wait");
+
             waitForEntries(streamKeys, startIds, blockTime);
         }
         else {
