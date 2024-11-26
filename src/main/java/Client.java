@@ -128,7 +128,7 @@ public class Client {
 
         List<List<String>> finalResult = fetchStreamEntries(streamKeys, startIds);
 
-        System.out.println(finalResult);
+        System.out.println("xread = " + finalResult);
 
         String response = (finalResult.size() == 1)
                 ? Parser.encodeRead(finalResult.get(0))
@@ -163,6 +163,8 @@ public class Client {
                 Map.Entry<String, KeyValue> entry = iterator.next();
                 String k = entry.getKey();
                 KeyValue v = entry.getValue();
+
+                if (startRange.equals("0-1")) continue;
 
                 if (isIdSmallerOrEqual(startRange, k)) processing = true;
 
