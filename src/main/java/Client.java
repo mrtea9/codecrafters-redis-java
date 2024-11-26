@@ -108,7 +108,7 @@ public class Client {
 
     private void processXread(List<String> list) throws IOException {
         String param = list.remove(0);
-        long blockTime = 0;
+        long blockTime = -1;
 
         if (param.equalsIgnoreCase("block")) {
             blockTime = Long.parseLong(list.remove(0));
