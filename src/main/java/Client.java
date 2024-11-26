@@ -117,15 +117,11 @@ public class Client {
 
         List<String> streamKeys = new ArrayList<>();
 
-        System.out.println(list);
-
         while (!isValidEntryId(list.get(0))) {
             if (list.get(0).equals("$")) break;
 
             streamKeys.add(list.remove(0));
         }
-
-        System.out.println(streamKeys);
 
         List<String> startIds = new ArrayList<>(list);
 
@@ -272,7 +268,7 @@ public class Client {
                 String k = entry.getKey();
                 KeyValue v = entry.getValue();
 
-                if (isIdSmallerOrEqual(startRange, k) && !processing) {
+                if (isIdSmallerOrEqual(startRange, k) && !processing || startRange.equals("$") && !processing) {
                     processing = true;
                     continue;
                 }
