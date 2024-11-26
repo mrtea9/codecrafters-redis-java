@@ -270,7 +270,6 @@ public class Client {
 
                 if (!processing && startRange.equals("$")) {
                     processing = true;
-                    System.out.println("Da");
                     continue;
                 }
 
