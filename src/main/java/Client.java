@@ -149,9 +149,9 @@ public class Client {
             KeyValue value = this.keys.get(streamKey);
             List<String> result = new ArrayList<>();
 
-            System.out.println(streamKey);
-            System.out.println(startRange);
-            System.out.println(value.entries);
+            System.out.println("fetch = " + streamKey);
+            System.out.println("fetch = " + startRange);
+            System.out.println("fetch = " + value.entries);
 
             Iterator<Map.Entry<String, KeyValue>> iterator = value.entries.entrySet().iterator();
             boolean processing = false;
