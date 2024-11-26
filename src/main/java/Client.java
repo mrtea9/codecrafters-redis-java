@@ -136,7 +136,7 @@ public class Client {
 
         if (blockTime > 0) waitForEntries(streamKeys, startIds, blockTime);
 
-        writeResponse(response);
+        //writeResponse(response);
     }
 
     private List<List<String>> fetchStreamEntries(List<String> streamKeys, List<String> startIds) {
@@ -204,7 +204,6 @@ public class Client {
                 List<List<String>> finalResult = fetchStreamEntries(streamKeys, startIds);
                 if (!finalResult.isEmpty()) {
                     String response = Parser.encodeMultipleRead(finalResult);
-                    System.out.println("wait = " + finalResult);
                     writeResponse(response);
                 } else {
                     writeResponse("$-1\r\n");
