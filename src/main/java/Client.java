@@ -188,7 +188,6 @@ public class Client {
             eventLoop.registerBlockedClient(streamKey, blockedClient);
         }
 
-
         CompletableFuture<Void> timeoutFuture = CompletableFuture.runAsync(() -> {
             try {
                 Thread.sleep(blockTime);
