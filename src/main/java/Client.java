@@ -114,6 +114,12 @@ public class Client {
 
         KeyValue value = this.keys.get(key);
 
+        if (value == null) {
+            this.keys.put(key, new KeyValue("1", 0, ValueType.STRING));
+            writeResponse(":1\r\n");
+            return;
+        }
+
         int number = Integer.parseInt(value.value) + 1;
 
         value.value = String.valueOf(number);
