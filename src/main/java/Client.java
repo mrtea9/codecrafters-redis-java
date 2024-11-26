@@ -255,6 +255,8 @@ public class Client {
                 String k = entry.getKey();
                 KeyValue v = entry.getValue();
 
+                System.out.println("da");
+
                 if (isIdSmallerOrEqual(startRange, k)) {
                     processing = true;
                     continue;
