@@ -268,10 +268,9 @@ public class Client {
                 String k = entry.getKey();
                 KeyValue v = entry.getValue();
 
-                System.out.println("da");
-
                 if (!processing && startRange.equals("$")) {
                     processing = true;
+                    System.out.println("Da");
                     continue;
                 }
 
