@@ -205,21 +205,23 @@ public class Client {
             eventLoop.registerBlockedClient(streamKey, blockedClient);
         }
 
-
         CompletableFuture<Void> timeoutFuture = CompletableFuture.runAsync(() -> {
             try {
-                Thread.sleep(blockTime);
+                if (blockTime != 0) {
+                    Thread.sleep(blockTime);
+                } else {
+                    Thread.sleep(1000);
+                }
+
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
             if (!future.isDone()) {
                 future.complete(null);
-                if (blockTime != 0) {
-                    try {
-                        writeResponse("$-1\r\n");
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                try {
+                    writeResponse("$-1\r\n");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
         });
