@@ -103,7 +103,24 @@ public class Client {
             decodedList.remove(0);
 
             processXread(decodedList);
+        } else if (command.equalsIgnoreCase("incr")) {
+
+            processIncr(decodedList);
         }
+    }
+
+    private void processIncr(List<String> list) throws IOException {
+        String key = list.get(1);
+
+        KeyValue value = this.keys.get(key);
+
+        int number = Integer.parseInt(value.value) + 1;
+
+        value.value = String.valueOf(number);
+
+        this.keys.put(key, value);
+
+        writeResponse(":" + number + "\r\n");
     }
 
     private void processXread(List<String> list) throws IOException {
@@ -143,19 +160,6 @@ public class Client {
                     : Parser.encodeMultipleRead(finalResult);
             writeResponse(response);
         }
-
-//        List<List<String>> finalResult = fetchStreamEntries(streamKeys, startIds);
-//
-//        System.out.println("xread = " + finalResult);
-//
-//        String response = (finalResult.size() == 1)
-//                ? Parser.encodeRead(finalResult.get(0))
-//                : Parser.encodeMultipleRead(finalResult);
-//
-//        if (blockTime > 0) waitForEntries(streamKeys, startIds, blockTime);
-//        else writeResponse(response);
-
-       // writeResponse(response);
     }
 
     private List<List<String>> fetchStreamEntries(List<String> streamKeys, List<String> startIds) {
