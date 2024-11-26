@@ -270,6 +270,11 @@ public class Client {
 
                 System.out.println("da");
 
+                if (!processing && startRange.equals("$")) {
+                    processing = true;
+                    continue;
+                }
+
                 if (isIdSmallerOrEqual(startRange, k) && !processing) {
                     processing = true;
                     continue;
