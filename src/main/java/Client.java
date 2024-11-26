@@ -126,16 +126,30 @@ public class Client {
         System.out.println(streamKeys);
         System.out.println(startIds);
 
-        List<List<String>> finalResult = fetchStreamEntries(streamKeys, startIds);
+        if (blockTime > 0) {
+            waitForEntries(streamKeys, startIds, blockTime);
+        }
+        else {
+            List<List<String>> finalResult = fetchStreamEntries(streamKeys, startIds);
 
-        System.out.println("xread = " + finalResult);
+            System.out.println("xread = " + finalResult);
 
-        String response = (finalResult.size() == 1)
-                ? Parser.encodeRead(finalResult.get(0))
-                : Parser.encodeMultipleRead(finalResult);
+            String response = (finalResult.size() == 1)
+                    ? Parser.encodeRead(finalResult.get(0))
+                    : Parser.encodeMultipleRead(finalResult);
+            writeResponse(response);
+        }
 
-        if (blockTime > 0) waitForEntries(streamKeys, startIds, blockTime);
-        else writeResponse(response);
+//        List<List<String>> finalResult = fetchStreamEntries(streamKeys, startIds);
+//
+//        System.out.println("xread = " + finalResult);
+//
+//        String response = (finalResult.size() == 1)
+//                ? Parser.encodeRead(finalResult.get(0))
+//                : Parser.encodeMultipleRead(finalResult);
+//
+//        if (blockTime > 0) waitForEntries(streamKeys, startIds, blockTime);
+//        else writeResponse(response);
 
        // writeResponse(response);
     }
