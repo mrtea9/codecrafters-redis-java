@@ -136,7 +136,7 @@ public class Client {
 
         if (blockTime > 0) waitForEntries(streamKeys, startIds, blockTime);
 
-        writeResponse(response);
+       // writeResponse(response);
     }
 
     private List<List<String>> fetchStreamEntries(List<String> streamKeys, List<String> startIds) {
