@@ -120,7 +120,8 @@ public class Client {
         System.out.println(list);
 
         while (!isValidEntryId(list.get(0))) {
-            System.out.println("da");
+            if (list.get(0).equals("$")) break;
+
             streamKeys.add(list.remove(0));
         }
 
