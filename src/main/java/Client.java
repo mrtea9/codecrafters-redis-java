@@ -268,14 +268,9 @@ public class Client {
                 String k = entry.getKey();
                 KeyValue v = entry.getValue();
 
-                if (isIdSmallerOrEqual(startRange, k) && !processing) {
-                    processing = true;
-                    continue;
-                }
-
                 System.out.println("da");
 
-                if (!processing && startRange.equals("$")) {
+                if (isIdSmallerOrEqual(startRange, k) && !processing) {
                     processing = true;
                     continue;
                 }
