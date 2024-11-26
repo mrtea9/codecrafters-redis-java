@@ -111,7 +111,6 @@ public class Client {
 
     private void processIncr(List<String> list) throws IOException {
         String key = list.get(1);
-
         KeyValue value = this.keys.get(key);
 
         if (value == null) {
