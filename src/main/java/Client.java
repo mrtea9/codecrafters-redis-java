@@ -171,7 +171,7 @@ public class Client {
                 result.add(v.key);
                 result.add(v.value);
 
-                System.out.println("key = " + k + ", value key = " + v.key + ", value value = " + v.value);
+                System.out.println("key fetch = " + k + ", value key = " + v.key + ", value value = " + v.value);
             }
 
             finalResult.add(result);
@@ -205,6 +205,7 @@ public class Client {
                 List<List<String>> finalResult = fetchStreamEntries(streamKeys, startIds);
                 if (!finalResult.isEmpty()) {
                     String response = Parser.encodeMultipleRead(finalResult);
+                    System.out.println("final future = " + finalResult);
                     writeResponse(response);
                 } else {
                     writeResponse("$-1\r\n");
