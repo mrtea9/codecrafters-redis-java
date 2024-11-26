@@ -205,7 +205,7 @@ public class Client {
                 System.out.println("streamKeys = " + streamKeys + "; startIds = " + startIds + " future");
                 List<List<String>> finalResult = fetchStreamEntries(streamKeys, startIds);
                 if (!finalResult.isEmpty()) {
-                    String response = Parser.encodeRead(finalResult.get(0));
+                    String response = Parser.encodeMultipleRead(finalResult);
                     System.out.println("final future = " + finalResult);
                     writeResponse(response);
                 } else {
