@@ -135,7 +135,6 @@ public class Client {
     private void processMulti() throws IOException {
         eventLoop.isMulti = true;
 
-
         writeResponse("+OK\r\n");
     }
 
