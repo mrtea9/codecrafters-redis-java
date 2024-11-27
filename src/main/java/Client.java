@@ -51,6 +51,12 @@ public class Client {
 
             processEcho(value);
         } else if (command.equalsIgnoreCase("set")) {
+            if (eventLoop.isMulti) {
+                eventLoop.multiCommands.add(decodedList);
+                writeResponse("+QUEUED\r\n");
+                return;
+            }
+
             this.time = "";
             String key = decodedList.get(1);
             String value = decodedList.get(2);
@@ -104,6 +110,11 @@ public class Client {
 
             processXread(decodedList);
         } else if (command.equalsIgnoreCase("incr")) {
+            if (eventLoop.isMulti) {
+                eventLoop.multiCommands.add(decodedList);
+                writeResponse("+QUEUED\r\n");
+                return;
+            }
 
             processIncr(decodedList);
         } else if (command.equalsIgnoreCase("multi")) {
