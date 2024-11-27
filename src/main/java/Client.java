@@ -125,7 +125,7 @@ public class Client {
     }
 
     private String processExec() throws IOException {
-        List<String> result = new ArrayList<>();
+        StringBuilder stringBuilder = new StringBuilder();
 
         if (!eventLoop.isMulti) {
             return "-ERR EXEC without MULTI\r\n";
@@ -140,9 +140,10 @@ public class Client {
             eventLoop.isMulti = false;
             System.out.println("multi command = " + command);
             String response = processResponse(command);
-            result.add(response);
-            System.out.println(result);
+            stringBuilder.append(response);
         }
+
+        System.out.println(stringBuilder);
 
         eventLoop.isMulti = false;
 
