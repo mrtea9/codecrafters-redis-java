@@ -54,7 +54,6 @@ public class Client {
             return "+QUEUED\r\n";
         }
 
-
         if (command.equalsIgnoreCase("ping")) {
             return processPing();
         } else if (command.equalsIgnoreCase("echo")) {
