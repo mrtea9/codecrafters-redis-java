@@ -55,9 +55,14 @@ public class Parser {
 
     public static String encodeExec(String source) {
         String[] intermediate = source.split("\r\n");
-        System.out.println(Arrays.toString(intermediate));
+        StringBuilder stringBuilder = new StringBuilder("*");
+        stringBuilder.append(intermediate.length);
+        for (String element : intermediate) {
+            stringBuilder.append(element);
+        }
 
-        return "*1";
+        System.out.println(stringBuilder);
+        return stringBuilder.toString();
     }
 
     public static String encodeMultipleRead(List<List<String>> finalList) {

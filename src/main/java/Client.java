@@ -141,10 +141,8 @@ public class Client {
             System.out.println("multi command = " + command);
             String response = processResponse(command);
             stringBuilder.append(response);
-            System.out.println(stringBuilder);
         }
 
-        System.out.println("este");
         eventLoop.isMulti = false;
 
         return Parser.encodeExec(stringBuilder.toString());
