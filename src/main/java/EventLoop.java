@@ -19,13 +19,15 @@ public class EventLoop {
     private ServerSocketChannel serverSocketChannel;
     private Map<String, KeyValue> globalKeys = new ConcurrentHashMap<>();
     private final Map<String, String> globalConfig = new ConcurrentHashMap<>();
-    public List<SocketChannel> replicaChannels = new ArrayList<>();
-    public AtomicInteger acknowledged = new AtomicInteger(0);
-    public boolean noCommand = true;
-    public String minStreamId = "";
     private final ConcurrentHashMap<Client, CompletableFuture<Integer>> waitingClients = new ConcurrentHashMap<>();
     private final Map<String, List<BlockedClient>> blockedClients = new ConcurrentHashMap<>();
     private int offset = 0;
+
+    public List<SocketChannel> replicaChannels = new ArrayList<>();
+    public AtomicInteger acknowledged = new AtomicInteger(0);
+    public boolean noCommand = true;
+    public boolean isMulti = false;
+    public String minStreamId = "";
 
     EventLoop(int port, String replicaOf) {
         this.port = port;
