@@ -123,6 +123,7 @@ public class Client {
 
         if (eventLoop.multiCommands.isEmpty()) {
             writeResponse("*0\r\n");
+            eventLoop.isMulti = false;
             return;
         }
 
