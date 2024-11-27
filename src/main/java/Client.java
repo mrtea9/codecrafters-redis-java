@@ -18,6 +18,8 @@ public class Client {
         this.keys = keys;
         this.config = config;
         this.eventLoop = eventLoop;
+
+        this.isMulti = this.eventLoop.multiClients.get(this.channel) != null && this.eventLoop.multiClients.get(this.channel);
     }
 
     public Map<String, KeyValue> getKeys() {
