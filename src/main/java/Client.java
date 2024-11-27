@@ -127,6 +127,7 @@ public class Client {
             return;
         }
 
+
         writeResponse("+OK\r\n");
 
         eventLoop.isMulti = false;
