@@ -26,7 +26,6 @@ public class EventLoop {
     public List<SocketChannel> replicaChannels = new ArrayList<>();
     public AtomicInteger acknowledged = new AtomicInteger(0);
     public boolean noCommand = true;
-    public boolean isMulti = false;
     public List<List<String>> multiCommands = new ArrayList<>();
     public String minStreamId = "";
 

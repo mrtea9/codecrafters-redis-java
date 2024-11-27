@@ -10,6 +10,7 @@ public class Client {
     private final Map<String, String> config;
     private String time;
     private final EventLoop eventLoop;
+    private boolean isMulti = false;
 
 
     public Client(SocketChannel channel, Map<String, KeyValue> keys, Map<String, String> config, EventLoop eventLoop) {
@@ -46,7 +47,7 @@ public class Client {
     private String processResponse(List<String> decodedList) throws IOException {
         String command = decodedList.get(0);
         System.out.println(decodedList);
-        if (eventLoop.isMulti && !command.equalsIgnoreCase("exec")) {
+        if (isMulti && !command.equalsIgnoreCase("exec")) {
             eventLoop.multiCommands.add(decodedList);
             return "+QUEUED\r\n";
         }
@@ -127,29 +128,29 @@ public class Client {
     private String processExec() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
 
-        if (!eventLoop.isMulti) {
+        if (!isMulti) {
             return "-ERR EXEC without MULTI\r\n";
         }
 
         if (eventLoop.multiCommands.isEmpty()) {
-            eventLoop.isMulti = false;
+            isMulti = false;
             return "*0\r\n";
         }
 
         for (List<String> command : eventLoop.multiCommands) {
-            eventLoop.isMulti = false;
+            isMulti = false;
             System.out.println("multi command = " + command);
             String response = processResponse(command);
             stringBuilder.append(response);
         }
 
-        eventLoop.isMulti = false;
+        isMulti = false;
 
         return Parser.encodeExec(stringBuilder.toString());
     }
 
     private String processMulti() throws IOException {
-        eventLoop.isMulti = true;
+        isMulti = true;
 
         return "+OK\r\n";
     }
