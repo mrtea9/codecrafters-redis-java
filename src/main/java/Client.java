@@ -114,7 +114,6 @@ public class Client {
 
     private void processMulti(List<String> list) throws IOException {
 
-
         writeResponse("+OK\r\n");
     }
 
