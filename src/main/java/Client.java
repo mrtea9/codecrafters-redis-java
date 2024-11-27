@@ -143,7 +143,7 @@ public class Client {
             stringBuilder.append(response);
         }
 
-        System.out.println(stringBuilder);
+        System.out.println(stringBuilder.toString());
 
         eventLoop.isMulti = false;
 
