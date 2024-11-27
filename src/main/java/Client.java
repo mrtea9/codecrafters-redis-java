@@ -44,6 +44,12 @@ public class Client {
     private void processResponse(List<String> decodedList) throws IOException {
         String command = decodedList.get(0);
         System.out.println(decodedList);
+        if (eventLoop.isMulti) {
+            eventLoop.multiCommands.add(decodedList);
+            writeResponse("+QUEUED\r\n");
+            return;
+        }
+
         if (command.equalsIgnoreCase("ping")) {
             processPing();
         } else if (command.equalsIgnoreCase("echo")) {
@@ -51,12 +57,6 @@ public class Client {
 
             processEcho(value);
         } else if (command.equalsIgnoreCase("set")) {
-            if (eventLoop.isMulti) {
-                eventLoop.multiCommands.add(decodedList);
-                writeResponse("+QUEUED\r\n");
-                return;
-            }
-
             this.time = "";
             String key = decodedList.get(1);
             String value = decodedList.get(2);
@@ -66,12 +66,6 @@ public class Client {
 
             processSet(key, value);
         } else if (command.equalsIgnoreCase("get")) {
-            if (eventLoop.isMulti) {
-                eventLoop.multiCommands.add(decodedList);
-                writeResponse("+QUEUED\r\n");
-                return;
-            }
-
             String key = decodedList.get(1);
 
             processGet(key);
@@ -116,11 +110,6 @@ public class Client {
 
             processXread(decodedList);
         } else if (command.equalsIgnoreCase("incr")) {
-            if (eventLoop.isMulti) {
-                eventLoop.multiCommands.add(decodedList);
-                writeResponse("+QUEUED\r\n");
-                return;
-            }
 
             processIncr(decodedList);
         } else if (command.equalsIgnoreCase("multi")) {
@@ -148,7 +137,6 @@ public class Client {
 
         for (List<String> command : eventLoop.multiCommands) {
             System.out.println("multi command = " + command);
-            processResponse(command);
         }
 
         eventLoop.isMulti = false;
