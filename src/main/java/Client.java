@@ -138,8 +138,12 @@ public class Client {
             return;
         }
 
-
         writeResponse("+OK\r\n");
+
+        for (List<String> command : eventLoop.multiCommands) {
+            System.out.println("multi command = " + command);
+            processResponse(command);
+        }
 
         eventLoop.isMulti = false;
     }
