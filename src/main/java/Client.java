@@ -112,9 +112,11 @@ public class Client {
         }
     }
 
-    private void processMulti(List<String> list) {
+    private void processMulti(List<String> list) throws IOException {
 
         System.out.println("este");
+
+        writeResponse("+OK\r\n");
     }
 
     private void processIncr(List<String> list) throws IOException {
