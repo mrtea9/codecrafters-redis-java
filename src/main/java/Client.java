@@ -49,7 +49,7 @@ public class Client {
     private String processResponse(List<String> decodedList) throws IOException {
         String command = decodedList.get(0);
         System.out.println(decodedList);
-        if (isMulti && !command.equalsIgnoreCase("exec")) {
+        if (isMulti && (!command.equalsIgnoreCase("exec") || !command.equalsIgnoreCase("discard"))) {
             eventLoop.multiCommands.add(decodedList);
             return "+QUEUED\r\n";
         }
