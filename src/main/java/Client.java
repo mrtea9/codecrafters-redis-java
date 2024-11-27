@@ -106,7 +106,15 @@ public class Client {
         } else if (command.equalsIgnoreCase("incr")) {
 
             processIncr(decodedList);
+        } else if (command.equalsIgnoreCase("multi")) {
+
+            processMulti(decodedList);
         }
+    }
+
+    private void processMulti(List<String> list) {
+
+        System.out.println("este");
     }
 
     private void processIncr(List<String> list) throws IOException {
