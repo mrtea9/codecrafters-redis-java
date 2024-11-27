@@ -108,11 +108,18 @@ public class Client {
             processIncr(decodedList);
         } else if (command.equalsIgnoreCase("multi")) {
 
-            processMulti(decodedList);
+            processMulti();
+        } else if (command.equalsIgnoreCase("exec")) {
+
+            processExec();
         }
     }
 
-    private void processMulti(List<String> list) throws IOException {
+    private void processExec() throws IOException {
+        writeResponse("+OK\r\n");
+    }
+
+    private void processMulti() throws IOException {
 
         writeResponse("+OK\r\n");
     }
