@@ -160,6 +160,8 @@ public class Client {
             return "*0\r\n";
         }
 
+        System.out.println(multiCommands);
+
         for (List<String> command : multiCommands) {
             isMulti = false;
             this.eventLoop.multiClients.put(this.channel, false);
