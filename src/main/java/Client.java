@@ -10,7 +10,7 @@ public class Client {
     private final Map<String, String> config;
     private String time;
     private final EventLoop eventLoop;
-    private boolean isMulti = false;
+    private boolean isMulti;
 
 
     public Client(SocketChannel channel, Map<String, KeyValue> keys, Map<String, String> config, EventLoop eventLoop) {
@@ -136,17 +136,20 @@ public class Client {
 
         if (eventLoop.multiCommands.isEmpty()) {
             isMulti = false;
+            this.eventLoop.multiClients.put(this.channel, false);
             return "*0\r\n";
         }
 
         for (List<String> command : eventLoop.multiCommands) {
             isMulti = false;
+            this.eventLoop.multiClients.put(this.channel, false);
             System.out.println("multi command = " + command);
             String response = processResponse(command);
             stringBuilder.append(response);
         }
 
         isMulti = false;
+        this.eventLoop.multiClients.put(this.channel, false);
 
         return Parser.encodeExec(stringBuilder.toString());
     }
