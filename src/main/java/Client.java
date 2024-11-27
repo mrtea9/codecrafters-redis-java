@@ -50,8 +50,13 @@ public class Client {
         String command = decodedList.get(0);
         System.out.println(decodedList);
         if (isMulti && !command.equalsIgnoreCase("exec") && !command.equalsIgnoreCase("discard")) {
-            List<List<String>> allList = new ArrayList<>();
-            allList.add(decodedList);
+            List<List<String>> allList = eventLoop.multiCommands.get(this.channel);
+            if (allList == null) {
+                allList = new ArrayList<>();
+                allList.add(decodedList);
+            } else {
+                allList.add(decodedList);
+            }
             eventLoop.multiCommands.put(this.channel, allList);
             return "+QUEUED\r\n";
         }
