@@ -55,6 +55,8 @@ public class Parser {
 
     public static String encodeExec(String source) {
         String[] intermediate = source.split("\r\n");
+        System.out.println(Arrays.toString(intermediate));
+
         StringBuilder stringBuilder = new StringBuilder("*");
         stringBuilder.append(intermediate.length);
         stringBuilder.append("\r\n");

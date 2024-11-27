@@ -517,8 +517,6 @@ public class Client {
             result = Parser.encodeBulkString(value.value);
         }
 
-        System.out.println("get");
-
         return result;
     }
 
