@@ -60,9 +60,8 @@ public class Parser {
 
         for (String element : intermediate) {
             stringBuilder.append(element);
+            stringBuilder.append("\r\n");
         }
-        stringBuilder.append("\r\n");
-
 
         System.out.println(stringBuilder);
         return stringBuilder.toString();
