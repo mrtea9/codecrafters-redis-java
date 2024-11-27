@@ -57,9 +57,12 @@ public class Parser {
         String[] intermediate = source.split("\r\n");
         StringBuilder stringBuilder = new StringBuilder("*");
         stringBuilder.append(intermediate.length);
+
         for (String element : intermediate) {
             stringBuilder.append(element);
         }
+        stringBuilder.append("\r\n");
+
 
         System.out.println(stringBuilder);
         return stringBuilder.toString();
