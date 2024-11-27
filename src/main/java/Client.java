@@ -144,9 +144,10 @@ public class Client {
             System.out.println(stringBuilder);
         }
 
+        System.out.println("este");
         eventLoop.isMulti = false;
 
-        return stringBuilder.toString();
+        return Parser.encodeExec(stringBuilder.toString());
     }
 
     private String processMulti() throws IOException {

@@ -53,6 +53,13 @@ public class Parser {
         return result;
     }
 
+    public static String encodeExec(String source) {
+        String[] intermediate = source.split("\r\n");
+        System.out.println(Arrays.toString(intermediate));
+
+        return "*1";
+    }
+
     public static String encodeMultipleRead(List<List<String>> finalList) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("*").append(finalList.size()).append("\r\n");
