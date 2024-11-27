@@ -58,7 +58,7 @@ public class Parser {
         System.out.println(Arrays.toString(intermediate));
 
         StringBuilder stringBuilder = new StringBuilder("*");
-        if (intermediate[3].contains("$")) {
+        if (intermediate.length > 3) {
             stringBuilder.append(intermediate.length - 1);
         } else {
             stringBuilder.append(intermediate.length);
