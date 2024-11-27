@@ -141,9 +141,8 @@ public class Client {
             System.out.println("multi command = " + command);
             String response = processResponse(command);
             stringBuilder.append(response);
+            System.out.println(stringBuilder);
         }
-
-        System.out.println(stringBuilder.toString());
 
         eventLoop.isMulti = false;
 
