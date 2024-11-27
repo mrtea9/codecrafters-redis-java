@@ -38,24 +38,25 @@ public class Client {
         parser.parse();
         List<String> decodedList = parser.getDecodedResponse();
 
-        processResponse(decodedList);
+        String response = processResponse(decodedList);
+
+        if (!response.equalsIgnoreCase("")) writeResponse(response);
     }
 
-    private void processResponse(List<String> decodedList) throws IOException {
+    private String processResponse(List<String> decodedList) throws IOException {
         String command = decodedList.get(0);
         System.out.println(decodedList);
         if (eventLoop.isMulti && !command.equalsIgnoreCase("exec")) {
             eventLoop.multiCommands.add(decodedList);
-            writeResponse("+QUEUED\r\n");
-            return;
+            return "+QUEUED\r\n";
         }
 
         if (command.equalsIgnoreCase("ping")) {
-            processPing();
+            return processPing();
         } else if (command.equalsIgnoreCase("echo")) {
             String value = decodedList.get(1);
 
-            processEcho(value);
+            return processEcho(value);
         } else if (command.equalsIgnoreCase("set")) {
             this.time = "";
             String key = decodedList.get(1);
@@ -64,99 +65,102 @@ public class Client {
                 this.time = decodedList.get(4);
             }
 
-            processSet(key, value);
+            return processSet(key, value);
         } else if (command.equalsIgnoreCase("get")) {
             String key = decodedList.get(1);
 
-            processGet(key);
+            return processGet(key);
         } else if (command.equalsIgnoreCase("config")) {
             String commandArg = decodedList.get(1);
             String key = decodedList.get(2);
 
-            processConfig(key, commandArg);
+            return processConfig(key, commandArg);
         } else if (command.equalsIgnoreCase("keys")) {
 
-            processKeys();
+            return processKeys();
         } else if (command.equalsIgnoreCase("info")) {
             String commandArg = decodedList.get(1);
 
-            processInfo();
+            return processInfo();
         } else if (command.equalsIgnoreCase("replconf")) {
             String commandArg = decodedList.get(1);
             String bytes = decodedList.get(2);
 
-            processReplconf(commandArg, bytes);
+            return processReplconf(commandArg, bytes);
         } else if (command.equalsIgnoreCase("psync")) {
             this.eventLoop.replicaChannels.add(this.channel);
 
-            processPsync();
+            return processPsync();
         } else if (command.equalsIgnoreCase("wait")) {
             String argument = decodedList.get(1);
             String timeWait = decodedList.get(2);
 
-            processWait(argument, timeWait);
+            return processWait(argument, timeWait);
         } else if (command.equalsIgnoreCase("type")) {
             String key = decodedList.get(1);
 
-            processType(key);
+            return processType(key);
         } else if (command.equalsIgnoreCase("xadd")) {
 
-            processXadd(decodedList);
+            return processXadd(decodedList);
         } else if (command.equalsIgnoreCase("xrange")) {
 
-            processXrange(decodedList);
+            return processXrange(decodedList);
         } else if (command.equalsIgnoreCase("xread")) {
             decodedList.remove(0);
 
-            processXread(decodedList);
+            return processXread(decodedList);
         } else if (command.equalsIgnoreCase("incr")) {
 
-            processIncr(decodedList);
+            return processIncr(decodedList);
         } else if (command.equalsIgnoreCase("multi")) {
 
-            processMulti();
+            return processMulti();
         } else if (command.equalsIgnoreCase("exec")) {
 
-            processExec();
+            return processExec();
         }
+
+        return "";
     }
 
-    private void processExec() throws IOException {
+    private String processExec() throws IOException {
         if (!eventLoop.isMulti) {
-            writeResponse("-ERR EXEC without MULTI\r\n");
-            return;
+            return "-ERR EXEC without MULTI\r\n";
         }
 
         if (eventLoop.multiCommands.isEmpty()) {
-            writeResponse("*0\r\n");
             eventLoop.isMulti = false;
-            return;
+            return "*0\r\n";
         }
-
-        writeResponse("+OK\r\n");
 
         for (List<String> command : eventLoop.multiCommands) {
             System.out.println("multi command = " + command);
+            String response = processResponse(command);
+            System.out.println(response);
         }
 
         eventLoop.isMulti = false;
+
+        return "+OK\r\n";
     }
 
-    private void processMulti() throws IOException {
+    private String processMulti() throws IOException {
         eventLoop.isMulti = true;
 
-        writeResponse("+OK\r\n");
+        return "+OK\r\n";
     }
 
-    private void processIncr(List<String> list) throws IOException {
+    private String processIncr(List<String> list) throws IOException {
         String key = list.get(1);
         KeyValue value = this.keys.get(key);
 
         if (value == null) {
             this.keys.put(key, new KeyValue("1", 0, ValueType.STRING));
-            writeResponse(":1\r\n");
-            return;
+            return ":1\r\n";
         }
+
+        String response;
 
         try {
             int number = Integer.parseInt(value.value) + 1;
@@ -165,13 +169,17 @@ public class Client {
 
             this.keys.put(key, value);
 
+            response = ":" + number + "\r\n";
+
             writeResponse(":" + number + "\r\n");
         } catch (NumberFormatException e) {
-            writeResponse("-ERR value is not an integer or out of range\r\n");
+            response = "-ERR value is not an integer or out of range\r\n";
         }
+
+        return response;
     }
 
-    private void processXread(List<String> list) throws IOException {
+    private String processXread(List<String> list) throws IOException {
         String param = list.remove(0);
         long blockTime = -1;
 
@@ -208,6 +216,8 @@ public class Client {
                     : Parser.encodeMultipleRead(finalResult);
             writeResponse(response);
         }
+
+        return "";
     }
 
     private List<List<String>> fetchStreamEntries(List<String> streamKeys, List<String> startIds) {
@@ -353,7 +363,7 @@ public class Client {
         return parts.length == 2;
     }
 
-    private void processXrange(List<String> list) throws IOException {
+    private String processXrange(List<String> list) throws IOException {
         String streamKey = list.get(1);
         String startRange = list.get(2);
         String endRange = list.get(3);
@@ -389,22 +399,21 @@ public class Client {
         String response = Parser.encodeRange(result);
         System.out.println(response);
 
-        writeResponse(response);
+        return response;
     }
 
     private void writeResponse(String response) throws IOException {
         this.channel.write(ByteBuffer.wrap(response.getBytes()));
     }
 
-    private void processXadd(List<String> list) throws IOException {
+    private String processXadd(List<String> list) throws IOException {
         String streamKey = list.get(1);
         String rawEntryId = list.get(2);
         String key = list.get(3);
         String value = list.get(4);
 
         if (rawEntryId.equals("0-0")) {
-            writeResponse("-ERR The ID specified in XADD must be greater than 0-0\r\n");
-            return;
+            return "-ERR The ID specified in XADD must be greater than 0-0\r\n";
         }
 
         System.out.println(rawEntryId);
@@ -413,8 +422,7 @@ public class Client {
         System.out.println(eventLoop.minStreamId);
 
         if (isIdSmallerOrEqual(entryId, eventLoop.minStreamId)) {
-            writeResponse("-ERR The ID specified in XADD is equal or smaller than the target stream top item\r\n");
-            return;
+            return "-ERR The ID specified in XADD is equal or smaller than the target stream top item\r\n";
         }
 
         KeyValue streamValue = this.keys.get(streamKey);
@@ -428,8 +436,7 @@ public class Client {
         eventLoop.minStreamId = entryId;
         eventLoop.notifyBlockedClients(streamKey);
 
-        writeResponse(Parser.encodeBulkString(entryId));
-
+        return Parser.encodeBulkString(entryId);
     }
 
     private String resolveEntryId(String rawEntryId) {
@@ -472,15 +479,15 @@ public class Client {
         return id1Seq <= id2Seq;
     }
 
-    private void processPing() throws IOException {
-        writeResponse("+PONG\r\n");
+    private String processPing() throws IOException {
+        return "+PONG\r\n";
     }
 
-    private void processEcho(String value) throws IOException {
-        writeResponse("+" + value + "\r\n");
+    private String processEcho(String value) throws IOException {
+        return "+" + value + "\r\n";
     }
 
-    private void processSet(String key, String value) throws IOException {
+    private String processSet(String key, String value) throws IOException {
         KeyValue valueKey = new KeyValue(value, 0, ValueType.STRING);
 
         if (this.time.isEmpty()) {
@@ -493,16 +500,15 @@ public class Client {
         this.eventLoop.propagateCommand("SET", key, value);
         this.eventLoop.noCommand = false;
 
-        writeResponse("+OK\r\n");
+        return "+OK\r\n";
     }
 
-    private void processGet(String key) throws IOException {
+    private String processGet(String key) throws IOException {
         String result = "$-1\r\n";
 
         KeyValue value = this.keys.get(key);
         if (value == null) {
-            writeResponse(result);
-            return;
+            return result;
         }
         System.out.println(System.currentTimeMillis());
         System.out.println(value.expiryTimestamp);
@@ -510,26 +516,23 @@ public class Client {
             result = Parser.encodeBulkString(value.value);
         }
 
-        writeResponse(result);
+        return result;
     }
 
-    private void processConfig(String key, String commandArg) throws IOException {
+    private String processConfig(String key, String commandArg) throws IOException {
         HashMap<String, String> inter = new HashMap<>();
         String value = this.config.get(key);
         inter.put(key, value);
 
-        String result = Parser.encodeArray(inter);
-
-        writeResponse(result);
+        return Parser.encodeArray(inter);
     }
 
-    private void processKeys() throws IOException {
-        String result = Parser.encodeArray(this.keys.keySet());
+    private String processKeys() throws IOException {
 
-        writeResponse(result);
+        return Parser.encodeArray(this.keys.keySet());
     }
 
-    private void processInfo() throws IOException {
+    private String processInfo() throws IOException {
         String replicaOf = this.config.get("--replicaof");
         String result = "";
         String masterReplId = "master_replid:" + this.config.get("master_replid");
@@ -539,30 +542,33 @@ public class Client {
         result += "\r\n" + masterReplOffset + "\r\n" + masterReplId;
         result = Parser.encodeBulkString(result);
 
-        writeResponse(result);
+        return result;
     }
 
-    private void processReplconf(String commandArg, String bytes) throws IOException {
+    private String processReplconf(String commandArg, String bytes) throws IOException {
         System.out.println("acknow = " + this.eventLoop.acknowledged);
-        if (commandArg.equalsIgnoreCase("listening-port")) this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
-        if (commandArg.equalsIgnoreCase("capa")) this.channel.write(ByteBuffer.wrap(("+OK\r\n").getBytes()));
+        if (commandArg.equalsIgnoreCase("listening-port")) return "+OK\r\n";
+        if (commandArg.equalsIgnoreCase("capa")) return "+OK\r\n";
         if (commandArg.equalsIgnoreCase("ack")) {
             System.out.println("Processing ack command");
             this.eventLoop.acknowledged.incrementAndGet();
             System.out.println("Acknowledged incremented: " + this.eventLoop.acknowledged);
             this.eventLoop.notifyAcknowledged();
         }
+        return "";
     }
 
-    private void processPsync() throws IOException {
+    private String processPsync() throws IOException {
         String response = "+FULLRESYNC " + this.config.get("master_replid") + " " + this.config.get("master_repl_offset") + "\r\n";
 
         writeResponse(response);
 
         sendRdbFile();
+
+        return "";
     }
 
-    private void processWait(String argument, String timeWait) throws IOException {
+    private String processWait(String argument, String timeWait) throws IOException {
         int replicas = Integer.parseInt(argument);
         int timeout = Integer.parseInt(timeWait);
 
@@ -571,7 +577,7 @@ public class Client {
         if (this.eventLoop.noCommand) {
             String response = ":" + this.eventLoop.replicaChannels.size() + "\r\n";
             writeResponse(response);
-            return;
+            return "";
         }
 
         CompletableFuture<Integer> waitFuture = new CompletableFuture<>();
@@ -603,6 +609,8 @@ public class Client {
                 e.printStackTrace();
             }
         });
+
+        return "";
     }
 
     private void sendRdbFile() throws IOException {
@@ -614,12 +622,11 @@ public class Client {
         this.channel.write(ByteBuffer.wrap(contents));
     }
 
-    private void processType(String key) throws IOException {
+    private String processType(String key) throws IOException {
         KeyValue value = this.keys.get(key);
         String result = "+none\r\n";
         if (value == null) {
-            writeResponse(result);
-            return;
+            return result;
         }
 
         ValueType type = value.type;
@@ -627,6 +634,6 @@ public class Client {
         if (type == ValueType.STRING) result = "+string\r\n";
         if (type == ValueType.STREAM) result = "+stream\r\n";
 
-        writeResponse(result);
+        return result;
     }
 }
