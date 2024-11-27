@@ -125,7 +125,7 @@ public class Client {
     }
 
     private String processExec() throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder("+OK\r\n");
 
         if (!eventLoop.isMulti) {
             return "-ERR EXEC without MULTI\r\n";
@@ -146,7 +146,7 @@ public class Client {
 
         eventLoop.isMulti = false;
 
-        return "+OK\r\n";
+        return stringBuilder.toString();
     }
 
     private String processMulti() throws IOException {
