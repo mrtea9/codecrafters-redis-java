@@ -175,8 +175,6 @@ public class Client {
             this.keys.put(key, value);
 
             response = ":" + number + "\r\n";
-
-            writeResponse(":" + number + "\r\n");
         } catch (NumberFormatException e) {
             response = "-ERR value is not an integer or out of range\r\n";
         }
