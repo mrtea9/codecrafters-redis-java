@@ -116,7 +116,7 @@ public class Client {
     }
 
     private void processExec() throws IOException {
-        if (eventLoop.isMulti) {
+        if (!eventLoop.isMulti) {
             writeResponse("-ERR EXEC without MULTI\r\n");
         }
 
