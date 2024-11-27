@@ -121,11 +121,19 @@ public class Client {
             return;
         }
 
+        if (eventLoop.multiCommands.isEmpty()) {
+            writeResponse("*0\r\n");
+            return;
+        }
+
         writeResponse("+OK\r\n");
+
+        eventLoop.isMulti = false;
     }
 
     private void processMulti() throws IOException {
         eventLoop.isMulti = true;
+
 
         writeResponse("+OK\r\n");
     }
