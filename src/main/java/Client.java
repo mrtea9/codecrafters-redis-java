@@ -150,7 +150,14 @@ public class Client {
     }
 
     private String processMulti() throws IOException {
-        isMulti = true;
+        Boolean inter = this.eventLoop.multiClients.get(this.channel);
+
+        if (inter == null) {
+            this.eventLoop.multiClients.put(this.channel, true);
+            return "+OK\r\n";
+        }
+
+        isMulti = inter;
 
         return "+OK\r\n";
     }

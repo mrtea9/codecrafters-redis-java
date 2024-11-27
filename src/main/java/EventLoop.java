@@ -28,6 +28,7 @@ public class EventLoop {
     public boolean noCommand = true;
     public List<List<String>> multiCommands = new ArrayList<>();
     public String minStreamId = "";
+    public Map<SocketChannel, Boolean> multiClients = new ConcurrentHashMap<>();
 
     EventLoop(int port, String replicaOf) {
         this.port = port;
