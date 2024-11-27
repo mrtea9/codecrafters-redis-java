@@ -135,6 +135,7 @@ public class Client {
         }
 
         for (List<String> command : eventLoop.multiCommands) {
+            eventLoop.isMulti = false;
             System.out.println("multi command = " + command);
             String response = processResponse(command);
             System.out.println(response);
