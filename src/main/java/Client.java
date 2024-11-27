@@ -502,6 +502,10 @@ public class Client {
         String result = "$-1\r\n";
 
         KeyValue value = this.keys.get(key);
+        if (value == null) {
+            writeResponse(result);
+            return;
+        }
         System.out.println(System.currentTimeMillis());
         System.out.println(value.expiryTimestamp);
         if (value.expiryTimestamp > System.currentTimeMillis() || value.expiryTimestamp == 0) {
