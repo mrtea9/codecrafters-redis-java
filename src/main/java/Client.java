@@ -159,7 +159,13 @@ public class Client {
 
         List<List<String>> multiCommands = this.eventLoop.multiCommands.get(this.channel);
 
-        if (multiCommands.isEmpty() || multiCommands == null) {
+        if (multiCommands == null) {
+            isMulti = false;
+            this.eventLoop.multiClients.put(this.channel, false);
+            return "*0\r\n";
+        }
+
+        if (multiCommands.isEmpty()) {
             isMulti = false;
             this.eventLoop.multiClients.put(this.channel, false);
             return "*0\r\n";
