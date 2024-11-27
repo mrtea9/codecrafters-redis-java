@@ -50,7 +50,9 @@ public class Client {
         String command = decodedList.get(0);
         System.out.println(decodedList);
         if (isMulti && !command.equalsIgnoreCase("exec") && !command.equalsIgnoreCase("discard")) {
-            eventLoop.multiCommands.add(decodedList);
+            List<List<String>> allList = new ArrayList<>();
+            allList.add(decodedList);
+            eventLoop.multiCommands.put(this.channel, allList);
             return "+QUEUED\r\n";
         }
 
@@ -127,7 +129,6 @@ public class Client {
             return processDiscard();
         }
 
-
         return "";
     }
 
@@ -151,13 +152,15 @@ public class Client {
             return "-ERR EXEC without MULTI\r\n";
         }
 
-        if (eventLoop.multiCommands.isEmpty()) {
+        List<List<String>> multiCommands = this.eventLoop.multiCommands.get(this.channel);
+
+        if (multiCommands.isEmpty() || multiCommands == null) {
             isMulti = false;
             this.eventLoop.multiClients.put(this.channel, false);
             return "*0\r\n";
         }
 
-        for (List<String> command : eventLoop.multiCommands) {
+        for (List<String> command : multiCommands) {
             isMulti = false;
             this.eventLoop.multiClients.put(this.channel, false);
             System.out.println("multi command = " + command);

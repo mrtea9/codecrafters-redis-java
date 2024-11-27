@@ -26,7 +26,7 @@ public class EventLoop {
     public List<SocketChannel> replicaChannels = new ArrayList<>();
     public AtomicInteger acknowledged = new AtomicInteger(0);
     public boolean noCommand = true;
-    public List<List<String>> multiCommands = new ArrayList<>();
+    public Map<SocketChannel, List<List<String>>> multiCommands = new ConcurrentHashMap<>();
     public String minStreamId = "";
     public Map<SocketChannel, Boolean> multiClients = new ConcurrentHashMap<>();
 
