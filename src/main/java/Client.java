@@ -66,6 +66,12 @@ public class Client {
 
             processSet(key, value);
         } else if (command.equalsIgnoreCase("get")) {
+            if (eventLoop.isMulti) {
+                eventLoop.multiCommands.add(decodedList);
+                writeResponse("+QUEUED\r\n");
+                return;
+            }
+
             String key = decodedList.get(1);
 
             processGet(key);
