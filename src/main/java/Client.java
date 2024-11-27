@@ -122,9 +122,25 @@ public class Client {
         } else if (command.equalsIgnoreCase("exec")) {
 
             return processExec();
+        } else if (command.equalsIgnoreCase("discard")) {
+
+            return processDiscard();
         }
 
         return "";
+    }
+
+    private String processDiscard() {
+
+        if (!isMulti) {
+            return "-ERR DISCARD without MULTI\r\n";
+        }
+
+        this.eventLoop.multiCommands.clear();
+        isMulti = false;
+        this.eventLoop.multiClients.put(this.channel, false);
+
+        return "+OK\r\n";
     }
 
     private String processExec() throws IOException {
